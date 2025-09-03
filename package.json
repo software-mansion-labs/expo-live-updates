@@ -1,0 +1,24 @@
+{
+  "name": "expo-live-updates",
+  "version": "0.0.0",
+  "description": "Library based on expo modules for Android Live Updates",
+  "keywords": [
+    "Android",
+    "Live Updates"
+  ],
+  "homepage": "https://github.com/software-mansion-labs/expo-live-updates#readme",
+  "bugs": {
+    "url": "https://github.com/software-mansion-labs/expo-live-updates/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/software-mansion-labs/expo-live-updates.git"
+  },
+  "license": "MIT",
+  "author": "Kamil Owczarz",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
