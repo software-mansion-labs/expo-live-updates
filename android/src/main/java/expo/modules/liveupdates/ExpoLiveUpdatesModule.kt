@@ -8,6 +8,19 @@ import androidx.core.content.ContextCompat.getSystemService
 import java.util.Timer
 import java.util.TimerTask
 import android.os.Build
+import expo.modules.kotlin.records.Record
+import expo.modules.liveupdates.service.NotificationManager
+import expo.modules.kotlin.functions.Coroutine
+import expo.modules.kotlin.Promise
+import expo.modules.kotlin.records.Field
+
+data class LiveActivityState(
+    @Field val title: String,
+    @Field val subtitle: String? = null,
+    @Field val date: Long? = null,
+    @Field val imageName: String? = null,
+    @Field val dynamicIslandImageName: String? = null
+) : Record
 
 class ExpoLiveUpdatesModule : Module() {
     private var notificationManager: NotificationManager? = null
@@ -41,27 +54,15 @@ class ExpoLiveUpdatesModule : Module() {
             notificationManager = notifManager
         }
 
-        Function("startService") {
-            notificationManager?.startForegroundService()
+        Function("startForegroundService") { state: LiveActivityState ->
+            notificationManager?.startForegroundService(state)
         }
-        Function("stopService") {
+        Function("stopForegroundService") {
             notificationManager?.stopForegroundService()
         }
-        Function("updateNotification") {
-            notificationManager?.updateNotification()
+        Function("updateForegroundService") { state: LiveActivityState ->
+            notificationManager?.updateNotification(state)
         }
-        Function("updateNotificationInterval") {
-            val timer = Timer()
-            val task = object : TimerTask() {
-                override fun run() {
-                    notificationManager?.updateNotification()
-                }
-            }
-
-            timer.scheduleAtFixedRate(task, 0L, 5000L)
-        }
-
-
     }
 
 

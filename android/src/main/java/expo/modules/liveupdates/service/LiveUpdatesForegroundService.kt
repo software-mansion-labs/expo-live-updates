@@ -10,6 +10,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.media.Image
 import android.os.Build
 import android.os.IBinder
 import android.os.Bundle
@@ -18,6 +20,8 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import expo.modules.liveupdates.service.ServiceAction
+import expo.modules.liveupdates.service.ServiceActionExtra
 
 const val TAG = "LiveUpdatesForegroundService"
 const val CHANNEL_ID = "LiveUpdatesServiceChannel"
@@ -36,7 +40,7 @@ class LiveUpdatesForegroundService : Service() {
                     "Intent received  ${intent.action}"
                 )
                 when (intent.action) {
-                    ServiceAction.updateDistance -> updateNotificationContent(intent.extras)
+                    ServiceAction.updateLiveUpdate -> updateNotificationContent(intent.extras)
                 }
             }
         }
@@ -51,7 +55,7 @@ class LiveUpdatesForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             this.registerReceiver(
                 broadcastReceiver,
-                IntentFilter(ServiceAction.updateDistance),
+                IntentFilter(ServiceAction.updateLiveUpdate),
                 RECEIVER_EXPORTED
             )
         }
@@ -73,8 +77,9 @@ class LiveUpdatesForegroundService : Service() {
 
         val text = extras?.getString(ServiceActionExtra.setText) ?: "[text placeholder]"
         val title = extras?.getString(ServiceActionExtra.setTitle) ?: "[title placeholder]"
+        val date = extras?.getLong(ServiceActionExtra.date)
 
-        val notification = createNotification(title, text)
+        val notification = createNotification(title, text, date)
         val notificationManager = NotificationManagerCompat.from(this)
 
         if (ActivityCompat.checkSelfPermission(
@@ -89,11 +94,16 @@ class LiveUpdatesForegroundService : Service() {
     private fun createNotification(
         title: String,
         text: String,
+        date: Long? = System.currentTimeMillis(),
+//        image: Image? = null
     ): Notification {
+        val notificationDate: Long = date ?: System.currentTimeMillis()
+
         val notificationIntent =
             Intent(
                 "android.intent.action.MAIN"
             )
+
         notificationIntent.setComponent(
             ComponentName(
                 "expo.modules.liveupdates.example",
@@ -119,7 +129,15 @@ class LiveUpdatesForegroundService : Service() {
                 .setProgress(100, 40, false)
                 .setContentText(text)
                 .setColor(0x00238440)
+                .setWhen(notificationDate)
                 .setContentIntent(pendingIntent)
+                .setColor(999)
+                .setColorized(true)
+
+
+//        if (image !== null) {
+//            notificationBuilder.setLargeIcon(image)
+//        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)

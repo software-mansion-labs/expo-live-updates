@@ -1,19 +1,27 @@
-package expo.modules.liveupdates
+package expo.modules.liveupdates.service
 
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import expo.modules.liveupdates.LiveActivityState // Assuming LiveActivityState is in this package, if not, this will need adjustment
+import expo.modules.liveupdates.LiveUpdatesForegroundService // Assuming LiveUpdatesForegroundService is in this package
+import expo.modules.liveupdates.service.ServiceAction
+
 
 class NotificationManager(
     private var context: Context
 ) {
-    fun startForegroundService() {
+    fun startForegroundService(state: LiveActivityState) {
         val serviceIntent = Intent(context, LiveUpdatesForegroundService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(serviceIntent)
         } else {
             context.startService(serviceIntent)
         }
+
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            updateNotification(state)
+        }, 500) // 500 ms delay
     }
 
     fun stopForegroundService() {
@@ -25,16 +33,16 @@ class NotificationManager(
         context.stopService(serviceIntent)
     }
 
-    var prevDistance: String? = null
+    fun updateNotification(state: LiveActivityState) {
+        val intent = Intent(ServiceAction.updateLiveUpdate)
 
-    fun updateNotification() {
-        val intent = Intent(ServiceAction.updateDistance)
+        intent.putExtra(ServiceActionExtra.setTitle, state.title)
+        intent.putExtra(ServiceActionExtra.setText, state.subtitle ?: "")
 
-        val timestamp = System.currentTimeMillis().toString()
+        intent.putExtra(ServiceActionExtra.date, state.date)
+        intent.putExtra(ServiceActionExtra.imageName, state.imageName)
+        intent.putExtra( ServiceActionExtra.dynamicIslandImageName, state.dynamicIslandImageName)
 
-        intent.putExtra(ServiceActionExtra.setTitle, timestamp)
-        intent.putExtra(ServiceActionExtra.setText, timestamp)
         context.sendBroadcast(intent)
-
     }
 }

@@ -1,10 +1,13 @@
-package expo.modules.liveupdates
+package expo.modules.liveupdates.service
 
 object ServiceAction {
-    const val updateDistance = "update-distance"
+    const val updateLiveUpdate = "update-liveupdate"
 }
 
 object ServiceActionExtra {
     const val setTitle = "set-title"
     const val setText = "set-text"
+    const val date = "date"
+    const val imageName = "imageName"
+    const val dynamicIslandImageName = "dynamicIslandImageName"
 }

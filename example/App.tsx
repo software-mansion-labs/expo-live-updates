@@ -1,26 +1,25 @@
-import { useEvent } from "expo";
-import ExpoLiveUpdates from "expo-live-updates";
-import { initLiveUpdates } from "expo-live-updates/ExpoLiveUpdatesModule";
+import {init, LiveActivityState, startForegroundService, stopForegroundService, updateForegroundService} from "expo-live-updates";
+import { useEffect } from "react";
 import { Button, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function App() {
-  initLiveUpdates();
-  const onChangePayload = useEvent(ExpoLiveUpdates, "onChange");
-  const startService = () => {
-    console.log(ExpoLiveUpdates.startService());
-  };
 
-  const stopService = () => {
-    ExpoLiveUpdates.stopService();
-  };
-
-  const updateNotification = () => {
-    ExpoLiveUpdates.updateNotification();
-  };
-
-  const updateNotificationInterval = () => {
-    ExpoLiveUpdates.updateNotificationInterval();
-  };
+  const startState: LiveActivityState =  {
+  title: 'Test title 2',
+  subtitle: 'test subtitle',
+  date: 1725794623,
+  imageName: 'someimagename',
+  dynamicIslandImageName: 'someimagename2',
+}
+  const updateState: LiveActivityState =  {
+  title: 'Test updated title 3',
+  subtitle: 'test updated subtitle',
+  date: 1599564223,
+  imageName: 'someimagename',
+  dynamicIslandImageName: 'someimagename2',
+}
+useEffect(()=> {    init()
+}, [])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,10 +27,9 @@ export default function App() {
         <Text style={styles.header}>Live Updates</Text>
         <Group name="Foreground service">
           <View style={styles.buttons}>
-            <Button title="Start Service" onPress={startService} />
-            <Button title="Stop Service" onPress={stopService} />
-            <Button title="updateNotification" onPress={updateNotification} />
-            <Button title="updateNotification every 5s" onPress={updateNotificationInterval} />
+            <Button title="Start Service" onPress={() => startForegroundService(startState)} />
+            <Button title="Stop Service" onPress={() => stopForegroundService()} />
+            <Button title="updateForegroundService" onPress={() => updateForegroundService(updateState)} />
           </View>
         </Group>
       </ScrollView>

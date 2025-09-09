@@ -32,7 +32,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'android.permission.CHANGE_NETWORK_STATE',
       'android.permission.CHANGE_WIFI_STATE',
       'android.permission.FOREGROUND_SERVICE_LOCATION',
-      'android.permission.POST_NOTIFICATIONS',],
+      'android.permission.POST_NOTIFICATIONS',
+       'android.permission.FOREGROUND_SERVICE'],
   },
   web: {
     favicon: "./assets/favicon.png",
