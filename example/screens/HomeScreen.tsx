@@ -3,7 +3,6 @@ import * as React from 'react'
 import { StyleSheet, Text } from 'react-native'
 import CreateLiveUpdatesScreen from './CreateLiveUpdatesScreen'
 
-
 export default function HomeScreen() {
   const url = useLinkingURL()
 

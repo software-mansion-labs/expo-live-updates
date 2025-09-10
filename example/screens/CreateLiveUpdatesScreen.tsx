@@ -1,5 +1,5 @@
-import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { useEffect, useState } from "react";
+import RNDateTimePicker from '@react-native-community/datetimepicker'
+import { useEffect, useState } from 'react'
 import {
   Button,
   Keyboard,
@@ -9,33 +9,33 @@ import {
   Text,
   TextInput,
   View,
-} from "react-native";
+} from 'react-native'
 import {
   LiveActivityConfig,
   LiveActivityState,
   startForegroundService,
   stopForegroundService,
   updateForegroundService,
-} from "expo-live-updates";
-import { Asset } from "expo-asset";
+} from 'expo-live-updates'
+import { Asset } from 'expo-asset'
 
-const toggle = (previousState: boolean) => !previousState;
+const toggle = (previousState: boolean) => !previousState
 
 export default function CreateLiveUpdatesScreen() {
-  const [activityId, setActivityID] = useState<string | null>();
-  const [title, onChangeTitle] = useState("Title");
-  const [backgroundColor, setBackgroundColor] = useState("red");
-  const [subtitle, onChangeSubtitle] = useState("This is a subtitle");
-  const [imageUri, setImageUri] = useState<string>();
-  const [iconImageUri, setIconImageUri] = useState<string>();
-  const [date, setDate] = useState(new Date());
-  const [isTimerTypeDigital, setTimerTypeDigital] = useState(false);
-  const [passSubtitle, setPassSubtitle] = useState(true);
-  const [passImage, setPassImage] = useState(true);
-  const [passIconImage, setPassIconImage] = useState(true);
-  const [passDate, setPassDate] = useState(true);
+  const [activityId, setActivityID] = useState<string | null>()
+  const [title, onChangeTitle] = useState('Title')
+  const [backgroundColor, setBackgroundColor] = useState('red')
+  const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
+  const [imageUri, setImageUri] = useState<string>()
+  const [iconImageUri, setIconImageUri] = useState<string>()
+  const [date, setDate] = useState(new Date())
+  const [isTimerTypeDigital, setTimerTypeDigital] = useState(false)
+  const [passSubtitle, setPassSubtitle] = useState(true)
+  const [passImage, setPassImage] = useState(true)
+  const [passIconImage, setPassIconImage] = useState(true)
+  const [passDate, setPassDate] = useState(true)
 
-  useEffect(()=> {
+  useEffect(() => {
     const loadImages = async () => {
       const images = await getImgsUri()
       setImageUri(images.logo)
@@ -43,55 +43,53 @@ export default function CreateLiveUpdatesScreen() {
     }
 
     loadImages()
-
   }, [])
 
-  const getState = (): LiveActivityState =>({
-      title,
-      subtitle: passSubtitle ? subtitle : undefined,
-      date: passDate ? date.getTime() : undefined,
-      imageName: passImage ? imageUri: undefined,
-      dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
-    });
+  const getState = (): LiveActivityState => ({
+    title,
+    subtitle: passSubtitle ? subtitle : undefined,
+    date: passDate ? date.getTime() : undefined,
+    imageName: passImage ? imageUri : undefined,
+    dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
+  })
 
   const startActivity = async () => {
-    Keyboard.dismiss();
+    Keyboard.dismiss()
 
     try {
-            const activityConfig: LiveActivityConfig = {
+      const activityConfig: LiveActivityConfig = {
         backgroundColor,
-      };
-      const id = startForegroundService(getState(), activityConfig);
+      }
+      const id = startForegroundService(getState(), activityConfig)
 
       //  {
       //   ...activityConfig,
       //   timerType: isTimerTypeDigital ? 'digital' : 'circular',
       // }
-      if (id) setActivityID(id);
+      if (id) setActivityID(id)
     } catch (e) {
-      console.error("Starting Live Update failed! " + e);
+      console.error('Starting Live Update failed! ' + e)
     }
-  };
+  }
 
   const stopActivity = () => {
-
     try {
       // activityId && LiveActivity.stopActivity(activityId, state)
-      activityId && stopForegroundService();
-      setActivityID(null);
+      activityId && stopForegroundService()
+      setActivityID(null)
     } catch (e) {
-      console.error("Stopping activity failed! " + e);
+      console.error('Stopping activity failed! ' + e)
     }
-  };
+  }
 
   const updateActivity = () => {
     try {
       // activityId && LiveActivity.updateActivity(activityId, state)
-      activityId && updateForegroundService(getState());
+      activityId && updateForegroundService(getState())
     } catch (e) {
-      console.error("Updating activity failed! " + e);
+      console.error('Updating activity failed! ' + e)
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -122,7 +120,10 @@ export default function CreateLiveUpdatesScreen() {
       </View>
       <View style={styles.labelWithSwitch}>
         <Text style={styles.label}>Set Live Update icon image:</Text>
-        <Switch onValueChange={() => setPassIconImage(toggle)} value={passIconImage} />
+        <Switch
+          onValueChange={() => setPassIconImage(toggle)}
+          value={passIconImage}
+        />
       </View>
 
       <View style={styles.labelWithSwitch}>
@@ -137,7 +138,7 @@ export default function CreateLiveUpdatesScreen() {
         placeholder="Live Update background color"
         value={backgroundColor}
       />
-      {Platform.OS === "ios" && (
+      {Platform.OS === 'ios' && (
         <>
           <View style={styles.labelWithSwitch}>
             <Text style={styles.label}>Set Live Update timer:</Text>
@@ -152,7 +153,7 @@ export default function CreateLiveUpdatesScreen() {
                 value={date}
                 mode="time"
                 onChange={(event, date) => {
-                  date && setDate(date);
+                  date && setDate(date)
                 }}
                 minimumDate={new Date(Date.now() + 60 * 1000)}
               />
@@ -171,25 +172,35 @@ export default function CreateLiveUpdatesScreen() {
         <Button
           title="Start Update"
           onPress={startActivity}
-          disabled={title === "" || !!activityId}
+          disabled={title === '' || !!activityId}
         />
         <Button
           title="Stop Update"
           onPress={stopActivity}
           disabled={!activityId}
         />
-        <Button title="Update Update" disabled={!activityId} onPress={updateActivity} />
+        <Button
+          title="Update Update"
+          disabled={!activityId}
+          onPress={updateActivity}
+        />
       </View>
     </View>
-  );
+  )
 }
 
-
 async function getImgsUri() {
-  const [{ localUri: logoLocalUri }] = await Asset.loadAsync(require(`./../assets/liveActivity/logo.png`));
-  const [{ localUri: logoIslandLocalUri }] = await Asset.loadAsync(require(`./../assets/liveActivity/logo-island.png`));
+  const [{ localUri: logoLocalUri }] = await Asset.loadAsync(
+    require(`./../assets/liveActivity/logo.png`),
+  )
+  const [{ localUri: logoIslandLocalUri }] = await Asset.loadAsync(
+    require(`./../assets/liveActivity/logo-island.png`),
+  )
 
-  return {logo: logoLocalUri ?? undefined, logoIsland: logoIslandLocalUri ?? undefined}
+  return {
+    logo: logoLocalUri ?? undefined,
+    logoIsland: logoIslandLocalUri ?? undefined,
+  }
 }
 
 // const activityConfig: LiveActivityConfig = {
@@ -204,53 +215,53 @@ async function getImgsUri() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   timerControlsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 15,
     marginBottom: 15,
-    width: "90%",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '90%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonsContainer: {
     padding: 30,
     gap: 15,
   },
   label: {
-    width: "90%",
+    width: '90%',
     fontSize: 17,
   },
   labelWithSwitch: {
-    flexDirection: "row",
-    width: "90%",
+    flexDirection: 'row',
+    width: '90%',
     paddingEnd: 15,
   },
   input: {
     height: 45,
-    width: "90%",
+    width: '90%',
     marginVertical: 12,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderRadius: 10,
     padding: 10,
   },
   diabledInput: {
     height: 45,
-    width: "90%",
+    width: '90%',
     margin: 12,
     borderWidth: 1,
-    borderColor: "#DEDEDE",
-    backgroundColor: "#ECECEC",
-    color: "gray",
+    borderColor: '#DEDEDE',
+    backgroundColor: '#ECECEC',
+    color: 'gray',
     borderRadius: 10,
     padding: 10,
   },
   timerCheckboxContainer: {
-    alignItems: "flex-start",
-    width: "90%",
-    justifyContent: "center",
+    alignItems: 'flex-start',
+    width: '90%',
+    justifyContent: 'center',
   },
-});
+})

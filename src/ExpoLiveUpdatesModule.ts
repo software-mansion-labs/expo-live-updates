@@ -1,3 +1,3 @@
-import { requireNativeModule } from 'expo';
+import { requireNativeModule } from 'expo'
 
-export default requireNativeModule('ExpoLiveUpdatesModule');
+export default requireNativeModule('ExpoLiveUpdatesModule')

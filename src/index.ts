@@ -44,7 +44,9 @@ export type ActivityUpdateEvent = {
 
 export type LiveActivityModuleEvents = {
   onTokenReceived: (params: ActivityTokenReceivedEvent) => void
-  onPushToStartTokenReceived: (params: ActivityPushToStartTokenReceivedEvent) => void
+  onPushToStartTokenReceived: (
+    params: ActivityPushToStartTokenReceivedEvent,
+  ) => void
   onStateChange: (params: ActivityUpdateEvent) => void
 }
 
@@ -60,17 +62,20 @@ export function init() {
   if (assertAndroid('init')) return ExpoLiveUpdatesModule.init()
 }
 
-
 /**
  * @param {LiveActivityState} state The state for the live activity.
  * @param {LiveActivityConfig} config Live activity config object.
  * @returns {string} The identifier of the started activity or undefined if creating live activity failed.
- */ 
+ */
 
 // config?: LiveActivityConfig
-export function startForegroundService(state: LiveActivityState, config: LiveActivityConfig): Voidable<string> {
+export function startForegroundService(
+  state: LiveActivityState,
+  config: LiveActivityConfig,
+): Voidable<string> {
   if (assertAndroid('startForegroundService')) {
-    return ExpoLiveUpdatesModule.startForegroundService(state, config)}
+    return ExpoLiveUpdatesModule.startForegroundService(state, config)
+  }
 }
 
 /**
@@ -79,7 +84,8 @@ export function startForegroundService(state: LiveActivityState, config: LiveAct
  */
 // id: string, state: LiveActivityState
 export function stopForegroundService() {
-  if (assertAndroid('stopForegroundService')) return ExpoLiveUpdatesModule.stopForegroundService()
+  if (assertAndroid('stopForegroundService'))
+    return ExpoLiveUpdatesModule.stopForegroundService()
 }
 
 /**
@@ -88,7 +94,8 @@ export function stopForegroundService() {
  */
 // id: string, state: LiveActivityState
 export function updateForegroundService(state: LiveActivityState) {
-  if (assertAndroid('updateForegroundService')) return ExpoLiveUpdatesModule.updateForegroundService(state)
+  if (assertAndroid('updateForegroundService'))
+    return ExpoLiveUpdatesModule.updateForegroundService(state)
 }
 
 // -----------------------------------------------------------

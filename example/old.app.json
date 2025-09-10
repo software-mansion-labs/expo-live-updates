@@ -23,13 +23,11 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "expo.modules.liveupdates.example",
-      "permissions": ["android.permission.FOREGROUND_SERVICE"],
+      "permissions": ["android.permission.FOREGROUND_SERVICE"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "./plugins/withForegroundService.ts"
-    ]
+    "plugins": ["./plugins/withForegroundService.ts"]
   }
 }
