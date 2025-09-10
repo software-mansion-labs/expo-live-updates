@@ -40,4 +40,9 @@ android {
   lintOptions {
     abortOnError false
   }
+  sourceSets {
+    main {
+      assets.srcDirs += ['src/main/assets', '../../example/assets/liveActivity']
+    }
+  }
 }

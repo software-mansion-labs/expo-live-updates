@@ -22,6 +22,10 @@ data class LiveActivityState(
     @Field val dynamicIslandImageName: String? = null
 ) : Record
 
+data class LiveActivityConfig(
+    @Field val backgroundColor: String? = null
+) : Record
+
 class ExpoLiveUpdatesModule : Module() {
     private var notificationManager: NotificationManager? = null
 
@@ -54,8 +58,10 @@ class ExpoLiveUpdatesModule : Module() {
             notificationManager = notifManager
         }
 
-        Function("startForegroundService") { state: LiveActivityState ->
-            notificationManager?.startForegroundService(state)
+        Function("startForegroundService") { state: LiveActivityState, config: LiveActivityConfig ->
+            println("=========config.backgroundColor")
+            println(config.backgroundColor)
+            notificationManager?.startForegroundService(state, config)
         }
         Function("stopForegroundService") {
             notificationManager?.stopForegroundService()

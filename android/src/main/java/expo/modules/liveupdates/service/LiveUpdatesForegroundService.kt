@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Icon
 import android.media.Image
 import android.os.Build
 import android.os.IBinder
@@ -20,8 +21,17 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+import java.net.URL
+import java.util.UUID
+import androidx.core.graphics.toColorInt
+import resolveImage
 
 const val TAG = "LiveUpdatesForegroundService"
 const val CHANNEL_ID = "LiveUpdatesServiceChannel"
@@ -78,8 +88,11 @@ class LiveUpdatesForegroundService : Service() {
         val text = extras?.getString(ServiceActionExtra.setText) ?: "[text placeholder]"
         val title = extras?.getString(ServiceActionExtra.setTitle) ?: "[title placeholder]"
         val date = extras?.getLong(ServiceActionExtra.date)
+        val imageName = extras?.getString(ServiceActionExtra.imageName)
+        val smallImageName = extras?.getString(ServiceActionExtra.dynamicIslandImageName)
+        val backgroundColor = extras?.getString(ServiceActionExtra.backgroundColor)
 
-        val notification = createNotification(title, text, date)
+        val notification = createNotification(title, text, backgroundColor, imageName, smallImageName)
         val notificationManager = NotificationManagerCompat.from(this)
 
         if (ActivityCompat.checkSelfPermission(
@@ -94,10 +107,12 @@ class LiveUpdatesForegroundService : Service() {
     private fun createNotification(
         title: String,
         text: String,
-        date: Long? = System.currentTimeMillis(),
-//        image: Image? = null
+//        date: Long? = System.currentTimeMillis(),
+        backgroundColor: String? = null,
+        image: String? = null,
+        smallImageName: String? = null
     ): Notification {
-        val notificationDate: Long = date ?: System.currentTimeMillis()
+//        val notificationDate: Long = date ?: System.currentTimeMillis()
 
         val notificationIntent =
             Intent(
@@ -128,20 +143,54 @@ class LiveUpdatesForegroundService : Service() {
                 .setSmallIcon(android.R.drawable.star_on)
                 .setProgress(100, 40, false)
                 .setContentText(text)
-                .setColor(0x00238440)
-                .setWhen(notificationDate)
                 .setContentIntent(pendingIntent)
-                .setColor(999)
-                .setColorized(true)
 
 
-//        if (image !== null) {
-//            notificationBuilder.setLargeIcon(image)
-//        }
+        if (image != null) {
+            val bitmap = loadBitmapByName(image)
+            println("==================bitmap")
+            if (bitmap != null) {
+                notificationBuilder.setLargeIcon(bitmap)
+            }
+        }
+
+        if (smallImageName != null) {
+            val bitmap = loadBitmapByName(smallImageName)
+            println("==================bitmap")
+            if (bitmap != null) {
+                val icon = IconCompat.createWithBitmap(bitmap)
+                notificationBuilder.setSmallIcon(icon)
+            }
+        }
+
+        if(backgroundColor !== null) {
+            notificationBuilder.setColor(backgroundColor.toColorInt())
+            notificationBuilder.setColorized(true)
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
         }
         return notificationBuilder.build()
     }
+
+    private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
+        println("==================loadBitmapByName")
+        println(name)
+
+        val fileUrl = name.replace("file://", "")
+        val file = File(fileUrl)
+        if (file.exists()) {
+            println("FileCheck found file at **************")
+            println(file.absolutePath)
+
+            // wczytanie pliku jako bitmapy
+            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+            return bitmap
+        } else {
+            println("FileCheck could not find file at")
+            return null
+        }
+    }
 }
+

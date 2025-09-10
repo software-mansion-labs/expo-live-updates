@@ -16,12 +16,12 @@ export type LiveActivityState = {
 
 export type LiveActivityConfig = {
   backgroundColor?: string
-  titleColor?: string
-  subtitleColor?: string
-  progressViewTint?: string
-  progressViewLabelColor?: string
-  deepLinkUrl?: string
-  timerType?: DynamicIslandTimerType
+  // titleColor?: string
+  // subtitleColor?: string
+  // progressViewTint?: string
+  // progressViewLabelColor?: string
+  // deepLinkUrl?: string
+  // timerType?: DynamicIslandTimerType
 }
 
 export type ActivityTokenReceivedEvent = {
@@ -68,10 +68,9 @@ export function init() {
  */ 
 
 // config?: LiveActivityConfig
-export function startForegroundService(state: LiveActivityState ): Voidable<string> {
+export function startForegroundService(state: LiveActivityState, config: LiveActivityConfig): Voidable<string> {
   if (assertAndroid('startForegroundService')) {
-    console.log({state})
-    return ExpoLiveUpdatesModule.startForegroundService(state)}
+    return ExpoLiveUpdatesModule.startForegroundService(state, config)}
 }
 
 /**
