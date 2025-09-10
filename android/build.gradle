@@ -42,7 +42,7 @@ android {
   }
   sourceSets {
     main {
-      assets.srcDirs += ['src/main/assets', '../../example/assets/liveActivity']
+      assets.srcDirs += ['src/main/assets', '../../example/assets/LiveUpdates']
     }
   }
 }

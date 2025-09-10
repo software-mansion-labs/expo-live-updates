@@ -1,42 +1,84 @@
-const { defineConfig } = require('eslint/config')
-const expoConfig = require('eslint-config-expo/flat')
-const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended')
-const simpleImportSort = require('eslint-plugin-simple-import-sort')
+const js = require('@eslint/js')
+const tseslint = require('@typescript-eslint/eslint-plugin')
+const tsparser = require('@typescript-eslint/parser')
+const react = require('eslint-plugin-react')
+const reactNative = require('eslint-plugin-react-native')
+const reactHooks = require('eslint-plugin-react-hooks')
+const prettier = require('eslint-plugin-prettier')
+const prettierConfig = require('eslint-config-prettier')
+const globals = require('globals')
 
-module.exports = defineConfig([
-  expoConfig,
-  eslintPluginPrettierRecommended,
+module.exports = [
+  // Base JavaScript recommended rules
+  js.configs.recommended,
+
+  // TypeScript configuration
   {
-    ignores: ['build/*', 'plugin/build/*'],
-  },
-  defineConfig([
-    {
-      files: ['example/webpack.config.js'],
-      languageOptions: {
-        globals: {
-          __dirname: 'readonly',
-        },
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+        projectService: true,
+        tsconfigRootDir: __dirname,
+      },
+      globals: {
+        ...globals.es2022,
+        ...globals.node,
       },
     },
-    {
-      basePath: 'example',
-      settings: {
-        'import/resolver': {
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      ...tseslint.configs['recommended-type-checked'].rules,
+    },
+  },
+
+  // React and React Native configuration
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      'react': react,
+      'react-native': reactNative,
+      'react-hooks': reactHooks,
+      'prettier': prettier,
+    },
+    settings: {
+      'import/resolver': {
+        'babel-module': {
+          root: ['.'],
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
           alias: {
-            map: [['expo-live-activity', './src']],
-            extensions: ['.ts'],
+            'expo-live-updates': './src/*',
           },
         },
       },
     },
-    {
-      plugins: {
-        'simple-import-sort': simpleImportSort,
-      },
-      rules: {
-        'simple-import-sort/imports': 'error',
-        'simple-import-sort/exports': 'error',
-      },
+    rules: {
+      // React Native rules
+      ...reactNative.configs.all.rules,
+
+      // React Hooks rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
+
+      // General rules
+      'no-shadow': 'error',
+      '@typescript-eslint/no-floating-promises': 'off',
+
+      // TypeScript rules
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { disallowTypeAnnotations: false },
+      ],
+
+      // Import order disabled (as per comment in original config)
+      'import/order': 'off',
+
+      // Prettier rules
+      ...prettierConfig.rules,
+      'prettier/prettier': 'error',
     },
-  ]),
-])
+  },
+]

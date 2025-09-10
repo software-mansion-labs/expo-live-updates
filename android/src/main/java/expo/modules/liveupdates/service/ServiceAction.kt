@@ -5,8 +5,8 @@ object ServiceAction {
 }
 
 object ServiceActionExtra {
-    const val setTitle = "set-title"
-    const val setText = "set-text"
+    const val title = "title"
+    const val text = "text"
     const val date = "date"
     const val imageName = "imageName"
     const val dynamicIslandImageName = "dynamicIslandImageName"

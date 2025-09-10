@@ -85,8 +85,8 @@ class LiveUpdatesForegroundService : Service() {
     private fun updateNotificationContent(extras: Bundle?) {
         Log.i(TAG, "Update notification")
 
-        val text = extras?.getString(ServiceActionExtra.setText) ?: "[text placeholder]"
-        val title = extras?.getString(ServiceActionExtra.setTitle) ?: "[title placeholder]"
+        val text = extras?.getString(ServiceActionExtra.text) ?: "[text placeholder]"
+        val title = extras?.getString(ServiceActionExtra.title) ?: "[title placeholder]"
         val date = extras?.getLong(ServiceActionExtra.date)
         val imageName = extras?.getString(ServiceActionExtra.imageName)
         val smallImageName = extras?.getString(ServiceActionExtra.dynamicIslandImageName)

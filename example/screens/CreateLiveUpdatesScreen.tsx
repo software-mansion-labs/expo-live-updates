@@ -1,4 +1,11 @@
 import RNDateTimePicker from '@react-native-community/datetimepicker'
+import { Asset } from 'expo-asset'
+import {
+  startForegroundService,
+  stopForegroundService,
+  updateForegroundService,
+} from 'expo-live-updates'
+import { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
 import { useEffect, useState } from 'react'
 import {
   Button,
@@ -10,19 +17,10 @@ import {
   TextInput,
   View,
 } from 'react-native'
-import {
-  LiveActivityConfig,
-  LiveActivityState,
-  startForegroundService,
-  stopForegroundService,
-  updateForegroundService,
-} from 'expo-live-updates'
-import { Asset } from 'expo-asset'
 
 const toggle = (previousState: boolean) => !previousState
 
 export default function CreateLiveUpdatesScreen() {
-  const [activityId, setActivityID] = useState<string | null>()
   const [title, onChangeTitle] = useState('Title')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
@@ -45,7 +43,7 @@ export default function CreateLiveUpdatesScreen() {
     loadImages()
   }, [])
 
-  const getState = (): LiveActivityState => ({
+  const getState = (): LiveUpdateState => ({
     title,
     subtitle: passSubtitle ? subtitle : undefined,
     date: passDate ? date.getTime() : undefined,
@@ -53,47 +51,38 @@ export default function CreateLiveUpdatesScreen() {
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })
 
-  const startActivity = async () => {
+  const startLiveUpdate = async () => {
     Keyboard.dismiss()
 
     try {
-      const activityConfig: LiveActivityConfig = {
+      const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
       }
-      const id = startForegroundService(getState(), activityConfig)
-
-      //  {
-      //   ...activityConfig,
-      //   timerType: isTimerTypeDigital ? 'digital' : 'circular',
-      // }
-      if (id) setActivityID(id)
+      startForegroundService(getState(), liveUpdateConfig)
     } catch (e) {
       console.error('Starting Live Update failed! ' + e)
     }
   }
 
-  const stopActivity = () => {
+  const stopLiveUpdate = () => {
     try {
-      // activityId && LiveActivity.stopActivity(activityId, state)
-      activityId && stopForegroundService()
-      setActivityID(null)
+      stopForegroundService()
     } catch (e) {
-      console.error('Stopping activity failed! ' + e)
+      console.error('Stopping live update failed! ' + e)
     }
   }
 
-  const updateActivity = () => {
+  const updateLiveUpdate = () => {
     try {
-      // activityId && LiveActivity.updateActivity(activityId, state)
-      activityId && updateForegroundService(getState())
+      updateForegroundService(getState())
     } catch (e) {
-      console.error('Updating activity failed! ' + e)
+      console.error('Updating live update failed! ' + e)
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Set Live Activity title:</Text>
+      <Text style={styles.label}>Set Live live update title:</Text>
       <TextInput
         style={styles.input}
         onChangeText={onChangeTitle}
@@ -170,20 +159,12 @@ export default function CreateLiveUpdatesScreen() {
       )}
       <View style={styles.buttonsContainer}>
         <Button
-          title="Start Update"
-          onPress={startActivity}
-          disabled={title === '' || !!activityId}
+          title="Start Live Update"
+          onPress={startLiveUpdate}
+          disabled={title === ''}
         />
-        <Button
-          title="Stop Update"
-          onPress={stopActivity}
-          disabled={!activityId}
-        />
-        <Button
-          title="Update Update"
-          disabled={!activityId}
-          onPress={updateActivity}
-        />
+        <Button title="Stop Live Update" onPress={stopLiveUpdate} />
+        <Button title="Update Live Update" onPress={updateLiveUpdate} />
       </View>
     </View>
   )
@@ -191,10 +172,10 @@ export default function CreateLiveUpdatesScreen() {
 
 async function getImgsUri() {
   const [{ localUri: logoLocalUri }] = await Asset.loadAsync(
-    require(`./../assets/liveActivity/logo.png`),
+    require(`./../assets/LiveUpdates/logo.png`),
   )
   const [{ localUri: logoIslandLocalUri }] = await Asset.loadAsync(
-    require(`./../assets/liveActivity/logo-island.png`),
+    require(`./../assets/LiveUpdates/logo-island.png`),
   )
 
   return {
@@ -203,7 +184,7 @@ async function getImgsUri() {
   }
 }
 
-// const activityConfig: LiveActivityConfig = {
+// const liveUpdateConfig: LiveUpdateConfig = {
 //   backgroundColor: '001A72',
 //   // titleColor: 'EBEBF0',
 //   // subtitleColor: '#FFFFFF75',
@@ -213,55 +194,55 @@ async function getImgsUri() {
 // }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  timerControlsContainer: {
-    flexDirection: 'row',
-    marginTop: 15,
-    marginBottom: 15,
-    width: '90%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   buttonsContainer: {
-    padding: 30,
     gap: 15,
+    padding: 30,
+  },
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  diabledInput: {
+    backgroundColor: '#ECECEC',
+    borderColor: '#DEDEDE',
+    borderRadius: 10,
+    borderWidth: 1,
+    color: 'gray',
+    height: 45,
+    margin: 12,
+    padding: 10,
+    width: '90%',
+  },
+  input: {
+    borderColor: 'gray',
+    borderRadius: 10,
+    borderWidth: 1,
+    height: 45,
+    marginVertical: 12,
+    padding: 10,
+    width: '90%',
   },
   label: {
-    width: '90%',
     fontSize: 17,
+    width: '90%',
   },
   labelWithSwitch: {
     flexDirection: 'row',
-    width: '90%',
     paddingEnd: 15,
-  },
-  input: {
-    height: 45,
     width: '90%',
-    marginVertical: 12,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
-    padding: 10,
-  },
-  diabledInput: {
-    height: 45,
-    width: '90%',
-    margin: 12,
-    borderWidth: 1,
-    borderColor: '#DEDEDE',
-    backgroundColor: '#ECECEC',
-    color: 'gray',
-    borderRadius: 10,
-    padding: 10,
   },
   timerCheckboxContainer: {
     alignItems: 'flex-start',
-    width: '90%',
     justifyContent: 'center',
+    width: '90%',
+  },
+  timerControlsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 15,
+    marginTop: 15,
+    width: '90%',
   },
 })

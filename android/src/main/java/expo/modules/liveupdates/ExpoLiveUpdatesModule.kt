@@ -14,7 +14,7 @@ import expo.modules.kotlin.functions.Coroutine
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.records.Field
 
-data class LiveActivityState(
+data class LiveUpdateState(
     @Field val title: String,
     @Field val subtitle: String? = null,
     @Field val date: Long? = null,
@@ -22,7 +22,7 @@ data class LiveActivityState(
     @Field val dynamicIslandImageName: String? = null
 ) : Record
 
-data class LiveActivityConfig(
+data class LiveUpdateConfig(
     @Field val backgroundColor: String? = null
 ) : Record
 
@@ -58,7 +58,7 @@ class ExpoLiveUpdatesModule : Module() {
             notificationManager = notifManager
         }
 
-        Function("startForegroundService") { state: LiveActivityState, config: LiveActivityConfig ->
+        Function("startForegroundService") { state: LiveUpdateState, config: LiveUpdateConfig ->
             println("=========config.backgroundColor")
             println(config.backgroundColor)
             notificationManager?.startForegroundService(state, config)
@@ -66,7 +66,7 @@ class ExpoLiveUpdatesModule : Module() {
         Function("stopForegroundService") {
             notificationManager?.stopForegroundService()
         }
-        Function("updateForegroundService") { state: LiveActivityState ->
+        Function("updateForegroundService") { state: LiveUpdateState ->
             notificationManager?.updateNotification(state)
         }
     }
