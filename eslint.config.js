@@ -12,9 +12,9 @@ module.exports = [
   // Base JavaScript recommended rules
   js.configs.recommended,
 
-  // TypeScript configuration
+  // React and React Native configuration
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
@@ -28,21 +28,11 @@ module.exports = [
       },
     },
     plugins: {
-      '@typescript-eslint': tseslint,
-    },
-    rules: {
-      ...tseslint.configs['recommended-type-checked'].rules,
-    },
-  },
-
-  // React and React Native configuration
-  {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    plugins: {
       'react': react,
       'react-native': reactNative,
       'react-hooks': reactHooks,
       'prettier': prettier,
+      '@typescript-eslint': tseslint,
     },
     settings: {
       'import/resolver': {
@@ -56,8 +46,10 @@ module.exports = [
       },
     },
     rules: {
+      ...tseslint.configs['recommended-type-checked'].rules,
       // React Native rules
       ...reactNative.configs.all.rules,
+      'react-native/no-color-literals': 'off',
 
       // React Hooks rules
       'react-hooks/rules-of-hooks': 'error',
@@ -80,5 +72,6 @@ module.exports = [
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
     },
+    ignores: ["./build/*"],
   },
 ]

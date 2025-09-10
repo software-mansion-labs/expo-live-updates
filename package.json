@@ -13,7 +13,6 @@
     "clean": "expo-module clean",
     "lint": "expo-module lint",
     "lint:fix": "expo-module lint --fix",
-    "lint:libOnly": "expo-module eslint --ignore-pattern 'example/*'",
     "test": "expo-module test",
     "prepare": "expo-module prepare && rm .eslintrc.js",
     "prepublishOnly": "expo-module prepublishOnly",
@@ -44,6 +43,7 @@
     "eslint-config-prettier": "^10.1.1",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-babel-module": "^5.3.2",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-native": "^5.0.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
@@ -52,7 +52,7 @@
     "globals": "^16.4.0",
     "prettier": "^3.6.2",
     "react-native": "0.79.1",
-    "typescript-eslint": "^8.32.1"
+    "typescript-eslint": "^8.43.0"
   },
   "peerDependencies": {
     "expo": "*",

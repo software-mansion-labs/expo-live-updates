@@ -1,16 +1,14 @@
-import RNDateTimePicker from '@react-native-community/datetimepicker'
 import { Asset } from 'expo-asset'
 import {
   startForegroundService,
   stopForegroundService,
   updateForegroundService,
 } from 'expo-live-updates'
-import { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
+import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
 import { useEffect, useState } from 'react'
 import {
   Button,
   Keyboard,
-  Platform,
   StyleSheet,
   Switch,
   Text,
@@ -26,12 +24,11 @@ export default function CreateLiveUpdatesScreen() {
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
-  const [date, setDate] = useState(new Date())
-  const [isTimerTypeDigital, setTimerTypeDigital] = useState(false)
+  // const [date, setDate] = useState(new Date())
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
-  const [passDate, setPassDate] = useState(true)
+  // const [passDate, setPassDate] = useState(true)
 
   useEffect(() => {
     const loadImages = async () => {
@@ -46,12 +43,13 @@ export default function CreateLiveUpdatesScreen() {
   const getState = (): LiveUpdateState => ({
     title,
     subtitle: passSubtitle ? subtitle : undefined,
-    date: passDate ? date.getTime() : undefined,
+    // date: passDate ? date.getTime() : undefined,
+    date: undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })
 
-  const startLiveUpdate = async () => {
+  const startLiveUpdate = () => {
     Keyboard.dismiss()
 
     try {
@@ -127,7 +125,7 @@ export default function CreateLiveUpdatesScreen() {
         placeholder="Live Update background color"
         value={backgroundColor}
       />
-      {Platform.OS === 'ios' && (
+      {/* {Platform.OS === 'ios' && (
         <>
           <View style={styles.labelWithSwitch}>
             <Text style={styles.label}>Set Live Update timer:</Text>
@@ -156,7 +154,7 @@ export default function CreateLiveUpdatesScreen() {
             />
           </View>
         </>
-      )}
+      )} */}
       <View style={styles.buttonsContainer}>
         <Button
           title="Start Live Update"
@@ -208,14 +206,14 @@ const styles = StyleSheet.create({
     borderColor: '#DEDEDE',
     borderRadius: 10,
     borderWidth: 1,
-    color: 'gray',
+    color: '#808080',
     height: 45,
     margin: 12,
     padding: 10,
     width: '90%',
   },
   input: {
-    borderColor: 'gray',
+    borderColor: '#808080',
     borderRadius: 10,
     borderWidth: 1,
     height: 45,
@@ -230,11 +228,6 @@ const styles = StyleSheet.create({
   labelWithSwitch: {
     flexDirection: 'row',
     paddingEnd: 15,
-    width: '90%',
-  },
-  timerCheckboxContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
     width: '90%',
   },
   timerControlsContainer: {
