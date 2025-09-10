@@ -8,12 +8,14 @@ import expo.modules.liveupdates.LiveUpdateState // Assuming LiveUpdateState is i
 import expo.modules.liveupdates.LiveUpdatesForegroundService // Assuming LiveUpdatesForegroundService is in this package
 
 class NotificationManager(
-    private var context: Context
+    private var context: Context,
+    private val channelId: String
 ) {
     var lastConfig: LiveUpdateConfig? = null
 
     fun startForegroundService(state: LiveUpdateState, config: LiveUpdateConfig) {
         val serviceIntent = Intent(context, LiveUpdatesForegroundService::class.java)
+        serviceIntent.putExtra("channelId", channelId)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(serviceIntent)
         } else {

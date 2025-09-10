@@ -48,7 +48,7 @@ class ExpoLiveUpdatesModule : Module() {
                 androidNotificationManager?.createNotificationChannel(serviceChannel)
             }
 
-            val notifManager = NotificationManager(context)
+            val notifManager = NotificationManager(context, channelId)
             notificationManager = notifManager
         }
 

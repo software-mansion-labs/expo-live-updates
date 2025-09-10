@@ -26,10 +26,11 @@ import java.io.File
 import androidx.core.graphics.toColorInt
 
 const val TAG = "LiveUpdatesForegroundService"
-const val CHANNEL_ID = "LiveUpdatesServiceChannel"
+// Removed hardcoded channel id. It will be provided via intent extra.
 const val NOTIFICATION_ID = 1
 
 class LiveUpdatesForegroundService : Service() {
+    private var channelId: String? = null
     val broadcastReceiver =
         object : BroadcastReceiver() {
             @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -54,6 +55,7 @@ class LiveUpdatesForegroundService : Service() {
         flags: Int,
         startId: Int
     ): Int {
+        channelId = intent.getStringExtra("channelId")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             this.registerReceiver(
                 broadcastReceiver,
@@ -130,7 +132,7 @@ class LiveUpdatesForegroundService : Service() {
             NotificationCompat
                 .Builder(
                     this,
-                    CHANNEL_ID
+                    channelId ?: "DUPADUPA"
                 ).setContentTitle(title)
                 .setSmallIcon(android.R.drawable.star_on)
                 .setProgress(100, 40, false)
