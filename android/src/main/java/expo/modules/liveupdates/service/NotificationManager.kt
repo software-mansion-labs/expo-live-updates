@@ -6,11 +6,12 @@ import android.os.Build
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState // Assuming LiveUpdateState is in this package, if not, this will need adjustment
 import expo.modules.liveupdates.LiveUpdatesForegroundService // Assuming LiveUpdatesForegroundService is in this package
-import expo.modules.liveupdates.service.ServiceAction
 
 class NotificationManager(
     private var context: Context
 ) {
+    var lastConfig: LiveUpdateConfig? = null
+
     fun startForegroundService(state: LiveUpdateState, config: LiveUpdateConfig) {
         val serviceIntent = Intent(context, LiveUpdatesForegroundService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -33,7 +34,6 @@ class NotificationManager(
         context.stopService(serviceIntent)
     }
 
-    var lastConfig: LiveUpdateConfig? = null
 
     fun updateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null) {
         if(config !== null) {
@@ -43,9 +43,6 @@ class NotificationManager(
 
         intent.putExtra(ServiceActionExtra.title, state.title)
         intent.putExtra(ServiceActionExtra.text, state.subtitle ?: "")
-    println("==================dsadsadsaa")
-        println(state.title)
-
         intent.putExtra(ServiceActionExtra.date, state.date)
         intent.putExtra(ServiceActionExtra.imageName, state.imageName)
         intent.putExtra( ServiceActionExtra.dynamicIslandImageName, state.dynamicIslandImageName)

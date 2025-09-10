@@ -2,7 +2,7 @@ import { NativeModule, requireNativeModule } from 'expo'
 import type { LiveUpdateState, LiveUpdateConfig } from './types'
 
 declare class ExpoLiveUpdatesModule extends NativeModule {
-  init: () => void
+  init: (channelId: string, channelName: string) => void
   startForegroundService: (
     state: LiveUpdateState,
     config: LiveUpdateConfig,

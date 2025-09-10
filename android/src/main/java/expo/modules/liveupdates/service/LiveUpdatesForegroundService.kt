@@ -11,8 +11,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Icon
-import android.media.Image
 import android.os.Build
 import android.os.IBinder
 import android.os.Bundle
@@ -24,14 +22,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
-import java.net.URL
-import java.util.UUID
 import androidx.core.graphics.toColorInt
-import resolveImage
 
 const val TAG = "LiveUpdatesForegroundService"
 const val CHANNEL_ID = "LiveUpdatesServiceChannel"
@@ -148,7 +140,6 @@ class LiveUpdatesForegroundService : Service() {
 
         if (image != null) {
             val bitmap = loadBitmapByName(image)
-            println("==================bitmap")
             if (bitmap != null) {
                 notificationBuilder.setLargeIcon(bitmap)
             }
@@ -156,7 +147,6 @@ class LiveUpdatesForegroundService : Service() {
 
         if (smallImageName != null) {
             val bitmap = loadBitmapByName(smallImageName)
-            println("==================bitmap")
             if (bitmap != null) {
                 val icon = IconCompat.createWithBitmap(bitmap)
                 notificationBuilder.setSmallIcon(icon)
@@ -175,20 +165,16 @@ class LiveUpdatesForegroundService : Service() {
     }
 
     private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
-        println("==================loadBitmapByName")
-        println(name)
-
         val fileUrl = name.replace("file://", "")
         val file = File(fileUrl)
         if (file.exists()) {
-            println("FileCheck found file at **************")
-            println(file.absolutePath)
-
-            // wczytanie pliku jako bitmapy
             val bitmap = BitmapFactory.decodeFile(file.absolutePath)
             return bitmap
         } else {
-            println("FileCheck could not find file at")
+            Log.e(
+                TAG,
+                "FileCheck could not find file at $fileUrl"
+            )
             return null
         }
     }

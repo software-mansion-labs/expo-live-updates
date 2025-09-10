@@ -2,16 +2,11 @@ package expo.modules.liveupdates
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.URL
 import android.app.NotificationChannel
 import androidx.core.content.ContextCompat.getSystemService
-import java.util.Timer
-import java.util.TimerTask
 import android.os.Build
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.kotlin.functions.Coroutine
-import expo.modules.kotlin.Promise
 import expo.modules.kotlin.records.Field
 
 data class LiveUpdateState(
@@ -37,30 +32,27 @@ class ExpoLiveUpdatesModule : Module() {
         // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
         // The module will be accessible from `requireNativeModule('ExpoLiveUpdatesModule')` in JavaScript.
         Name("ExpoLiveUpdatesModule")
-        OnCreate {
-            // prepare notification channel
+
+        AsyncFunction("init") { channelId: String, channelName: String ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val serviceChannel =
                     NotificationChannel(
-                        CHANNEL_ID,
-                        "Android Live Updates",
+                        channelId,
+                        channelName,
                         android.app.NotificationManager.IMPORTANCE_DEFAULT
                     )
                 serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_LOW
 
-                val notificationManager =
+                val androidNotificationManager =
                     getSystemService(context, android.app.NotificationManager::class.java)
-                notificationManager?.createNotificationChannel(serviceChannel)
+                androidNotificationManager?.createNotificationChannel(serviceChannel)
             }
-        }
-        AsyncFunction("init") {
+
             val notifManager = NotificationManager(context)
             notificationManager = notifManager
         }
 
         Function("startForegroundService") { state: LiveUpdateState, config: LiveUpdateConfig ->
-            println("=========config.backgroundColor")
-            println(config.backgroundColor)
             notificationManager?.startForegroundService(state, config)
         }
         Function("stopForegroundService") {
