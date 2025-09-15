@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -26,7 +27,6 @@ import java.io.File
 import androidx.core.graphics.toColorInt
 
 const val TAG = "LiveUpdatesForegroundService"
-// Removed hardcoded channel id. It will be provided via intent extra.
 const val NOTIFICATION_ID = 1
 
 class LiveUpdatesForegroundService : Service() {
@@ -50,6 +50,7 @@ class LiveUpdatesForegroundService : Service() {
 
     override fun onBind(intent: Intent): IBinder? = null
 
+    @RequiresApi(Build.VERSION_CODES.BAKLAVA)
     override fun onStartCommand(
         intent: Intent,
         flags: Int,
@@ -66,7 +67,6 @@ class LiveUpdatesForegroundService : Service() {
         val notification = createNotification("Starting Live Updates...", "")
         startForeground(NOTIFICATION_ID, notification)
 
-        // Perform your long-running task here
         return START_STICKY
     }
 
@@ -132,12 +132,18 @@ class LiveUpdatesForegroundService : Service() {
             NotificationCompat
                 .Builder(
                     this,
-                    channelId ?: "DUPADUPA"
+                    channelId,
                 ).setContentTitle(title)
                 .setSmallIcon(android.R.drawable.star_on)
-                .setProgress(100, 40, false)
                 .setContentText(text)
                 .setContentIntent(pendingIntent)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA){
+            notificationBuilder.setStyle(NotificationCompat.ProgressStyle().setProgressIndeterminate(true))
+            notificationBuilder.setShortCriticalText("SWM")
+            notificationBuilder.setOngoing(true)
+            notificationBuilder.setRequestPromotedOngoing(true)
+        }
 
 
         if (image != null) {
@@ -155,7 +161,7 @@ class LiveUpdatesForegroundService : Service() {
             }
         }
 
-        if(backgroundColor !== null) {
+        if(backgroundColor !== null && Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
             notificationBuilder.setColor(backgroundColor.toColorInt())
             notificationBuilder.setColorized(true)
         }

@@ -7,11 +7,5 @@ export type LiveUpdateState = {
 }
 
 export type LiveUpdateConfig = {
-  backgroundColor?: string
-  // titleColor?: string
-  // subtitleColor?: string
-  // progressViewTint?: string
-  // progressViewLabelColor?: string
-  // deepLinkUrl?: string
-  // timerType?: DynamicIslandTimerType
+  backgroundColor?: string // only SDK < 16
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import expo.modules.liveupdates.LiveUpdateConfig
-import expo.modules.liveupdates.LiveUpdateState // Assuming LiveUpdateState is in this package, if not, this will need adjustment
-import expo.modules.liveupdates.LiveUpdatesForegroundService // Assuming LiveUpdatesForegroundService is in this package
+import expo.modules.liveupdates.LiveUpdateState 
+import expo.modules.liveupdates.LiveUpdatesForegroundService 
 
 class NotificationManager(
     private var context: Context,

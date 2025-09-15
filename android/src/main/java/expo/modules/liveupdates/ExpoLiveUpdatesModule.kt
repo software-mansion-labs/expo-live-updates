@@ -5,6 +5,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import android.app.NotificationChannel
 import androidx.core.content.ContextCompat.getSystemService
 import android.os.Build
+import android.util.Log
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
 import expo.modules.kotlin.records.Field
@@ -41,11 +42,22 @@ class ExpoLiveUpdatesModule : Module() {
                         channelName,
                         android.app.NotificationManager.IMPORTANCE_DEFAULT
                     )
-                serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_LOW
+                serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
 
                 val androidNotificationManager =
                     getSystemService(context, android.app.NotificationManager::class.java)
                 androidNotificationManager?.createNotificationChannel(serviceChannel)
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+                    val canPostLiveUpdates =
+                        androidNotificationManager.canPostPromotedNotifications()
+
+                    if (canPostLiveUpdates) {
+                        Log.i("ExpoLiveUpdatesModule", "✅ can post live updates")
+                    } else {
+                        Log.i("ExpoLiveUpdatesModule", "❌ cannot post live updates")
+                    }
+                }
             }
 
             val notifManager = NotificationManager(context, channelId)

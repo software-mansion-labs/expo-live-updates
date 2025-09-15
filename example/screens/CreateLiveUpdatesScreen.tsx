@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import {
   Button,
   Keyboard,
+  PermissionsAndroid,
   StyleSheet,
   Switch,
   Text,
@@ -24,11 +25,9 @@ export default function CreateLiveUpdatesScreen() {
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
-  // const [date, setDate] = useState(new Date())
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
-  // const [passDate, setPassDate] = useState(true)
 
   useEffect(() => {
     const loadImages = async () => {
@@ -38,6 +37,7 @@ export default function CreateLiveUpdatesScreen() {
     }
 
     loadImages()
+    requestCameraPermission()
   }, [])
 
   const getState = (): LiveUpdateState => ({
@@ -115,7 +115,7 @@ export default function CreateLiveUpdatesScreen() {
 
       <View style={styles.labelWithSwitch}>
         <Text style={styles.label}>
-          Set Live Update background color (hex):
+          Set Live Update background color (hex) (for SDK &lt; 16 Baklava):
         </Text>
       </View>
       <TextInput
@@ -125,36 +125,6 @@ export default function CreateLiveUpdatesScreen() {
         placeholder="Live Update background color"
         value={backgroundColor}
       />
-      {/* {Platform.OS === 'ios' && (
-        <>
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Set Live Update timer:</Text>
-            <Switch
-              onValueChange={() => setPassDate(toggle)}
-              value={passDate}
-            />
-          </View>
-          <View style={styles.timerControlsContainer}>
-            {passDate && (
-              <RNDateTimePicker
-                value={date}
-                mode="time"
-                onChange={(event, date) => {
-                  date && setDate(date)
-                }}
-                minimumDate={new Date(Date.now() + 60 * 1000)}
-              />
-            )}
-          </View>
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Timer shown as text:</Text>
-            <Switch
-              onValueChange={setTimerTypeDigital}
-              value={isTimerTypeDigital}
-            />
-          </View>
-        </>
-      )} */}
       <View style={styles.buttonsContainer}>
         <Button
           title="Start Live Update"
@@ -182,14 +152,28 @@ async function getImgsUri() {
   }
 }
 
-// const liveUpdateConfig: LiveUpdateConfig = {
-//   backgroundColor: '001A72',
-//   // titleColor: 'EBEBF0',
-//   // subtitleColor: '#FFFFFF75',
-//   // progressViewTint: '38ACDD',
-//   // progressViewLabelColor: '#FFFFFF',
-//   // deepLinkUrl: '/dashboard',
-// }
+// TODO: add POST_PROMOTED_NOTIFICATIONS also
+const requestCameraPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      {
+        title: 'Notifications Permission',
+        message: 'Expo Live Updates Example needs access to the notifications',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('Notifications permission granted')
+    } else {
+      console.log('Notifications permission denied')
+    }
+  } catch (err) {
+    console.warn(err)
+  }
+}
 
 const styles = StyleSheet.create({
   buttonsContainer: {
