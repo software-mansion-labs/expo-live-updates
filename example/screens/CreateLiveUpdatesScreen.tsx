@@ -10,6 +10,7 @@ import {
   Button,
   Keyboard,
   PermissionsAndroid,
+  Platform,
   StyleSheet,
   Switch,
   Text,
@@ -51,6 +52,7 @@ export default function CreateLiveUpdatesScreen() {
 
   const startLiveUpdate = () => {
     Keyboard.dismiss()
+    console.log('+++++++++++++++++++++++' + Platform.Version)
 
     try {
       const liveUpdateConfig: LiveUpdateConfig = {
@@ -113,18 +115,22 @@ export default function CreateLiveUpdatesScreen() {
         />
       </View>
 
-      <View style={styles.labelWithSwitch}>
-        <Text style={styles.label}>
-          Set Live Update background color (hex) (for SDK &lt; 16 Baklava):
-        </Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        onChangeText={setBackgroundColor}
-        autoCapitalize="none"
-        placeholder="Live Update background color"
-        value={backgroundColor}
-      />
+      {!isBaklava() && (
+        <>
+          <View style={styles.labelWithSwitch}>
+            <Text style={styles.label}>
+              Set Live Update background color (hex) (for SDK &lt; 16 Baklava):
+            </Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            onChangeText={setBackgroundColor}
+            autoCapitalize="none"
+            placeholder="Live Update background color"
+            value={backgroundColor}
+          />
+        </>
+      )}
       <View style={styles.buttonsContainer}>
         <Button
           title="Start Live Update"
@@ -136,6 +142,10 @@ export default function CreateLiveUpdatesScreen() {
       </View>
     </View>
   )
+}
+
+function isBaklava() {
+  return Platform.OS === 'android' && Platform.Version >= 36
 }
 
 async function getImgsUri() {
@@ -212,14 +222,6 @@ const styles = StyleSheet.create({
   labelWithSwitch: {
     flexDirection: 'row',
     paddingEnd: 15,
-    width: '90%',
-  },
-  timerControlsContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 15,
-    marginTop: 15,
     width: '90%',
   },
 })
