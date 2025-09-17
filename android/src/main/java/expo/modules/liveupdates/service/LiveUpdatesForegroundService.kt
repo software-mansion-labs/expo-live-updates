@@ -134,7 +134,6 @@ class LiveUpdatesForegroundService : Service() {
                 ).setContentTitle(title)
                 .setSmallIcon(android.R.drawable.star_on)
                 .setContentText(text)
-                .se
                 .setContentIntent(pendingIntent)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA){
