@@ -9,6 +9,6 @@ object ServiceActionExtra {
     const val text = "text"
     const val date = "date"
     const val imageName = "imageName"
-    const val dynamicIslandImageName = "dynamicIslandImageName"
+    const val smallImageName = "smallImageName"
     const val backgroundColor = "backgroundColor"
 }

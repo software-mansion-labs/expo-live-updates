@@ -47,7 +47,7 @@ class NotificationManager(
         intent.putExtra(ServiceActionExtra.text, state.subtitle ?: "")
         intent.putExtra(ServiceActionExtra.date, state.date)
         intent.putExtra(ServiceActionExtra.imageName, state.imageName)
-        intent.putExtra( ServiceActionExtra.dynamicIslandImageName, state.dynamicIslandImageName)
+        intent.putExtra( ServiceActionExtra.smallImageName, state.smallImageName)
         intent.putExtra( ServiceActionExtra.backgroundColor, lastConfig?.backgroundColor?: "000")
 
         context.sendBroadcast(intent)

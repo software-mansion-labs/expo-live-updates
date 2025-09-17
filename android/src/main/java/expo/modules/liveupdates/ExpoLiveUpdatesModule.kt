@@ -15,7 +15,7 @@ data class LiveUpdateState(
     @Field val subtitle: String? = null,
     @Field val date: Long? = null,
     @Field val imageName: String? = null,
-    @Field val dynamicIslandImageName: String? = null
+    @Field val smallImageName: String? = null
 ) : Record
 
 data class LiveUpdateConfig(
