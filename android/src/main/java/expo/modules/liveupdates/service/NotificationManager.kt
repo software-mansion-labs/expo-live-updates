@@ -24,7 +24,7 @@ class NotificationManager(
 
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
             updateNotification(state, config)
-        }, 500) // 500 ms delay
+        }, 500) // 500 ms delay to make sure service started <- TODO: handle it better
     }
 
     fun stopForegroundService() {

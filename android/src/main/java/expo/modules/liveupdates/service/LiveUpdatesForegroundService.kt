@@ -101,12 +101,10 @@ class LiveUpdatesForegroundService : Service() {
     private fun createNotification(
         title: String,
         text: String,
-//        date: Long? = System.currentTimeMillis(),
         backgroundColor: String? = null,
         image: String? = null,
         smallImageName: String? = null
     ): Notification {
-//        val notificationDate: Long = date ?: System.currentTimeMillis()
 
         val notificationIntent =
             Intent(
