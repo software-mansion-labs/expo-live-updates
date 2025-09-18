@@ -30,7 +30,7 @@ const val TAG = "LiveUpdatesForegroundService"
 const val NOTIFICATION_ID = 1
 
 class LiveUpdatesForegroundService : Service() {
-    private var channelId: String? = null
+    private var channelId: String = ""
     val broadcastReceiver =
         object : BroadcastReceiver() {
             @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -56,14 +56,12 @@ class LiveUpdatesForegroundService : Service() {
         flags: Int,
         startId: Int
     ): Int {
-        channelId = intent.getStringExtra("channelId")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.registerReceiver(
-                broadcastReceiver,
-                IntentFilter(ServiceAction.updateLiveUpdate),
-                RECEIVER_EXPORTED
-            )
-        }
+        channelId = intent.getStringExtra("channelId").toString()
+        this.registerReceiver(
+            broadcastReceiver,
+            IntentFilter(ServiceAction.updateLiveUpdate),
+            RECEIVER_EXPORTED
+        )
         val notification = createNotification("Starting Live Updates...", "")
         startForeground(NOTIFICATION_ID, notification)
 
