@@ -34,12 +34,13 @@
   "author": "Kamil Owczarz",
   "homepage": "https://github.com/software-mansion-labs/expo-live-updates#readme",
   "dependencies": {
-    "babel-plugin-module-resolver": "^5.0.2"
+    "babel-plugin-module-resolver": "^5.0.2",
+    "react": "19.1.0"
   },
   "devDependencies": {
-    "@types/react": "~19.0.0",
+    "@types/react": "~19.1.10",
     "eslint": "^9.35.0",
-    "eslint-config-expo": "~9.2.0",
+    "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-babel-module": "^5.3.2",
@@ -47,11 +48,11 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-native": "^5.0.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "expo": "~53.0.0",
+    "expo": "^54.0.8",
     "expo-module-scripts": "^4.1.10",
     "globals": "^16.4.0",
     "prettier": "^3.6.2",
-    "react-native": "0.79.1",
+    "react-native": "0.81.4",
     "typescript-eslint": "^8.43.0"
   },
   "peerDependencies": {
