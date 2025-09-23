@@ -1,14 +1,15 @@
 package expo.modules.liveupdates
 
-import expo.modules.kotlin.modules.Module
-import expo.modules.kotlin.modules.ModuleDefinition
 import android.app.NotificationChannel
-import androidx.core.content.ContextCompat.getSystemService
 import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
+import expo.modules.kotlin.modules.Module
+import expo.modules.kotlin.modules.ModuleDefinition
+import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.kotlin.records.Field
+
 
 data class LiveUpdateState(
     @Field val title: String,
@@ -24,6 +25,7 @@ data class LiveUpdateConfig(
 
 class ExpoLiveUpdatesModule : Module() {
     private var notificationManager: NotificationManager? = null
+    private var firebaseService: FirebaseService ?= null
 
     // Each module class must implement the definition function. The definition consists of components
     // that describes the module's functionality and behavior.
@@ -35,6 +37,8 @@ class ExpoLiveUpdatesModule : Module() {
         Name("ExpoLiveUpdatesModule")
 
         AsyncFunction("init") { channelId: String, channelName: String ->
+            firebaseService = FirebaseService()
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val serviceChannel =
                     NotificationChannel(
@@ -72,6 +76,11 @@ class ExpoLiveUpdatesModule : Module() {
         }
         Function("updateForegroundService") { state: LiveUpdateState ->
             notificationManager?.updateNotification(state)
+
+            if(firebaseService !== null){
+                Log.i("FOREGROUND SERVICE", firebaseService.toString())
+                firebaseService?.printToken()
+            }
         }
     }
 

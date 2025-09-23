@@ -75,4 +75,12 @@ dependencies {
 
   // Optional - APIs for SplashScreen, including compatibility helpers on devices prior Android 12
   implementation "androidx.core:core-splashscreen:1.2.0-rc01"
+
+  // TODO: check version
+  // Configure Firebase
+  implementation 'com.google.firebase:firebase-messaging:24.0.1'
+
+  // TODO: probably not needed
+  // implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+  // implementation("com.google.firebase:firebase-messaging")
 }

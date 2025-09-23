@@ -25,13 +25,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     edgeToEdgeEnabled: true,
-    package: 'expo.modules.liveupdates.example',
+    package: 'com.test.test',
     permissions: [
       'android.permission.POST_NOTIFICATIONS',
       'android.permission.FOREGROUND_SERVICE_SPECIAL_USE',
       'android.permission.FOREGROUND_SERVICE',
       'android.permission.POST_PROMOTED_NOTIFICATIONS',
     ],
+    googleServicesFile: './google-services.json',
   },
   web: {
     favicon: './assets/favicon.png',
@@ -58,5 +59,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+    '../plugin/withFirebaseService',
   ],
 })
