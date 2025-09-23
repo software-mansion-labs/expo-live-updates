@@ -5,7 +5,6 @@ Library based on expo modules for Android Live Updates
 # How to run example
 
 To run example app:
-
 1. Prepare Android emulator with `Android Baklava Preview` SDK. Just `Android 16.0 ("Baklava")` won't allow to run Live Updates.
 2. `npm i`
 3. Go to `example/` directory and un `npm i` & `npm run android`.
