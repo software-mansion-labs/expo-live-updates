@@ -30,7 +30,7 @@ const val TAG = "LiveUpdatesForegroundService"
 const val NOTIFICATION_ID = 1
 
 class LiveUpdatesForegroundService : Service() {
-    private var channelId: String = ""
+    private var channelId: String? = null
     val broadcastReceiver =
         object : BroadcastReceiver() {
             @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -56,14 +56,19 @@ class LiveUpdatesForegroundService : Service() {
         flags: Int,
         startId: Int
     ): Int {
-        channelId = intent.getStringExtra("channelId").toString()
-        this.registerReceiver(
-            broadcastReceiver,
-            IntentFilter(ServiceAction.updateLiveUpdate),
-            RECEIVER_EXPORTED
-        )
-        val notification = createNotification("Starting Live Updates...", "")
-        startForeground(NOTIFICATION_ID, notification)
+        channelId = intent.getStringExtra("channelId")
+
+        if(channelId !== null) {
+            this.registerReceiver(
+                broadcastReceiver,
+                IntentFilter(ServiceAction.updateLiveUpdate),
+                RECEIVER_EXPORTED
+            )
+            val notification = createNotification("Starting Live Updates...", "")
+            if(notification !== null){
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        }
 
         return START_STICKY
     }
@@ -91,7 +96,7 @@ class LiveUpdatesForegroundService : Service() {
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
-        ) {
+            && notification !== null) {
             notificationManager.notify(NOTIFICATION_ID, notification)
         }
     }
@@ -102,70 +107,73 @@ class LiveUpdatesForegroundService : Service() {
         backgroundColor: String? = null,
         image: String? = null,
         smallImageName: String? = null
-    ): Notification {
+    ): Notification? {
+        if(channelId === null){
+            return null
+        } else {
+            val notificationIntent =
+                Intent(
+                    "android.intent.action.MAIN"
+                )
 
-        val notificationIntent =
-            Intent(
-                "android.intent.action.MAIN"
+            notificationIntent.setComponent(
+                ComponentName(
+                    "expo.modules.liveupdates.example",
+                    "expo.modules.liveupdates.example.MainActivity"
+                )
             )
-
-        notificationIntent.setComponent(
-            ComponentName(
-                "expo.modules.liveupdates.example",
-                "expo.modules.liveupdates.example.MainActivity"
-            )
-        )
-        notificationIntent.addCategory("android.intent.category.LAUNCHER")
-        val pendingIntent =
-            PendingIntent.getActivity(
-                this,
-                0,
-                notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-        val notificationBuilder =
-            NotificationCompat
-                .Builder(
+            notificationIntent.addCategory("android.intent.category.LAUNCHER")
+            val pendingIntent =
+                PendingIntent.getActivity(
                     this,
-                    channelId,
-                ).setContentTitle(title)
-                .setSmallIcon(android.R.drawable.star_on)
-                .setContentText(text)
-                .setContentIntent(pendingIntent)
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA){
-            notificationBuilder.setStyle(NotificationCompat.ProgressStyle().setProgressIndeterminate(true))
-            notificationBuilder.setShortCriticalText("SWM")
-            notificationBuilder.setOngoing(true)
-            notificationBuilder.setRequestPromotedOngoing(true)
-        }
+            val notificationBuilder =
+                NotificationCompat
+                    .Builder(
+                        this,
+                        channelId!!,
+                    ).setContentTitle(title)
+                    .setSmallIcon(android.R.drawable.star_on)
+                    .setContentText(text)
+                    .setContentIntent(pendingIntent)
 
-
-        if (image != null) {
-            val bitmap = loadBitmapByName(image)
-            if (bitmap != null) {
-                notificationBuilder.setLargeIcon(bitmap)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA){
+                notificationBuilder.setStyle(NotificationCompat.ProgressStyle().setProgressIndeterminate(true))
+                notificationBuilder.setShortCriticalText("SWM")
+                notificationBuilder.setOngoing(true)
+                notificationBuilder.setRequestPromotedOngoing(true)
             }
-        }
 
-        if (smallImageName != null) {
-            val bitmap = loadBitmapByName(smallImageName)
-            if (bitmap != null) {
-                val icon = IconCompat.createWithBitmap(bitmap)
-                notificationBuilder.setSmallIcon(icon)
+
+            if (image != null) {
+                val bitmap = loadBitmapByName(image)
+                if (bitmap != null) {
+                    notificationBuilder.setLargeIcon(bitmap)
+                }
             }
-        }
 
-        if(backgroundColor !== null && Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
-            notificationBuilder.setColor(backgroundColor.toColorInt())
-            notificationBuilder.setColorized(true)
-        }
+            if (smallImageName != null) {
+                val bitmap = loadBitmapByName(smallImageName)
+                if (bitmap != null) {
+                    val icon = IconCompat.createWithBitmap(bitmap)
+                    notificationBuilder.setSmallIcon(icon)
+                }
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
+            if(backgroundColor !== null && Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
+                notificationBuilder.setColor(backgroundColor.toColorInt())
+                notificationBuilder.setColorized(true)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
+            }
+            return notificationBuilder.build()
         }
-        return notificationBuilder.build()
     }
 
     private fun loadBitmapByName(name: String): android.graphics.Bitmap? {

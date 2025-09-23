@@ -47,6 +47,7 @@ android {
   }
 }
 
+// https://developer.android.com/jetpack/androidx/releases/core#declaring_dependencies
 dependencies {
   def core_version = "1.17.0"
 
