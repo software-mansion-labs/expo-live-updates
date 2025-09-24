@@ -17,6 +17,7 @@
     "expo": "^54.0.8",
     "expo-asset": "~12.0.8",
     "expo-build-properties": "~1.0.8",
+    "expo-clipboard": "~8.0.7",
     "expo-config": "^1.0.0",
     "expo-linking": "~8.0.8",
     "react": "19.1.0",

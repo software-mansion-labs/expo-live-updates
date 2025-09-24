@@ -56,3 +56,27 @@ export function updateForegroundService(state: LiveUpdateState) {
   if (assertAndroid('updateForegroundService'))
     return ExpoLiveUpdatesModule.updateForegroundService(state)
 }
+
+let nativeTokenPromise: Promise<string> | null = null
+
+/**
+ * Returns current native FCM token
+ */
+export async function getDevicePushTokenAsync() {
+  if (assertAndroid('updateForegroundService')) {
+    let devicePushToken: string | null
+    if (nativeTokenPromise) {
+      // Reuse existing Promise
+      devicePushToken = await nativeTokenPromise
+    } else {
+      // Create a new Promise and clear it afterwards
+      nativeTokenPromise = ExpoLiveUpdatesModule.getDevicePushTokenAsync()
+      devicePushToken = await nativeTokenPromise
+      nativeTokenPromise = null
+    }
+
+    return devicePushToken
+  } else {
+    return null
+  }
+}

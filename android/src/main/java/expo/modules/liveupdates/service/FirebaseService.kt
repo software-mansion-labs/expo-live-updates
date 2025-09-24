@@ -45,7 +45,7 @@ class FirebaseService: FirebaseMessagingService() {
         notificationManager = androidNotificationManager
     }
 
-    // TODO: this needs to go to react native
+    // TODO: update token in RN
     override fun onNewToken(token: String) {
         Log.i(FIREBASE_TAG, "new token received: $token")
         super.onNewToken(token)
@@ -110,24 +110,6 @@ class FirebaseService: FirebaseMessagingService() {
         }
 
         return progressStyle
-    }
-
-    fun printToken() {
-        FirebaseMessaging.getInstance().getToken()
-            .addOnSuccessListener(OnSuccessListener { token: String? ->
-                if (!TextUtils.isEmpty(token)) {
-                    Log.d(TAG, "received token: $token")
-                } else {
-                    Log.w(TAG, "token is null")
-                }
-            }).addOnFailureListener(OnFailureListener { e: Exception? -> })
-            .addOnCanceledListener(OnCanceledListener {})
-            .addOnCompleteListener(OnCompleteListener { task: Task<String?>? ->
-                Log.v(
-                    TAG,
-                    "token:" + task!!.getResult()
-                )
-            })
     }
 }
 

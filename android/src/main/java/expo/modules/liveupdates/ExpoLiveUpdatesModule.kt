@@ -6,6 +6,8 @@ import android.app.NotificationChannel
 import androidx.core.content.ContextCompat.getSystemService
 import android.os.Build
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
+import expo.modules.kotlin.Promise
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
 import expo.modules.kotlin.records.Field
@@ -21,6 +23,8 @@ data class LiveUpdateState(
 data class LiveUpdateConfig(
     @Field val backgroundColor: String? = null
 ) : Record
+
+private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
 
 class ExpoLiveUpdatesModule : Module() {
     private var notificationManager: NotificationManager? = null
@@ -73,8 +77,24 @@ class ExpoLiveUpdatesModule : Module() {
         Function("updateForegroundService") { state: LiveUpdateState ->
             notificationManager?.updateNotification(state)
         }
-    }
 
+        AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
+                FirebaseMessaging.getInstance().token
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            val exception = task.exception
+                            promise.reject(GET_PUSH_TOKEN_FAILED_CODE, "Fetching the token failed: ${exception?.message ?: "unknown"}", exception)
+                            return@addOnCompleteListener
+                        }
+                        val token = task.result ?: run {
+                            promise.reject(GET_PUSH_TOKEN_FAILED_CODE, "Fetching the token failed. Invalid token.", null)
+                            return@addOnCompleteListener
+                        }
+
+                        promise.resolve(token)
+            }
+        }
+    }
 
     private val context
         get() = requireNotNull(appContext.reactContext)
