@@ -5,10 +5,45 @@ Library based on expo modules for Android Live Updates
 # How to run example
 
 To run example app:
+
 1. Prepare Android emulator with `Android Baklava Preview` SDK. Just `Android 16.0 ("Baklava")` won't allow to run Live Updates.
 2. `npm i`
 3. Go to `example/` directory and run `npm i` & `npm run android`.
 4. Run `npm run android` (or `npx expo run:android --device` to select proper emulator) in `example/` directory again.
+
+# How to add Firebase Cloud Messaging
+
+1. Create project at [Firebase](https://firebase.google.com/).
+2. Add android app to created project. Set package name to `com.com.test` and download `google-service.json`. Skip other steps of Firebase instructions.
+3. Place `google-service.json` in `/example` folder.
+
+# Send Firebase Message
+
+To send message to the device you need to sent POST request to `https://fcm.googleapis.com/v1/projects/<your-project-id>/messages:send` with example body:
+
+```
+{
+   "message":{
+      "token":<device-token>,
+      "data":{
+        "title":"Firebase message",
+        "body":"This is a message sent via Firebase",
+        "currentProgress":"20",
+        "currentProgressPointOne":"40",
+        "currentProgressPointTwo":"80"
+      }
+   }
+}
+```
+
+and two headers:
+
+```
+    Content-Type: application/json
+    Authorization: Bearer <your-bearer-token>
+```
+
+For testing you can generate bearer token from [Google Auth Playground](https://developers.google.com/oauthplayground/).
 
 # API documentation
 
