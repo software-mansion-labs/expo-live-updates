@@ -54,9 +54,9 @@ class ExpoLiveUpdatesModule : Module() {
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
                     val canPostLiveUpdates =
-                        androidNotificationManager.canPostPromotedNotifications()
+                        androidNotificationManager?.canPostPromotedNotifications()
 
-                    if (canPostLiveUpdates) {
+                    if (canPostLiveUpdates == true) {
                         Log.i("ExpoLiveUpdatesModule", "✅ can post live updates")
                     } else {
                         Log.i("ExpoLiveUpdatesModule", "❌ cannot post live updates")

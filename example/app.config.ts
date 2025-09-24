@@ -38,25 +38,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     favicon: './assets/favicon.png',
   },
   plugins: [
+    'expo-asset',
     [
       '../plugin/withLiveUpdatesForegroundService',
       {
         foregroundServiceType: 'specialUse',
         explanationForSpecialUse: 'explanation_for_special_use',
-      },
-    ],
-    [
-      // TODO: Should be deleted after succesfull upgrade to Expo 54 which support Android 36 Baklava SDK
-      'expo-build-properties',
-      {
-        android: {
-          compileSdkVersion: 36,
-          targetSdkVersion: 36,
-          buildToolsVersion: '36.0.0',
-        },
-        ios: {
-          deploymentTarget: '15.1',
-        },
       },
     ],
     '../plugin/withFirebaseService',
