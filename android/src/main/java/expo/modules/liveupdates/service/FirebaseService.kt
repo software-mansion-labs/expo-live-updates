@@ -5,17 +5,10 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.tasks.OnCanceledListener
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
@@ -24,7 +17,6 @@ import kotlin.String
 const val FIREBASE_TAG = "FIREBASE SERVICE"
 const val CHANNEL_ID = "Firebase notifications channel"
 const val CHANNEL_DESCRIPTION = "Channel to handle push notifications form Firebase"
-const val  FIREBASE_NOTIFICATION_ID = 32
 
 
 class FirebaseService: FirebaseMessagingService() {
@@ -60,7 +52,7 @@ class FirebaseService: FirebaseMessagingService() {
 
         if(notificationManager !== null){
             Log.i(FIREBASE_TAG, "message displayed")
-            notificationManager!!.notify(FIREBASE_NOTIFICATION_ID, notification)
+            notificationManager!!.notify(NOTIFICATION_ID, notification)
         }
     }
 

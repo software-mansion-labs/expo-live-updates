@@ -19,12 +19,18 @@ To run example app:
 
 # Send Firebase Message
 
-To send message to the device you need to sent POST request to `https://fcm.googleapis.com/v1/projects/<your-project-id>/messages:send` with example body:
+To create/update live update via FCM you need to send data message:
 
 ```
+POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
+Host: fcm.googleapis.com
+Content-Type: application/json
+Authorization: Bearer <YOUR_BEARER_TOKEN>
+Content-Length: 399
+
 {
    "message":{
-      "token":<device-token>,
+      "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
         "title":"Firebase message",
         "body":"This is a message sent via Firebase",
@@ -36,14 +42,19 @@ To send message to the device you need to sent POST request to `https://fcm.goog
 }
 ```
 
-and two headers:
+Request variables:
 
-```
-    Content-Type: application/json
-    Authorization: Bearer <your-bearer-token>
-```
+- `<YOUR_PROJECT_ID>` - can be found in `google-service.json`
+- testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google Auth Playground](https://developers.google.com/oauthplayground/)
+- `<DEVICE_PUSH_TOKEN>` - can be copied in the example app
 
-For testing you can generate bearer token from [Google Auth Playground](https://developers.google.com/oauthplayground/).
+# TODO
+
+- change package name in `google-service.jso`
+- handle push token change
+- delete live update using FCM
+- support missing fields of live update
+- support multiple live updates at once
 
 # API documentation
 

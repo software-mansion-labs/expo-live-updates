@@ -25,6 +25,7 @@ data class LiveUpdateConfig(
 ) : Record
 
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
+const val NOTIFICATION_ID = 1
 
 class ExpoLiveUpdatesModule : Module() {
     private var notificationManager: NotificationManager? = null
@@ -46,7 +47,6 @@ class ExpoLiveUpdatesModule : Module() {
                         channelName,
                         android.app.NotificationManager.IMPORTANCE_DEFAULT
                     )
-                serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
 
                 val androidNotificationManager =
                     getSystemService(context, android.app.NotificationManager::class.java)
