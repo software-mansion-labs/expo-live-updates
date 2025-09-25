@@ -57,13 +57,14 @@ class LiveUpdatesForegroundService : Service() {
     ): Int {
         channelId = intent.getStringExtra("channelId")
 
-        if(channelId !== null){
-            this.registerReceiver(
-                broadcastReceiver,
-                IntentFilter(ServiceAction.updateLiveUpdate),
-                RECEIVER_EXPORTED
-            )
-            val notification = createNotification("Starting Live Updates...", "")
+        this.registerReceiver(
+            broadcastReceiver,
+            IntentFilter(ServiceAction.updateLiveUpdate),
+            RECEIVER_EXPORTED
+        )
+
+        val notification = createNotification("Starting Live Updates...", "")
+        if(notification !== null){
             startForeground(NOTIFICATION_ID, notification)
         }
 
@@ -92,7 +93,7 @@ class LiveUpdatesForegroundService : Service() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED && notification !== null
         ) {
             notificationManager.notify(NOTIFICATION_ID, notification)
         }
