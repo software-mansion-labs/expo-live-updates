@@ -30,7 +30,7 @@ class FirebaseService: FirebaseMessagingService() {
         val channel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_DESCRIPTION,
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_DEFAULT
         )
 
         androidNotificationManager.createNotificationChannel(channel)

@@ -59,9 +59,7 @@ export function updateForegroundService(state: LiveUpdateState) {
 
 export async function getDevicePushTokenAsync() {
   if (assertAndroid('updateForegroundService')) {
-    const devicePushToken =
-      await ExpoLiveUpdatesModule.getDevicePushTokenAsync()
-    return devicePushToken
+    return await ExpoLiveUpdatesModule.getDevicePushTokenAsync()
   } else {
     return null
   }

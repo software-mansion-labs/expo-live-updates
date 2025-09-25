@@ -45,12 +45,12 @@ Content-Length: 399
 Request variables:
 
 - `<YOUR_PROJECT_ID>` - can be found in `google-service.json`
-- testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google Auth Playground](https://developers.google.com/oauthplayground/)
-- `<DEVICE_PUSH_TOKEN>` - can be copied in the example app
+- testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
+- `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
 
 # TODO
 
-- change package name in `google-service.jso`
+- change package name in `google-service.json`
 - handle push token change
 - delete live update using FCM
 - support missing fields of live update
