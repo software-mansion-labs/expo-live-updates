@@ -1,83 +1,78 @@
 package expo.modules.liveupdates
 
-import expo.modules.kotlin.modules.Module
-import expo.modules.kotlin.modules.ModuleDefinition
 import android.app.NotificationChannel
-import androidx.core.content.ContextCompat.getSystemService
 import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
+import expo.modules.kotlin.modules.Module
+import expo.modules.kotlin.modules.ModuleDefinition
+import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.kotlin.records.Field
 
 data class LiveUpdateState(
-    @Field val title: String,
-    @Field val subtitle: String? = null,
-    @Field val date: Long? = null,
-    @Field val imageName: String? = null,
-    @Field val smallImageName: String? = null
+  @Field val title: String,
+  @Field val subtitle: String? = null,
+  @Field val date: Long? = null,
+  @Field val imageName: String? = null,
+  @Field val smallImageName: String? = null,
 ) : Record
 
-data class LiveUpdateConfig(
-    @Field val backgroundColor: String? = null
-) : Record
+data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
 class ExpoLiveUpdatesModule : Module() {
-    private var notificationManager: NotificationManager? = null
+  private var notificationManager: NotificationManager? = null
 
-    // Each module class must implement the definition function. The definition consists of components
-    // that describes the module's functionality and behavior.
-    // See https://docs.expo.dev/modules/module-api for more details about available components.
-    override fun definition() = ModuleDefinition {
-        // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-        // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-        // The module will be accessible from `requireNativeModule('ExpoLiveUpdatesModule')` in JavaScript.
-        Name("ExpoLiveUpdatesModule")
+  // Each module class must implement the definition function. The definition consists of components
+  // that describes the module's functionality and behavior.
+  // See https://docs.expo.dev/modules/module-api for more details about available components.
+  override fun definition() = ModuleDefinition {
+    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a
+    // string as an argument.
+    // Can be inferred from module's class name, but it's recommended to set it explicitly for
+    // clarity.
+    // The module will be accessible from `requireNativeModule('ExpoLiveUpdatesModule')` in
+    // JavaScript.
+    Name("ExpoLiveUpdatesModule")
 
-        AsyncFunction("init") { channelId: String, channelName: String ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val serviceChannel =
-                    NotificationChannel(
-                        channelId,
-                        channelName,
-                        android.app.NotificationManager.IMPORTANCE_DEFAULT
-                    )
-                serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
+    AsyncFunction("init") { channelId: String, channelName: String ->
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val serviceChannel =
+          NotificationChannel(
+            channelId,
+            channelName,
+            android.app.NotificationManager.IMPORTANCE_DEFAULT,
+          )
+        serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
 
-                val androidNotificationManager =
-                    getSystemService(context, android.app.NotificationManager::class.java)
-                androidNotificationManager?.createNotificationChannel(serviceChannel)
+        val androidNotificationManager =
+          getSystemService(context, android.app.NotificationManager::class.java)
+        androidNotificationManager?.createNotificationChannel(serviceChannel)
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-                    val canPostLiveUpdates =
-                        androidNotificationManager.canPostPromotedNotifications()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+          val canPostLiveUpdates = androidNotificationManager.canPostPromotedNotifications()
 
-                    if (canPostLiveUpdates) {
-                        Log.i("ExpoLiveUpdatesModule", "✅ can post live updates")
-                    } else {
-                        Log.i("ExpoLiveUpdatesModule", "❌ cannot post live updates")
-                    }
-                }
-            }
-
-            val notifManager = NotificationManager(context, channelId)
-            notificationManager = notifManager
+          if (canPostLiveUpdates) {
+            Log.i("ExpoLiveUpdatesModule", "✅ can post live updates")
+          } else {
+            Log.i("ExpoLiveUpdatesModule", "❌ cannot post live updates")
+          }
         }
+      }
 
-        Function("startForegroundService") { state: LiveUpdateState, config: LiveUpdateConfig ->
-            notificationManager?.startForegroundService(state, config)
-        }
-        Function("stopForegroundService") {
-            notificationManager?.stopForegroundService()
-        }
-        Function("updateForegroundService") { state: LiveUpdateState ->
-            notificationManager?.updateNotification(state)
-        }
+      val notifManager = NotificationManager(context, channelId)
+      notificationManager = notifManager
     }
 
+    Function("startForegroundService") { state: LiveUpdateState, config: LiveUpdateConfig ->
+      notificationManager?.startForegroundService(state, config)
+    }
+    Function("stopForegroundService") { notificationManager?.stopForegroundService() }
+    Function("updateForegroundService") { state: LiveUpdateState ->
+      notificationManager?.updateNotification(state)
+    }
+  }
 
-    private val context
-        get() = requireNotNull(appContext.reactContext)
+  private val context
+    get() = requireNotNull(appContext.reactContext)
 }
-
-
