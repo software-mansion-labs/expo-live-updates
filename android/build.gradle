@@ -1,0 +1,78 @@
+apply plugin: 'com.android.library'
+
+group = 'expo.modules.liveupdates'
+version = '0.1.0'
+
+def expoModulesCorePlugin = new File(project(":expo-modules-core").projectDir.absolutePath, "ExpoModulesCorePlugin.gradle")
+apply from: expoModulesCorePlugin
+applyKotlinExpoModulesCorePlugin()
+useCoreDependencies()
+useExpoPublishing()
+
+// If you want to use the managed Android SDK versions from expo-modules-core, set this to true.
+// The Android SDK versions will be bumped from time to time in SDK releases and may introduce breaking changes in your module code.
+// Most of the time, you may like to manage the Android SDK versions yourself.
+def useManagedAndroidSdkVersions = false
+if (useManagedAndroidSdkVersions) {
+  useDefaultAndroidSdkVersions()
+} else {
+  buildscript {
+    // Simple helper that allows the root project to override versions declared by this library.
+    ext.safeExtGet = { prop, fallback ->
+      rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
+  }
+  project.android {
+    compileSdkVersion safeExtGet("compileSdkVersion", 36)
+    defaultConfig {
+      minSdkVersion safeExtGet("minSdkVersion", 21)
+      targetSdkVersion safeExtGet("targetSdkVersion", 36)
+    }
+  }
+}
+
+android {
+  namespace "expo.modules.liveupdates"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+  lintOptions {
+    abortOnError false
+  }
+  sourceSets {
+    main {
+      assets.srcDirs += ['src/main/assets', '../../example/assets/LiveUpdates']
+    }
+  }
+}
+
+// TODO: Should be deleted after succesfull upgrade to Expo 54 which support Android 36 Baklava SDK 
+dependencies {
+  def core_version = "1.17.0"
+
+  // Java language implementation
+  implementation "androidx.core:core:$core_version"
+  // Kotlin
+  implementation "androidx.core:core-ktx:$core_version"
+
+  // To use RoleManagerCompat
+  implementation "androidx.core:core-role:1.1.0"
+
+  // To use the Animator APIs
+  implementation "androidx.core:core-animation:1.0.0"
+  // To test the Animator APIs
+  androidTestImplementation "androidx.core:core-animation-testing:1.0.0"
+
+  // Optional - To enable APIs that query the performance characteristics of GMS devices.
+  implementation "androidx.core:core-performance:1.0.0"
+
+  // Optional - to use ShortcutManagerCompat to donate shortcuts to be used by Google
+  implementation "androidx.core:core-google-shortcuts:1.1.0"
+
+  // Optional - to support backwards compatibility of RemoteViews
+  implementation "androidx.core:core-remoteviews:1.1.0"
+
+  // Optional - APIs for SplashScreen, including compatibility helpers on devices prior Android 12
+  implementation "androidx.core:core-splashscreen:1.2.0-rc01"
+}

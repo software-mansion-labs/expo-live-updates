@@ -6,19 +6,57 @@
     "Android",
     "Live Updates"
   ],
-  "homepage": "https://github.com/software-mansion-labs/expo-live-updates#readme",
-  "bugs": {
-    "url": "https://github.com/software-mansion-labs/expo-live-updates/issues"
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "lint:fix": "expo-module lint --fix",
+    "test": "expo-module test",
+    "prepare": "expo-module prepare && rm .eslintrc.js",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module",
+    "open:ios": "xed example/ios",
+    "open:android": "open -a \"Android Studio\" example/android",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --check -w .",
+    "postinstall": "cd example && npm install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/software-mansion-labs/expo-live-updates.git"
   },
+  "bugs": {
+    "url": "https://github.com/software-mansion-labs/expo-live-updates/issues"
+  },
   "license": "MIT",
   "author": "Kamil Owczarz",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "homepage": "https://github.com/software-mansion-labs/expo-live-updates#readme",
+  "dependencies": {
+    "babel-plugin-module-resolver": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.0.0",
+    "eslint": "^9.35.0",
+    "eslint-config-expo": "~9.2.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-babel-module": "^5.3.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-native": "^5.0.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "expo": "~53.0.0",
+    "expo-module-scripts": "^4.1.10",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "react-native": "0.79.1",
+    "typescript-eslint": "^8.43.0"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
   }
 }
