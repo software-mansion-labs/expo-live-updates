@@ -27,7 +27,6 @@ import java.io.File
 import androidx.core.graphics.toColorInt
 
 const val TAG = "LiveUpdatesForegroundService"
-const val NOTIFICATION_ID = 1
 
 class LiveUpdatesForegroundService : Service() {
     private var channelId: String? = null
