@@ -1,9 +1,9 @@
-name: Check formatting
+name: Static checks
+
 on:
-  push:
   pull_request:
 jobs:
-  static-checks:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
