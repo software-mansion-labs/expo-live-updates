@@ -2,16 +2,16 @@ package expo.modules.liveupdates.service
 
 data class NotificationData(
     var title: String? = null,
-    var body: String? = null,
-    var currentProgress: Int? = null,
-    var currentProgressPointOne: Int? = null,
-    var currentProgressPointTwo: Int? = null,
+    var subtitle: String? = null,
+    var progress: Int? = null,
+    var progressPoints: List<Int> = listOf(),
 ) {
     constructor(data: Map<String, String>) : this() {
-        this.title = data.getValue("title")
-        this.body = data.getValue("body")
-        this.currentProgress = data.getValue("currentProgress").toInt()
-        this.currentProgressPointOne = data.getValue("currentProgressPointOne").toInt()
-        this.currentProgressPointTwo = data.getValue("currentProgressPointTwo").toInt()
+        this.title = data["title"]
+        this.subtitle = data["subtitle"]
+        this.progress = data["progress"]?.toIntOrNull()
+        this.progressPoints =
+            listOfNotNull(data["progressPointOne"], data["progressPointTwo"])
+                .mapNotNull { it.toIntOrNull() }
     }
 }

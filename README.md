@@ -34,9 +34,9 @@ Content-Length: 399
       "data":{
         "title":"Firebase message",
         "body":"This is a message sent via Firebase",
-        "currentProgress":"20",
-        "currentProgressPointOne":"40",
-        "currentProgressPointTwo":"80"
+        "progress":"20",
+        "progressPointOne":"40",
+        "progressPointTwo":"80"
       }
    }
 }

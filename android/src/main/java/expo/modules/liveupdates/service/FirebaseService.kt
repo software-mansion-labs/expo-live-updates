@@ -67,7 +67,7 @@ class FirebaseService: FirebaseMessagingService() {
                 )
                 .setContentTitle(notificationData.title)
                 .setSmallIcon(android.R.drawable.star_on)
-                .setContentText(notificationData.body)
+                .setContentText(notificationData.subtitle)
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA){
@@ -85,21 +85,12 @@ class FirebaseService: FirebaseMessagingService() {
     private fun createProgressStyle(notificationData: NotificationData): NotificationCompat.ProgressStyle {
         val progressStyle = NotificationCompat.ProgressStyle()
 
-        val progress = notificationData.currentProgress
-        val first = notificationData.currentProgressPointOne
-        val second = notificationData.currentProgressPointTwo
+        if(notificationData.progress !== null){
+            progressStyle.setProgress(notificationData.progress!!)
+        }
 
-        if(progress !== null){
-            progressStyle.setProgress(progress)
-        }
-        if(first !== null){
-            progressStyle.addProgressPoint(
-                NotificationCompat.ProgressStyle.Point(first))
-        }
-        if(second !== null){
-            progressStyle.addProgressPoint(
-                NotificationCompat.ProgressStyle.Point(second))
-        }
+        notificationData.progressPoints.forEach { it -> progressStyle.addProgressPoint(
+            NotificationCompat.ProgressStyle.Point(it))}
 
         return progressStyle
     }
