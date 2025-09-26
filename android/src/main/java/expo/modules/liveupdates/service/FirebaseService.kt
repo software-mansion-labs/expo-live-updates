@@ -16,8 +16,7 @@ import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
 const val CHANNEL_ID = "Firebase notifications channel"
-const val CHANNEL_DESCRIPTION = "Channel to handle push notifications form Firebase"
-
+const val CHANNEL_DESCRIPTION = "Channel to handle push notifications for Live Updates form Firebase"
 
 class FirebaseService: FirebaseMessagingService() {
 
@@ -50,7 +49,7 @@ class FirebaseService: FirebaseMessagingService() {
         val notificationData = NotificationData(message.data)
         val notification = createNotification(notificationData)
 
-        if(notificationManager !== null){
+        notificationManager?.let {
             Log.i(FIREBASE_TAG, "message displayed")
             notificationManager!!.notify(NOTIFICATION_ID, notification)
         }
@@ -85,8 +84,8 @@ class FirebaseService: FirebaseMessagingService() {
     private fun createProgressStyle(notificationData: NotificationData): NotificationCompat.ProgressStyle {
         val progressStyle = NotificationCompat.ProgressStyle()
 
-        if(notificationData.progress !== null){
-            progressStyle.setProgress(notificationData.progress!!)
+        notificationData.progress?.let {
+            progressStyle.setProgress(it)
         }
 
         notificationData.progressPoints.forEach { it -> progressStyle.addProgressPoint(

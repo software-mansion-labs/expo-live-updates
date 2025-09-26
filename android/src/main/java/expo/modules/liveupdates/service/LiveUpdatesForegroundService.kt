@@ -64,7 +64,7 @@ class LiveUpdatesForegroundService : Service() {
         )
 
         val notification = createNotification("Starting Live Updates...", "")
-        if(notification !== null){
+        notification?.let {
             startForeground(NOTIFICATION_ID, notification)
         }
 
