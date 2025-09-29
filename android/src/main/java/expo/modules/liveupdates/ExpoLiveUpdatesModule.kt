@@ -4,6 +4,8 @@ import android.app.NotificationChannel
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
+import com.google.firebase.messaging.FirebaseMessaging
+import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
@@ -19,6 +21,9 @@ data class LiveUpdateState(
 ) : Record
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
+
+private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
+const val NOTIFICATION_ID = 1
 
 class ExpoLiveUpdatesModule : Module() {
   private var notificationManager: NotificationManager? = null
@@ -43,16 +48,15 @@ class ExpoLiveUpdatesModule : Module() {
             channelName,
             android.app.NotificationManager.IMPORTANCE_DEFAULT,
           )
-        serviceChannel.importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
 
         val androidNotificationManager =
           getSystemService(context, android.app.NotificationManager::class.java)
         androidNotificationManager?.createNotificationChannel(serviceChannel)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-          val canPostLiveUpdates = androidNotificationManager.canPostPromotedNotifications()
+          val canPostLiveUpdates = androidNotificationManager?.canPostPromotedNotifications()
 
-          if (canPostLiveUpdates) {
+          if (canPostLiveUpdates == true) {
             Log.i("ExpoLiveUpdatesModule", "✅ can post live updates")
           } else {
             Log.i("ExpoLiveUpdatesModule", "❌ cannot post live updates")
@@ -70,6 +74,31 @@ class ExpoLiveUpdatesModule : Module() {
     Function("stopForegroundService") { notificationManager?.stopForegroundService() }
     Function("updateForegroundService") { state: LiveUpdateState ->
       notificationManager?.updateNotification(state)
+    }
+    AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
+      FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+        if (!task.isSuccessful) {
+          val exception = task.exception
+          promise.reject(
+            GET_PUSH_TOKEN_FAILED_CODE,
+            "Fetching the token failed: ${exception?.message ?: "unknown"}",
+            exception,
+          )
+          return@addOnCompleteListener
+        }
+        val token =
+          task.result
+            ?: run {
+              promise.reject(
+                GET_PUSH_TOKEN_FAILED_CODE,
+                "Fetching the token failed. Invalid token.",
+                null,
+              )
+              return@addOnCompleteListener
+            }
+
+        promise.resolve(token)
+      }
     }
   }
 

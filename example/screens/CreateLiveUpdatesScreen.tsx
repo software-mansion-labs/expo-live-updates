@@ -3,6 +3,7 @@ import {
   startForegroundService,
   stopForegroundService,
   updateForegroundService,
+  getDevicePushTokenAsync,
 } from 'expo-live-updates'
 import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
 import { useEffect, useState } from 'react'
@@ -17,6 +18,7 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import * as Clipboard from 'expo-clipboard'
 
 const toggle = (previousState: boolean) => !previousState
 
@@ -29,6 +31,7 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+  const [tokenClipboardLoading, setTokenClipboardLoading] = useState(false)
 
   useEffect(() => {
     const loadImages = async () => {
@@ -77,6 +80,15 @@ export default function CreateLiveUpdatesScreen() {
       updateForegroundService(getState())
     } catch (e) {
       console.error('Updating live update failed! ' + e)
+    }
+  }
+
+  const copyPushToken = () => {
+    if (!tokenClipboardLoading) {
+      setTokenClipboardLoading(true)
+      getDevicePushTokenAsync()
+        .then(token => Clipboard.setStringAsync(token ?? 'someting went wrong'))
+        .finally(() => setTokenClipboardLoading(false))
     }
   }
 
@@ -139,6 +151,11 @@ export default function CreateLiveUpdatesScreen() {
         />
         <Button title="Stop Live Update" onPress={stopLiveUpdate} />
         <Button title="Update Live Update" onPress={updateLiveUpdate} />
+        <Button
+          title="Copy Push Token"
+          onPress={copyPushToken}
+          disabled={tokenClipboardLoading}
+        />
       </View>
     </View>
   )
