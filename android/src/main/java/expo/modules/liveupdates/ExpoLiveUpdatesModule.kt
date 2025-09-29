@@ -70,7 +70,7 @@ class ExpoLiveUpdatesModule : Module() {
       val notifManager = NotificationManager(context, CHANNEL_ID)
 
       notificationManager = notifManager
-      notificationManager.startLiveUpdatesService()
+      notificationManager?.startLiveUpdatesService()
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->

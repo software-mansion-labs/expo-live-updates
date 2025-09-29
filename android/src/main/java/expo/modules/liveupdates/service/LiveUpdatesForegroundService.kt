@@ -116,7 +116,7 @@ class LiveUpdatesForegroundService : Service() {
         )
 
       val notificationBuilder =
-        NotificationCompat.Builder(this, channelId)
+        NotificationCompat.Builder(this, channelId!!)
           .setContentTitle(title)
           .setSmallIcon(android.R.drawable.star_on)
           .setContentText(text)
