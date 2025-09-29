@@ -49,11 +49,12 @@ Request variables:
 
 # TODO
 
-- change package name in `google-service.json`
-- handle push token change
-- delete live update using FCM
-- support missing fields of live update
-- support multiple live updates at once
+- Update Expo to 54 to handle Android 16 Baklava SDK and get rid of those wild hacks marked with `TODO:` in code
+- Change package name in `google-service.json`
+- Handle push token change
+- Delete live update using FCM
+- Support missing fields of live update
+- Support multiple live updates at once
 
 # API documentation
 
