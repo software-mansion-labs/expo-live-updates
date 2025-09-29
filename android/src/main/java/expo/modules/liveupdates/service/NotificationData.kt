@@ -11,8 +11,6 @@ data class NotificationData(
     this.subtitle = data["subtitle"]
     this.progress = data["progress"]?.toIntOrNull()
     this.progressPoints =
-      listOf(data["progressPointOne"], data["progressPointTwo"]).mapNotNull {
-        it?.toIntOrNull()
-      }
+      listOf(data["progressPointOne"], data["progressPointTwo"]).mapNotNull { it?.toIntOrNull() }
   }
 }
