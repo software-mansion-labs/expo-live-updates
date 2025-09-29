@@ -37,6 +37,7 @@ class LiveUpdatesForegroundService : Service() {
         Log.i(TAG, "Intent received  ${intent.action}")
         when (intent.action) {
           ServiceAction.updateLiveUpdate -> updateNotificationContent(intent.extras)
+          ServiceAction.cancelLiveUpdate -> cancelNotification()
         }
       }
     }
@@ -47,14 +48,11 @@ class LiveUpdatesForegroundService : Service() {
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     channelId = intent.getStringExtra("channelId")
 
-    this.registerReceiver(
-      broadcastReceiver,
-      IntentFilter(ServiceAction.updateLiveUpdate),
-      RECEIVER_EXPORTED,
-    )
+    val intentFilter = IntentFilter()
+    intentFilter.addAction(ServiceAction.updateLiveUpdate)
+    intentFilter.addAction(ServiceAction.cancelLiveUpdate)
 
-    val notification = createNotification("Starting Live Updates...", "")
-    notification?.let { startForeground(NOTIFICATION_ID, notification) }
+    this.registerReceiver(broadcastReceiver, intentFilter, RECEIVER_EXPORTED)
 
     return START_STICKY
   }
@@ -84,6 +82,11 @@ class LiveUpdatesForegroundService : Service() {
     ) {
       notificationManager.notify(NOTIFICATION_ID, notification)
     }
+  }
+
+  private fun cancelNotification() {
+    val notificationManager = NotificationManagerCompat.from(this)
+    notificationManager.cancel(NOTIFICATION_ID)
   }
 
   private fun createNotification(
@@ -148,9 +151,6 @@ class LiveUpdatesForegroundService : Service() {
         notificationBuilder.setColorized(true)
       }
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
-      }
       return notificationBuilder.build()
     } else {
       return null

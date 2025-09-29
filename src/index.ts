@@ -28,23 +28,23 @@ export function init(channelId: string, channelName: string) {
  */
 
 // config?: LiveUpdateConfig
-export function startForegroundService(
+export function startLiveUpdate(
   state: LiveUpdateState,
   config: LiveUpdateConfig,
 ): Voidable<string> {
-  if (assertAndroid('startForegroundService')) {
-    return ExpoLiveUpdatesModule.startForegroundService(state, config)
+  if (assertAndroid('startLiveUpdate')) {
+    return ExpoLiveUpdatesModule.startLiveUpdate(state, config)
   }
 }
 
 /**
- * @param {string} id The identifier of the live update to stop.
+ * @param {string} id The identifier of the live update to cancel.
  * @param {LiveUpdateState} state The updated state for the live live update.
  */
 // id: string, state: LiveUpdateState
-export function stopForegroundService() {
-  if (assertAndroid('stopForegroundService'))
-    return ExpoLiveUpdatesModule.stopForegroundService()
+export function cancelLiveUpdate() {
+  if (assertAndroid('cancelLiveUpdate'))
+    return ExpoLiveUpdatesModule.cancelLiveUpdate()
 }
 
 /**
@@ -52,13 +52,13 @@ export function stopForegroundService() {
  * @param {LiveUpdateState} state The updated state for the live live update.
  */
 // id: string, state: LiveUpdateState
-export function updateForegroundService(state: LiveUpdateState) {
-  if (assertAndroid('updateForegroundService'))
-    return ExpoLiveUpdatesModule.updateForegroundService(state)
+export function updateLiveUpdate(state: LiveUpdateState) {
+  if (assertAndroid('updateLiveUpdate'))
+    return ExpoLiveUpdatesModule.updateLiveUpdate(state)
 }
 
 export async function getDevicePushTokenAsync() {
-  if (assertAndroid('updateForegroundService')) {
+  if (assertAndroid('getDevicePushTokenAsync')) {
     return await ExpoLiveUpdatesModule.getDevicePushTokenAsync()
   } else {
     return null

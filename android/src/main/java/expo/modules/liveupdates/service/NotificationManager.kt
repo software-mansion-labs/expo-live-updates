@@ -2,34 +2,20 @@ package expo.modules.liveupdates.service
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
 import expo.modules.liveupdates.LiveUpdatesForegroundService
 
+val TAG = "FIREBASE SERVICE"
+
 class NotificationManager(private var context: Context, private val channelId: String) {
   var lastConfig: LiveUpdateConfig? = null
 
-  fun startForegroundService(state: LiveUpdateState, config: LiveUpdateConfig) {
+  fun startLiveUpdatesService() {
     val serviceIntent = Intent(context, LiveUpdatesForegroundService::class.java)
     serviceIntent.putExtra("channelId", channelId)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      context.startForegroundService(serviceIntent)
-    } else {
-      context.startService(serviceIntent)
-    }
 
-    android.os
-      .Handler(android.os.Looper.getMainLooper())
-      .postDelayed(
-        { updateNotification(state, config) },
-        500,
-      ) // 500 ms delay to make sure service started <- TODO: handle it better
-  }
-
-  fun stopForegroundService() {
-    val serviceIntent = Intent(context, LiveUpdatesForegroundService::class.java)
-    context.stopService(serviceIntent)
+    context.startService(serviceIntent)
   }
 
   fun updateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null) {
@@ -45,6 +31,11 @@ class NotificationManager(private var context: Context, private val channelId: S
     intent.putExtra(ServiceActionExtra.smallImageName, state.smallImageName)
     intent.putExtra(ServiceActionExtra.backgroundColor, lastConfig?.backgroundColor ?: "000")
 
+    context.sendBroadcast(intent)
+  }
+
+  fun cancelNotification() {
+    val intent = Intent(ServiceAction.cancelLiveUpdate)
     context.sendBroadcast(intent)
   }
 }

@@ -1,8 +1,8 @@
 import { Asset } from 'expo-asset'
 import {
-  startForegroundService,
-  stopForegroundService,
-  updateForegroundService,
+  startLiveUpdate,
+  cancelLiveUpdate,
+  updateLiveUpdate,
   getDevicePushTokenAsync,
 } from 'expo-live-updates'
 import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
@@ -53,7 +53,7 @@ export default function CreateLiveUpdatesScreen() {
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })
 
-  const startLiveUpdate = () => {
+  const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
     console.log('+++++++++++++++++++++++' + Platform.Version)
 
@@ -61,29 +61,29 @@ export default function CreateLiveUpdatesScreen() {
       const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
       }
-      startForegroundService(getState(), liveUpdateConfig)
+      startLiveUpdate(getState(), liveUpdateConfig)
     } catch (e) {
       console.error('Starting Live Update failed! ' + e)
     }
   }
 
-  const stopLiveUpdate = () => {
+  const handleCancelLiveUpdate = () => {
     try {
-      stopForegroundService()
+      cancelLiveUpdate()
     } catch (e) {
-      console.error('Stopping live update failed! ' + e)
+      console.error('canceling live update failed! ' + e)
     }
   }
 
-  const updateLiveUpdate = () => {
+  const handleUpdateLiveUpdate = () => {
     try {
-      updateForegroundService(getState())
+      updateLiveUpdate(getState())
     } catch (e) {
       console.error('Updating live update failed! ' + e)
     }
   }
 
-  const copyPushToken = () => {
+  const handleCopyPushToken = () => {
     if (!tokenClipboardLoading) {
       setTokenClipboardLoading(true)
       getDevicePushTokenAsync()
@@ -144,16 +144,12 @@ export default function CreateLiveUpdatesScreen() {
         </>
       )}
       <View style={styles.buttonsContainer}>
-        <Button
-          title="Start Live Update"
-          onPress={startLiveUpdate}
-          disabled={title === ''}
-        />
-        <Button title="Stop Live Update" onPress={stopLiveUpdate} />
-        <Button title="Update Live Update" onPress={updateLiveUpdate} />
+        <Button title="Start" onPress={handleStartLiveUpdate} disabled={true} />
+        <Button title="Cancel" onPress={handleCancelLiveUpdate} />
+        <Button title="Update" onPress={handleUpdateLiveUpdate} />
         <Button
           title="Copy Push Token"
-          onPress={copyPushToken}
+          onPress={handleCopyPushToken}
           disabled={tokenClipboardLoading}
         />
       </View>

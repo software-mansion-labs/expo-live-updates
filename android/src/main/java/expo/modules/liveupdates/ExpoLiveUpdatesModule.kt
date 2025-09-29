@@ -24,6 +24,8 @@ data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
 const val NOTIFICATION_ID = 1
+const val CHANNEL_ID = "Notifications channel"
+const val CHANNEL_DESCRIPTION = "Channel to handle notifications for Live Updates"
 
 class ExpoLiveUpdatesModule : Module() {
   private var notificationManager: NotificationManager? = null
@@ -42,10 +44,11 @@ class ExpoLiveUpdatesModule : Module() {
 
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // TODO: use channelId and channelName
         val serviceChannel =
           NotificationChannel(
-            channelId,
-            channelName,
+            CHANNEL_ID,
+            CHANNEL_DESCRIPTION,
             android.app.NotificationManager.IMPORTANCE_DEFAULT,
           )
 
@@ -64,15 +67,17 @@ class ExpoLiveUpdatesModule : Module() {
         }
       }
 
-      val notifManager = NotificationManager(context, channelId)
+      val notifManager = NotificationManager(context, CHANNEL_ID)
+
       notificationManager = notifManager
+      notificationManager.startLiveUpdatesService()
     }
 
-    Function("startForegroundService") { state: LiveUpdateState, config: LiveUpdateConfig ->
-      notificationManager?.startForegroundService(state, config)
+    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
+      //            TODO: this should return live update id
     }
-    Function("stopForegroundService") { notificationManager?.stopForegroundService() }
-    Function("updateForegroundService") { state: LiveUpdateState ->
+    Function("cancelLiveUpdate") { notificationManager?.cancelNotification() }
+    Function("updateLiveUpdate") { state: LiveUpdateState ->
       notificationManager?.updateNotification(state)
     }
     AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->

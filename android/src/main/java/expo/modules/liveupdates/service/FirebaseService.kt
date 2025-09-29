@@ -15,9 +15,6 @@ import expo.modules.liveupdates.service.NotificationData
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
-const val CHANNEL_ID = "Firebase notifications channel"
-const val CHANNEL_DESCRIPTION =
-  "Channel to handle push notifications for Live Updates form Firebase"
 
 class FirebaseService : FirebaseMessagingService() {
 
