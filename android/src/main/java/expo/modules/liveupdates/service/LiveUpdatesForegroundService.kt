@@ -27,7 +27,6 @@ import expo.modules.liveupdates.service.ServiceActionExtra
 import java.io.File
 
 const val TAG = "LiveUpdatesForegroundService"
-const val NOTIFICATION_ID = 1
 
 class LiveUpdatesForegroundService : Service() {
   private var channelId: String? = null
@@ -48,17 +47,14 @@ class LiveUpdatesForegroundService : Service() {
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     channelId = intent.getStringExtra("channelId")
 
-    if (channelId !== null) {
-      this.registerReceiver(
-        broadcastReceiver,
-        IntentFilter(ServiceAction.updateLiveUpdate),
-        RECEIVER_EXPORTED,
-      )
-      val notification = createNotification("Starting Live Updates...", "")
-      if (notification !== null) {
-        startForeground(NOTIFICATION_ID, notification)
-      }
-    }
+    this.registerReceiver(
+      broadcastReceiver,
+      IntentFilter(ServiceAction.updateLiveUpdate),
+      RECEIVER_EXPORTED,
+    )
+
+    val notification = createNotification("Starting Live Updates...", "")
+    notification?.let { startForeground(NOTIFICATION_ID, notification) }
 
     return START_STICKY
   }
@@ -97,9 +93,8 @@ class LiveUpdatesForegroundService : Service() {
     image: String? = null,
     smallImageName: String? = null,
   ): Notification? {
-    if (channelId === null) {
-      return null
-    } else {
+
+    if (channelId !== null) {
       val notificationIntent = Intent("android.intent.action.MAIN")
 
       notificationIntent.setComponent(
@@ -157,6 +152,8 @@ class LiveUpdatesForegroundService : Service() {
         notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
       }
       return notificationBuilder.build()
+    } else {
+      return null
     }
   }
 

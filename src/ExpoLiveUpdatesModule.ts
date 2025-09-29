@@ -9,6 +9,7 @@ declare class ExpoLiveUpdatesModule extends NativeModule {
   ) => void
   stopForegroundService: () => void
   updateForegroundService: (state: LiveUpdateState) => void
+  getDevicePushTokenAsync: () => Promise<string> | null
 }
 
 const module = requireNativeModule<ExpoLiveUpdatesModule>(
