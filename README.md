@@ -8,7 +8,7 @@ To run example app:
 
 1. Prepare Android emulator with `Android Baklava Preview` SDK. Just `Android 16.0 ("Baklava")` won't allow to run Live Updates.
 1. `npm i`
-1. Go to `example/` directory and un `npm i` & `npm run android`. You will probably get error on the second one and then to fix it you need to change line 9 in `example/android/build.gradle` to: `classpath('com.android.tools.build:gradle:8.13.0')`
+1. Go to `example/` directory and un `npm i` & `npm run android`. You will probably get error on the second one and then to fix it you need to change line 10 in `example/android/build.gradle` to: `classpath('com.android.tools.build:gradle:8.13.0')`
 1. Run `npm run android` (or `npx expo run:android --device` to select proper emulator) in `example/` directory again.
 
 # How to add Firebase Cloud Messaging
