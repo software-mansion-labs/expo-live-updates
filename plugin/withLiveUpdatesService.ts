@@ -10,7 +10,7 @@ type PluginProps = {
   explanationForSpecialUse?: string
 }
 
-const SERVICE_NAME = 'expo.modules.liveupdates.LiveUpdatesForegroundService'
+const SERVICE_NAME = 'expo.modules.liveupdates.LiveUpdatesService'
 
 const ensureService = (
   androidManifest: AndroidConfig.Manifest.AndroidManifest,

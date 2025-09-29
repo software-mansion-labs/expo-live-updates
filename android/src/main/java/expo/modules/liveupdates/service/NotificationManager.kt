@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
-import expo.modules.liveupdates.LiveUpdatesForegroundService
+import expo.modules.liveupdates.LiveUpdatesService
 
 val TAG = "FIREBASE SERVICE"
 
@@ -12,7 +12,7 @@ class NotificationManager(private var context: Context, private val channelId: S
   var lastConfig: LiveUpdateConfig? = null
 
   fun startLiveUpdatesService() {
-    val serviceIntent = Intent(context, LiveUpdatesForegroundService::class.java)
+    val serviceIntent = Intent(context, LiveUpdatesService::class.java)
     serviceIntent.putExtra("channelId", channelId)
 
     context.startService(serviceIntent)

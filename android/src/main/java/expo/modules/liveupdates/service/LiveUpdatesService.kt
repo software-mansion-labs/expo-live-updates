@@ -26,9 +26,9 @@ import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
 import java.io.File
 
-const val TAG = "LiveUpdatesForegroundService"
+const val TAG = "LiveUpdatesService"
 
-class LiveUpdatesForegroundService : Service() {
+class LiveUpdatesService : Service() {
   private var channelId: String? = null
   val broadcastReceiver =
     object : BroadcastReceiver() {
