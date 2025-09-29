@@ -108,4 +108,3 @@ class ExpoLiveUpdatesModule : Module() {
         get() = requireNotNull(appContext.reactContext)
 }
 
-
