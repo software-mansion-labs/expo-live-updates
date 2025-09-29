@@ -79,8 +79,7 @@ class FirebaseService : FirebaseMessagingService() {
 
     notificationData.progress?.let { progressStyle.setProgress(it) }
 
-    notificationData.progressPoints.forEach { it ->
-      progressStyle.addProgressPoint(NotificationCompat.ProgressStyle.Point(it))
+    notificationData.progressPoints?.forEach { progressStyle.addProgressPoint(NotificationCompat.ProgressStyle.Point(it))
     }
 
     return progressStyle
