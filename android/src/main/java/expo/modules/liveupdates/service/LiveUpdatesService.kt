@@ -117,28 +117,30 @@ class LiveUpdatesService : Service() {
         notificationBuilder.setRequestPromotedOngoing(true)
       }
 
-      if (image != null) {
+      image?.let { image ->
         val bitmap = loadBitmapByName(image)
-        if (bitmap != null) {
-          notificationBuilder.setLargeIcon(bitmap)
-        }
+        bitmap?.let { bitmap -> notificationBuilder.setLargeIcon(bitmap) }
       }
 
-      if (smallImageName != null) {
+      smallImageName?.let { smallImageName ->
         val bitmap = loadBitmapByName(smallImageName)
-        if (bitmap != null) {
+        bitmap?.let { bitmap ->
           val icon = IconCompat.createWithBitmap(bitmap)
           notificationBuilder.setSmallIcon(icon)
         }
       }
 
-      if (backgroundColor !== null && Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
-        notificationBuilder.setColor(backgroundColor.toColorInt())
-        notificationBuilder.setColorized(true)
+      backgroundColor?.let { backgroundColor ->
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
+          notificationBuilder.setColor(backgroundColor.toColorInt())
+          notificationBuilder.setColorized(true)
+        }
       }
 
       return notificationBuilder.build()
     }
+
+    return null
 
     return null
   }
