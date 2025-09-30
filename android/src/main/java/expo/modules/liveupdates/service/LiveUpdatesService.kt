@@ -141,8 +141,6 @@ class LiveUpdatesService : Service() {
     }
 
     return null
-
-    return null
   }
 
   private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
