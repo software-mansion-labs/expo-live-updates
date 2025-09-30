@@ -49,7 +49,7 @@ class FirebaseService : FirebaseMessagingService() {
 
     notificationManager?.let {
       Log.i(FIREBASE_TAG, "message displayed")
-      notificationManager!!.notify(NOTIFICATION_ID, notification)
+      it.notify(NOTIFICATION_ID, notification)
     }
   }
 
