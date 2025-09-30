@@ -57,8 +57,8 @@ Request variables:
 - Support missing fields of live update
 - Support multiple live updates at once
 - Listen to notification state changes - eg. dismiss by swipe
-- Return notification ID for FCM on live update start
-- Update foreground service plugin
+- Handle notification ID after live update start triggered by FCM
+- Update `withLiveUpdatesService.ts` plugin
 
 # API documentation
 

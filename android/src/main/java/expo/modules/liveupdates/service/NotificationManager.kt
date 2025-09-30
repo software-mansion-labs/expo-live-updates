@@ -18,9 +18,10 @@ class NotificationManager(private var context: Context, private val channelId: S
   }
 
   fun startNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int {
-    updateNotification(NOTIFICATION_ID, state, config)
-    // TODO: unique id should be returned every time
-    return NOTIFICATION_ID
+    // TODO: notificationId should be unique value for each live update
+    val notificationId = NOTIFICATION_ID
+    updateNotification(notificationId, state, config)
+    return notificationId
   }
 
   fun updateNotification(

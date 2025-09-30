@@ -24,10 +24,8 @@ export function init(channelId: string, channelName: string) {
 /**
  * @param {LiveUpdateState} state The state for the live live update.
  * @param {LiveUpdateConfig} config Live live update config object.
- * @returns {string} The identifier of the started live update or undefined if creating live live update failed.
+ * @returns {number} The identifier of the started live update or undefined if creating live live update failed.
  */
-
-// config?: LiveUpdateConfig
 export function startLiveUpdate(
   state: LiveUpdateState,
   config: LiveUpdateConfig,
@@ -38,20 +36,17 @@ export function startLiveUpdate(
 }
 
 /**
- * @param {string} id The identifier of the live update to cancel.
- * @param {LiveUpdateState} state The updated state for the live live update.
+ * @param {number} notificationId The identifier of the live update to cancel.
  */
-// id: string, state: LiveUpdateState
 export function cancelLiveUpdate(notificationId: number) {
   if (assertAndroid('cancelLiveUpdate'))
     return ExpoLiveUpdatesModule.cancelLiveUpdate(notificationId)
 }
 
 /**
- * @param {string} id The identifier of the live update to update.
+ * @param {number} notificationId The identifier of the live update to update.
  * @param {LiveUpdateState} state The updated state for the live live update.
  */
-// id: string, state: LiveUpdateState
 export function updateLiveUpdate(
   notificationId: number,
   state: LiveUpdateState,
