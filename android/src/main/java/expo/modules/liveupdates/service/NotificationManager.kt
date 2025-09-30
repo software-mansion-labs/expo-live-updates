@@ -23,7 +23,11 @@ class NotificationManager(private var context: Context, private val channelId: S
     return NOTIFICATION_ID
   }
 
-  fun updateNotification(notificationId: Int, state: LiveUpdateState, config: LiveUpdateConfig? = null) {
+  fun updateNotification(
+    notificationId: Int,
+    state: LiveUpdateState,
+    config: LiveUpdateConfig? = null,
+  ) {
     if (config !== null) {
       lastConfig = config
     }

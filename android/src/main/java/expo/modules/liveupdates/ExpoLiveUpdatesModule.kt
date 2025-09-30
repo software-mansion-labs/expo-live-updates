@@ -76,7 +76,9 @@ class ExpoLiveUpdatesModule : Module() {
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
       notificationManager?.startNotification(state, config)
     }
-    Function("cancelLiveUpdate") { notificationId: Int -> notificationManager?.cancelNotification(notificationId) }
+    Function("cancelLiveUpdate") { notificationId: Int ->
+      notificationManager?.cancelNotification(notificationId)
+    }
     Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
       notificationManager?.updateNotification(notificationId, state)
     }

@@ -40,7 +40,8 @@ class LiveUpdatesService : Service() {
 
         notificationId?.let {
           when (intent.action) {
-            ServiceAction.updateLiveUpdate -> updateNotificationContent(notificationId, intent.extras)
+            ServiceAction.updateLiveUpdate ->
+              updateNotificationContent(notificationId, intent.extras)
             ServiceAction.cancelLiveUpdate -> cancelNotification(notificationId)
           }
         }
@@ -83,12 +84,11 @@ class LiveUpdatesService : Service() {
 
     if (
       ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-      PackageManager.PERMISSION_GRANTED && notification !== null
+        PackageManager.PERMISSION_GRANTED && notification !== null
     ) {
       notificationManager.notify(notificationId, notification)
     }
   }
-
 
   private fun cancelNotification(notificationId: Int) {
     val notificationManager = NotificationManagerCompat.from(this)
