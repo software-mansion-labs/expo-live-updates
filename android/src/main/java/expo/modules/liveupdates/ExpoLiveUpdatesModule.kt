@@ -74,11 +74,11 @@ class ExpoLiveUpdatesModule : Module() {
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
-      //            TODO: this should return live update id
+      notificationManager?.startNotification(state, config)
     }
-    Function("cancelLiveUpdate") { notificationManager?.cancelNotification() }
-    Function("updateLiveUpdate") { state: LiveUpdateState ->
-      notificationManager?.updateNotification(state)
+    Function("cancelLiveUpdate") { notificationId: Int -> notificationManager?.cancelNotification(notificationId) }
+    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
+      notificationManager?.updateNotification(notificationId, state)
     }
     AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
       FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->

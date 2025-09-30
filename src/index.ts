@@ -31,7 +31,7 @@ export function init(channelId: string, channelName: string) {
 export function startLiveUpdate(
   state: LiveUpdateState,
   config: LiveUpdateConfig,
-): Voidable<string> {
+): Voidable<number> {
   if (assertAndroid('startLiveUpdate')) {
     return ExpoLiveUpdatesModule.startLiveUpdate(state, config)
   }
@@ -42,9 +42,9 @@ export function startLiveUpdate(
  * @param {LiveUpdateState} state The updated state for the live live update.
  */
 // id: string, state: LiveUpdateState
-export function cancelLiveUpdate() {
+export function cancelLiveUpdate(notificationId: number) {
   if (assertAndroid('cancelLiveUpdate'))
-    return ExpoLiveUpdatesModule.cancelLiveUpdate()
+    return ExpoLiveUpdatesModule.cancelLiveUpdate(notificationId)
 }
 
 /**
@@ -52,9 +52,12 @@ export function cancelLiveUpdate() {
  * @param {LiveUpdateState} state The updated state for the live live update.
  */
 // id: string, state: LiveUpdateState
-export function updateLiveUpdate(state: LiveUpdateState) {
+export function updateLiveUpdate(
+  notificationId: number,
+  state: LiveUpdateState,
+) {
   if (assertAndroid('updateLiveUpdate'))
-    return ExpoLiveUpdatesModule.updateLiveUpdate(state)
+    return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state)
 }
 
 export async function getDevicePushTokenAsync() {

@@ -55,6 +55,7 @@ Request variables:
 - Delete live update using FCM
 - Support missing fields of live update
 - Support multiple live updates at once
+- Listen to notification state changes - eg. dismiss by swipe
 
 # API documentation
 

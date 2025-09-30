@@ -5,9 +5,10 @@ import android.content.Intent
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
 import expo.modules.liveupdates.LiveUpdatesService
+import expo.modules.liveupdates.NOTIFICATION_ID
 
 class NotificationManager(private var context: Context, private val channelId: String) {
-  var lastConfig: LiveUpdateConfig? = null
+  var lastConfig: LiveUpdateConfig? = null // TODO: keep separate last config for each notification
 
   fun startLiveUpdatesService() {
     val serviceIntent = Intent(context, LiveUpdatesService::class.java)
@@ -16,12 +17,19 @@ class NotificationManager(private var context: Context, private val channelId: S
     context.startService(serviceIntent)
   }
 
-  fun updateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null) {
+  fun startNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int {
+    updateNotification(NOTIFICATION_ID, state, config)
+    // TODO: unique id should be returned every time
+    return NOTIFICATION_ID
+  }
+
+  fun updateNotification(notificationId: Int, state: LiveUpdateState, config: LiveUpdateConfig? = null) {
     if (config !== null) {
       lastConfig = config
     }
     val intent = Intent(ServiceAction.updateLiveUpdate)
 
+    intent.putExtra(ServiceActionExtra.notificationId, notificationId)
     intent.putExtra(ServiceActionExtra.title, state.title)
     intent.putExtra(ServiceActionExtra.text, state.subtitle ?: "")
     intent.putExtra(ServiceActionExtra.date, state.date)
@@ -32,8 +40,9 @@ class NotificationManager(private var context: Context, private val channelId: S
     context.sendBroadcast(intent)
   }
 
-  fun cancelNotification() {
+  fun cancelNotification(notificationId: Int) {
     val intent = Intent(ServiceAction.cancelLiveUpdate)
+    intent.putExtra(ServiceActionExtra.notificationId, notificationId)
     context.sendBroadcast(intent)
   }
 }

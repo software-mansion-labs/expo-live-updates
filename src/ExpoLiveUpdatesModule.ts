@@ -3,9 +3,9 @@ import type { LiveUpdateState, LiveUpdateConfig } from './types'
 
 declare class ExpoLiveUpdatesModule extends NativeModule {
   init: (channelId: string, channelName: string) => void
-  startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => void
-  cancelLiveUpdate: () => void
-  updateLiveUpdate: (state: LiveUpdateState) => void
+  startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
+  cancelLiveUpdate: (notificationId: number) => void
+  updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
   getDevicePushTokenAsync: () => Promise<string> | null
 }
 

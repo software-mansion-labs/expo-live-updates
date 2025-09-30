@@ -35,9 +35,14 @@ class LiveUpdatesService : Service() {
       @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
       override fun onReceive(context: Context, intent: Intent) {
         Log.i(TAG, "Intent received  ${intent.action}")
-        when (intent.action) {
-          ServiceAction.updateLiveUpdate -> updateNotificationContent(intent.extras)
-          ServiceAction.cancelLiveUpdate -> cancelNotification()
+
+        val notificationId = intent.extras?.getInt(ServiceActionExtra.notificationId)
+
+        notificationId?.let {
+          when (intent.action) {
+            ServiceAction.updateLiveUpdate -> updateNotificationContent(notificationId, intent.extras)
+            ServiceAction.cancelLiveUpdate -> cancelNotification(notificationId)
+          }
         }
       }
     }
@@ -63,7 +68,7 @@ class LiveUpdatesService : Service() {
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  private fun updateNotificationContent(extras: Bundle?) {
+  private fun updateNotificationContent(notificationId: Int, extras: Bundle?) {
     Log.i(TAG, "Update notification")
 
     val text = extras?.getString(ServiceActionExtra.text) ?: "[text placeholder]"
@@ -78,15 +83,16 @@ class LiveUpdatesService : Service() {
 
     if (
       ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-        PackageManager.PERMISSION_GRANTED && notification !== null
+      PackageManager.PERMISSION_GRANTED && notification !== null
     ) {
-      notificationManager.notify(NOTIFICATION_ID, notification)
+      notificationManager.notify(notificationId, notification)
     }
   }
 
-  private fun cancelNotification() {
+
+  private fun cancelNotification(notificationId: Int) {
     val notificationManager = NotificationManagerCompat.from(this)
-    notificationManager.cancel(NOTIFICATION_ID)
+    notificationManager.cancel(notificationId)
   }
 
   private fun createNotification(

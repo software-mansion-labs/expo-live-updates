@@ -32,6 +32,9 @@ export default function CreateLiveUpdatesScreen() {
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
   const [tokenClipboardLoading, setTokenClipboardLoading] = useState(false)
+  const [notificationId, setNotificationId] = useState<number | undefined>(
+    undefined,
+  )
 
   useEffect(() => {
     const loadImages = async () => {
@@ -61,7 +64,10 @@ export default function CreateLiveUpdatesScreen() {
       const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
       }
-      startLiveUpdate(getState(), liveUpdateConfig)
+      const id = startLiveUpdate(getState(), liveUpdateConfig)
+      if (id) {
+        setNotificationId(id)
+      }
     } catch (e) {
       console.error('Starting Live Update failed! ' + e)
     }
@@ -69,7 +75,12 @@ export default function CreateLiveUpdatesScreen() {
 
   const handleCancelLiveUpdate = () => {
     try {
-      cancelLiveUpdate()
+      if (notificationId) {
+        cancelLiveUpdate(notificationId)
+        setNotificationId(undefined)
+      } else {
+        throw Error('notificationId is undefined')
+      }
     } catch (e) {
       console.error('Canceling live update failed! ' + e)
     }
@@ -77,7 +88,11 @@ export default function CreateLiveUpdatesScreen() {
 
   const handleUpdateLiveUpdate = () => {
     try {
-      updateLiveUpdate(getState())
+      if (notificationId) {
+        updateLiveUpdate(notificationId, getState())
+      } else {
+        throw Error('notificationId is undefined')
+      }
     } catch (e) {
       console.error('Updating live update failed! ' + e)
     }
@@ -144,7 +159,11 @@ export default function CreateLiveUpdatesScreen() {
         </>
       )}
       <View style={styles.buttonsContainer}>
-        <Button title="Start" onPress={handleStartLiveUpdate} disabled={true} />
+        <Button
+          title="Start"
+          onPress={handleStartLiveUpdate}
+          disabled={title === ''}
+        />
         <Button title="Cancel" onPress={handleCancelLiveUpdate} />
         <Button title="Update" onPress={handleUpdateLiveUpdate} />
         <Button

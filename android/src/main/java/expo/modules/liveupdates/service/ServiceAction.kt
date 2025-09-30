@@ -6,6 +6,7 @@ object ServiceAction {
 }
 
 object ServiceActionExtra {
+  const val notificationId = "notificationId"
   const val title = "title"
   const val text = "text"
   const val date = "date"
