@@ -104,29 +104,11 @@ class LiveUpdatesService : Service() {
   ): Notification? {
 
     channelId?.let { channelId ->
-      val notificationIntent = Intent("android.intent.action.MAIN")
-
-      notificationIntent.setComponent(
-        ComponentName(
-          "expo.modules.liveupdates.example",
-          "expo.modules.liveupdates.example.MainActivity",
-        )
-      )
-      notificationIntent.addCategory("android.intent.category.LAUNCHER")
-      val pendingIntent =
-        PendingIntent.getActivity(
-          this,
-          0,
-          notificationIntent,
-          PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-
       val notificationBuilder =
         NotificationCompat.Builder(this, channelId)
           .setContentTitle(title)
           .setSmallIcon(android.R.drawable.star_on)
           .setContentText(text)
-          .setContentIntent(pendingIntent)
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
         notificationBuilder.setStyle(
