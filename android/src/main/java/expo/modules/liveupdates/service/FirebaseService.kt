@@ -44,10 +44,10 @@ class FirebaseService : FirebaseMessagingService() {
     val notificationData = NotificationData(message.data)
     val notification = createNotification(notificationData)
 
-    notificationData.notificationId?.let {
-      notificationManager?.let {
+    notificationData.notificationId?.let { notificationId ->
+      notificationManager?.let { notificationManager ->
         Log.i(FIREBASE_TAG, "message displayed")
-        notificationManager!!.notify(notificationData.notificationId!!, notification)
+        notificationManager.notify(notificationId, notification)
       }
     }
   }

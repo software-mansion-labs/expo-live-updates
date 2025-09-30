@@ -103,7 +103,7 @@ class LiveUpdatesService : Service() {
     smallImageName: String? = null,
   ): Notification? {
 
-    if (channelId !== null) {
+    channelId?.let { channelId ->
       val notificationIntent = Intent("android.intent.action.MAIN")
 
       notificationIntent.setComponent(
@@ -122,7 +122,7 @@ class LiveUpdatesService : Service() {
         )
 
       val notificationBuilder =
-        NotificationCompat.Builder(this, channelId!!)
+        NotificationCompat.Builder(this, channelId)
           .setContentTitle(title)
           .setSmallIcon(android.R.drawable.star_on)
           .setContentText(text)
@@ -158,9 +158,9 @@ class LiveUpdatesService : Service() {
       }
 
       return notificationBuilder.build()
-    } else {
-      return null
     }
+
+    return null
   }
 
   private fun loadBitmapByName(name: String): android.graphics.Bitmap? {

@@ -58,6 +58,7 @@ Request variables:
 - Support multiple live updates at once
 - Listen to notification state changes - eg. dismiss by swipe
 - Return notification ID for FCM on live update start
+- Update foreground service plugin
 
 # API documentation
 
