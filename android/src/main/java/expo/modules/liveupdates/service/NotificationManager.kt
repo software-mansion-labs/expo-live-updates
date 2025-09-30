@@ -8,7 +8,8 @@ import expo.modules.liveupdates.LiveUpdatesService
 import expo.modules.liveupdates.NOTIFICATION_ID
 
 class NotificationManager(private var context: Context, private val channelId: String) {
-  var lastConfig: LiveUpdateConfig? = null // TODO: keep separate last config for each notification
+  // TODO: keep separate last config for each live update
+  var lastConfig: LiveUpdateConfig? = null
 
   fun startLiveUpdatesService() {
     val serviceIntent = Intent(context, LiveUpdatesService::class.java)

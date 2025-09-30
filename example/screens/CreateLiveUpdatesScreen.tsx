@@ -67,6 +67,8 @@ export default function CreateLiveUpdatesScreen() {
       const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
         setNotificationId(id)
+      } else {
+        throw new Error('no notificationId returned')
       }
     } catch (e) {
       console.error('Starting Live Update failed! ' + e)
