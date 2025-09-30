@@ -33,9 +33,7 @@ class NotificationManager(private var context: Context, private val channelId: S
   }
 
   fun updateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null) {
-    if (config !== null) {
-      lastConfig = config
-    }
+    config?.let { lastConfig = it }
     val intent = Intent(ServiceAction.updateLiveUpdate)
 
     intent.putExtra(ServiceActionExtra.title, state.title)

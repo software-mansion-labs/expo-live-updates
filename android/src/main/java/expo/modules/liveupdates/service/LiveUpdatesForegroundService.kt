@@ -78,11 +78,13 @@ class LiveUpdatesForegroundService : Service() {
     val notification = createNotification(title, text, backgroundColor, imageName, smallImageName)
     val notificationManager = NotificationManagerCompat.from(this)
 
-    if (
-      ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-        PackageManager.PERMISSION_GRANTED && notification !== null
-    ) {
-      notificationManager.notify(NOTIFICATION_ID, notification)
+    notification?.let { notification ->
+      if (
+        ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+          PackageManager.PERMISSION_GRANTED
+      ) {
+        notificationManager.notify(NOTIFICATION_ID, notification)
+      }
     }
   }
 
@@ -94,7 +96,7 @@ class LiveUpdatesForegroundService : Service() {
     smallImageName: String? = null,
   ): Notification? {
 
-    if (channelId !== null) {
+    channelId?.let { channelId ->
       val notificationIntent = Intent("android.intent.action.MAIN")
 
       notificationIntent.setComponent(
@@ -128,33 +130,34 @@ class LiveUpdatesForegroundService : Service() {
         notificationBuilder.setRequestPromotedOngoing(true)
       }
 
-      if (image != null) {
+      image?.let { image ->
         val bitmap = loadBitmapByName(image)
-        if (bitmap != null) {
-          notificationBuilder.setLargeIcon(bitmap)
-        }
+        bitmap?.let { bitmap -> notificationBuilder.setLargeIcon(bitmap) }
       }
 
-      if (smallImageName != null) {
+      smallImageName?.let { smallImageName ->
         val bitmap = loadBitmapByName(smallImageName)
-        if (bitmap != null) {
+        bitmap?.let { bitmap ->
           val icon = IconCompat.createWithBitmap(bitmap)
           notificationBuilder.setSmallIcon(icon)
         }
       }
 
-      if (backgroundColor !== null && Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
-        notificationBuilder.setColor(backgroundColor.toColorInt())
-        notificationBuilder.setColorized(true)
+      backgroundColor?.let { backgroundColor ->
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
+          notificationBuilder.setColor(backgroundColor.toColorInt())
+          notificationBuilder.setColorized(true)
+        }
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
       }
+
       return notificationBuilder.build()
-    } else {
-      return null
     }
+
+    return null
   }
 
   private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
