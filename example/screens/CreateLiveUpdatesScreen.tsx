@@ -71,7 +71,7 @@ export default function CreateLiveUpdatesScreen() {
     try {
       cancelLiveUpdate()
     } catch (e) {
-      console.error('canceling live update failed! ' + e)
+      console.error('Canceling live update failed! ' + e)
     }
   }
 

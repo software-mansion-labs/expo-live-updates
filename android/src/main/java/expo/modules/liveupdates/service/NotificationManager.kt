@@ -6,8 +6,6 @@ import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
 import expo.modules.liveupdates.LiveUpdatesService
 
-val TAG = "FIREBASE SERVICE"
-
 class NotificationManager(private var context: Context, private val channelId: String) {
   var lastConfig: LiveUpdateConfig? = null
 

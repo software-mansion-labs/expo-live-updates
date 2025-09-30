@@ -66,7 +66,7 @@ class ExpoLiveUpdatesModule : Module() {
           }
         }
       }
-
+      // TODO: use channelId
       val notifManager = NotificationManager(context, CHANNEL_ID)
 
       notificationManager = notifManager
