@@ -31,6 +31,7 @@ Content-Length: 399
    "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
+        "notificationId":"1",
         "title":"Firebase message",
         "body":"This is a message sent via Firebase",
         "progress":"20",
@@ -56,6 +57,7 @@ Request variables:
 - Support missing fields of live update
 - Support multiple live updates at once
 - Listen to notification state changes - eg. dismiss by swipe
+- Return notification ID for FCM on live update start
 
 # API documentation
 
