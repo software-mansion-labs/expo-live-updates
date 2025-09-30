@@ -94,7 +94,7 @@ class LiveUpdatesForegroundService : Service() {
     smallImageName: String? = null,
   ): Notification? {
 
-    if (channelId !== null) {
+    channelId?.let { channelId ->
       val notificationIntent = Intent("android.intent.action.MAIN")
 
       notificationIntent.setComponent(
@@ -152,9 +152,9 @@ class LiveUpdatesForegroundService : Service() {
         notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
       }
       return notificationBuilder.build()
-    } else {
-      return null
     }
+
+    return null
   }
 
   private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
