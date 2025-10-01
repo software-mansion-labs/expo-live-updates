@@ -45,8 +45,8 @@ class NotificationManager(private var context: Context, private val channelId: S
     context.sendBroadcast(intent)
   }
 
-  fun cancelNotification(notificationId: Int) {
-    val intent = Intent(ServiceAction.cancelLiveUpdate)
+  fun stopNotification(notificationId: Int) {
+    val intent = Intent(ServiceAction.stopLiveUpdate)
     intent.putExtra(ServiceActionExtra.notificationId, notificationId)
     context.sendBroadcast(intent)
   }

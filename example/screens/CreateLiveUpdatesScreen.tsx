@@ -1,7 +1,7 @@
 import { Asset } from 'expo-asset'
 import {
   startLiveUpdate,
-  cancelLiveUpdate,
+  stopLiveUpdate,
   updateLiveUpdate,
   getDevicePushTokenAsync,
 } from 'expo-live-updates'
@@ -75,16 +75,16 @@ export default function CreateLiveUpdatesScreen() {
     }
   }
 
-  const handleCancelLiveUpdate = () => {
+  const handleStopLiveUpdate = () => {
     try {
       if (notificationId) {
-        cancelLiveUpdate(notificationId)
+        stopLiveUpdate(notificationId)
         setNotificationId(undefined)
       } else {
         throw Error('notificationId is undefined')
       }
     } catch (e) {
-      console.error('Canceling live update failed! ' + e)
+      console.error('Stopping live update failed! ' + e)
     }
   }
 
@@ -166,7 +166,7 @@ export default function CreateLiveUpdatesScreen() {
           onPress={handleStartLiveUpdate}
           disabled={title === ''}
         />
-        <Button title="Cancel" onPress={handleCancelLiveUpdate} />
+        <Button title="Stop" onPress={handleStopLiveUpdate} />
         <Button title="Update" onPress={handleUpdateLiveUpdate} />
         <Button
           title="Copy Push Token"

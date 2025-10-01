@@ -2,7 +2,7 @@ package expo.modules.liveupdates.service
 
 object ServiceAction {
   const val updateLiveUpdate = "update-liveupdate"
-  const val cancelLiveUpdate = "cancel-liveupdate"
+  const val stopLiveUpdate = "stop-liveupdate"
 }
 
 object ServiceActionExtra {

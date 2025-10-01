@@ -36,11 +36,11 @@ export function startLiveUpdate(
 }
 
 /**
- * @param {number} notificationId The identifier of the live update to cancel.
+ * @param {number} notificationId The identifier of the live update to stop.
  */
-export function cancelLiveUpdate(notificationId: number) {
-  if (assertAndroid('cancelLiveUpdate'))
-    return ExpoLiveUpdatesModule.cancelLiveUpdate(notificationId)
+export function stopLiveUpdate(notificationId: number) {
+  if (assertAndroid('stopLiveUpdate'))
+    return ExpoLiveUpdatesModule.stopLiveUpdate(notificationId)
 }
 
 /**

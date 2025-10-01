@@ -40,7 +40,7 @@ class LiveUpdatesService : Service() {
           when (intent.action) {
             ServiceAction.updateLiveUpdate ->
               updateNotificationContent(notificationId, intent.extras)
-            ServiceAction.cancelLiveUpdate -> cancelNotification(notificationId)
+            ServiceAction.stopLiveUpdate -> stopNotification(notificationId)
           }
         }
       }
@@ -54,7 +54,7 @@ class LiveUpdatesService : Service() {
 
     val intentFilter = IntentFilter()
     intentFilter.addAction(ServiceAction.updateLiveUpdate)
-    intentFilter.addAction(ServiceAction.cancelLiveUpdate)
+    intentFilter.addAction(ServiceAction.stopLiveUpdate)
 
     this.registerReceiver(broadcastReceiver, intentFilter, RECEIVER_EXPORTED)
 
@@ -88,7 +88,7 @@ class LiveUpdatesService : Service() {
     }
   }
 
-  private fun cancelNotification(notificationId: Int) {
+  private fun stopNotification(notificationId: Int) {
     val notificationManager = NotificationManagerCompat.from(this)
     notificationManager.cancel(notificationId)
   }
