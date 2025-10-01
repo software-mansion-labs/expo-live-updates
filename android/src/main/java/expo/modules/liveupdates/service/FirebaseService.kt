@@ -11,12 +11,17 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import expo.modules.liveupdates.service.FirebaseMessagingDelegate
 import expo.modules.liveupdates.service.NotificationData
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
 
-class FirebaseService : FirebaseMessagingService() {
+open class FirebaseService : FirebaseMessagingService() {
+
+  protected open val firebaseMessagingDelegate: FirebaseMessagingDelegate by lazy {
+    expo.modules.liveupdates.service.FirebaseServiceDelegate(this)
+  }
 
   var notificationManager: NotificationManager? = null
 
@@ -31,11 +36,7 @@ class FirebaseService : FirebaseMessagingService() {
     notificationManager = androidNotificationManager
   }
 
-  // TODO: update token in RN
-  override fun onNewToken(token: String) {
-    Log.i(FIREBASE_TAG, "new token received: $token")
-    super.onNewToken(token)
-  }
+  override fun onNewToken(token: String) = firebaseMessagingDelegate.onNewToken(token)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {

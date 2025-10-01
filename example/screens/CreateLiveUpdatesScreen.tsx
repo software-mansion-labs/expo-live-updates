@@ -4,6 +4,7 @@ import {
   stopLiveUpdate,
   updateLiveUpdate,
   getDevicePushTokenAsync,
+  addTokenListener,
 } from 'expo-live-updates'
 import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
 import { useEffect, useState } from 'react'
@@ -35,6 +36,7 @@ export default function CreateLiveUpdatesScreen() {
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
   )
+  const [token, setToken] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const loadImages = async () => {
@@ -104,13 +106,23 @@ export default function CreateLiveUpdatesScreen() {
     if (!tokenClipboardLoading) {
       setTokenClipboardLoading(true)
       getDevicePushTokenAsync()
-        .then(token => Clipboard.setStringAsync(token ?? 'someting went wrong'))
+        .then(t => Clipboard.setStringAsync(t ?? 'someting went wrong'))
         .finally(() => setTokenClipboardLoading(false))
     }
   }
 
+  useEffect(() => {
+    const subscription = addTokenListener(({ token: t }) => {
+      console.log('TOKEN RECEIVED: ', t)
+      setToken(t)
+    })
+
+    return () => subscription.remove()
+  }, [setToken])
+
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>Push token: {token ?? ':('}</Text>
       <Text style={styles.label}>Set Live live update title:</Text>
       <TextInput
         style={styles.input}

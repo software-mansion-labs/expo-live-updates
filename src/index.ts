@@ -1,6 +1,11 @@
+import type { EventSubscription } from 'expo-modules-core'
 import { Platform } from 'react-native'
 import ExpoLiveUpdatesModule from './ExpoLiveUpdatesModule'
-import type { LiveUpdateState, LiveUpdateConfig } from './types'
+import type {
+  LiveUpdateState,
+  LiveUpdateConfig,
+  TokenChangeEvent,
+} from './types'
 
 type Voidable<T> = T | void
 
@@ -61,4 +66,10 @@ export async function getDevicePushTokenAsync() {
   } else {
     return null
   }
+}
+
+export function addTokenListener(
+  listener: (event: TokenChangeEvent) => void,
+): EventSubscription {
+  return ExpoLiveUpdatesModule.addListener('onTokenChange', listener)
 }

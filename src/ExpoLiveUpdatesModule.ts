@@ -1,5 +1,9 @@
 import { NativeModule, requireNativeModule } from 'expo'
-import type { LiveUpdateState, LiveUpdateConfig } from './types'
+import type {
+  LiveUpdateState,
+  LiveUpdateConfig,
+  TokenChangeEvent,
+} from './types'
 
 declare class ExpoLiveUpdatesModule extends NativeModule {
   init: (channelId: string, channelName: string) => void
@@ -7,6 +11,7 @@ declare class ExpoLiveUpdatesModule extends NativeModule {
   stopLiveUpdate: (notificationId: number) => void
   updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
   getDevicePushTokenAsync: () => Promise<string> | null
+  onTokenChange: (params: TokenChangeEvent) => void
 }
 
 const module = requireNativeModule<ExpoLiveUpdatesModule>(
