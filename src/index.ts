@@ -24,41 +24,39 @@ export function init(channelId: string, channelName: string) {
 /**
  * @param {LiveUpdateState} state The state for the live live update.
  * @param {LiveUpdateConfig} config Live live update config object.
- * @returns {string} The identifier of the started live update or undefined if creating live live update failed.
+ * @returns {number} The identifier of the started live update or undefined if creating live live update failed.
  */
-
-// config?: LiveUpdateConfig
-export function startForegroundService(
+export function startLiveUpdate(
   state: LiveUpdateState,
   config: LiveUpdateConfig,
-): Voidable<string> {
-  if (assertAndroid('startForegroundService')) {
-    return ExpoLiveUpdatesModule.startForegroundService(state, config)
+): Voidable<number> {
+  if (assertAndroid('startLiveUpdate')) {
+    return ExpoLiveUpdatesModule.startLiveUpdate(state, config)
   }
 }
 
 /**
- * @param {string} id The identifier of the live update to stop.
- * @param {LiveUpdateState} state The updated state for the live live update.
+ * @param {number} notificationId The identifier of the live update to stop.
  */
-// id: string, state: LiveUpdateState
-export function stopForegroundService() {
-  if (assertAndroid('stopForegroundService'))
-    return ExpoLiveUpdatesModule.stopForegroundService()
+export function stopLiveUpdate(notificationId: number) {
+  if (assertAndroid('stopLiveUpdate'))
+    return ExpoLiveUpdatesModule.stopLiveUpdate(notificationId)
 }
 
 /**
- * @param {string} id The identifier of the live update to update.
+ * @param {number} notificationId The identifier of the live update to update.
  * @param {LiveUpdateState} state The updated state for the live live update.
  */
-// id: string, state: LiveUpdateState
-export function updateForegroundService(state: LiveUpdateState) {
-  if (assertAndroid('updateForegroundService'))
-    return ExpoLiveUpdatesModule.updateForegroundService(state)
+export function updateLiveUpdate(
+  notificationId: number,
+  state: LiveUpdateState,
+) {
+  if (assertAndroid('updateLiveUpdate'))
+    return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state)
 }
 
 export async function getDevicePushTokenAsync() {
-  if (assertAndroid('updateForegroundService')) {
+  if (assertAndroid('getDevicePushTokenAsync')) {
     return await ExpoLiveUpdatesModule.getDevicePushTokenAsync()
   } else {
     return null

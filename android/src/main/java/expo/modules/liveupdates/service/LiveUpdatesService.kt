@@ -2,10 +2,8 @@ package expo.modules.liveupdates
 
 import android.Manifest
 import android.app.Notification
-import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -26,17 +24,24 @@ import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
 import java.io.File
 
-const val TAG = "LiveUpdatesForegroundService"
+const val TAG = "LiveUpdatesService"
 
-class LiveUpdatesForegroundService : Service() {
+class LiveUpdatesService : Service() {
   private var channelId: String? = null
   val broadcastReceiver =
     object : BroadcastReceiver() {
       @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
       override fun onReceive(context: Context, intent: Intent) {
         Log.i(TAG, "Intent received  ${intent.action}")
-        when (intent.action) {
-          ServiceAction.updateLiveUpdate -> updateNotificationContent(intent.extras)
+
+        val notificationId = intent.extras?.getInt(ServiceActionExtra.notificationId)
+
+        notificationId?.let {
+          when (intent.action) {
+            ServiceAction.updateLiveUpdate ->
+              updateNotificationContent(notificationId, intent.extras)
+            ServiceAction.stopLiveUpdate -> stopNotification(notificationId)
+          }
         }
       }
     }
@@ -47,14 +52,11 @@ class LiveUpdatesForegroundService : Service() {
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     channelId = intent.getStringExtra("channelId")
 
-    this.registerReceiver(
-      broadcastReceiver,
-      IntentFilter(ServiceAction.updateLiveUpdate),
-      RECEIVER_EXPORTED,
-    )
+    val intentFilter = IntentFilter()
+    intentFilter.addAction(ServiceAction.updateLiveUpdate)
+    intentFilter.addAction(ServiceAction.stopLiveUpdate)
 
-    val notification = createNotification("Starting Live Updates...", "")
-    notification?.let { startForeground(NOTIFICATION_ID, notification) }
+    this.registerReceiver(broadcastReceiver, intentFilter, RECEIVER_EXPORTED)
 
     return START_STICKY
   }
@@ -65,7 +67,7 @@ class LiveUpdatesForegroundService : Service() {
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  private fun updateNotificationContent(extras: Bundle?) {
+  private fun updateNotificationContent(notificationId: Int, extras: Bundle?) {
     Log.i(TAG, "Update notification")
 
     val text = extras?.getString(ServiceActionExtra.text) ?: "[text placeholder]"
@@ -78,14 +80,17 @@ class LiveUpdatesForegroundService : Service() {
     val notification = createNotification(title, text, backgroundColor, imageName, smallImageName)
     val notificationManager = NotificationManagerCompat.from(this)
 
-    notification?.let { notification ->
-      if (
-        ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-          PackageManager.PERMISSION_GRANTED
-      ) {
-        notificationManager.notify(NOTIFICATION_ID, notification)
-      }
+    if (
+      ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+        PackageManager.PERMISSION_GRANTED && notification !== null
+    ) {
+      notificationManager.notify(notificationId, notification)
     }
+  }
+
+  private fun stopNotification(notificationId: Int) {
+    val notificationManager = NotificationManagerCompat.from(this)
+    notificationManager.cancel(notificationId)
   }
 
   private fun createNotification(
@@ -97,29 +102,11 @@ class LiveUpdatesForegroundService : Service() {
   ): Notification? {
 
     channelId?.let { channelId ->
-      val notificationIntent = Intent("android.intent.action.MAIN")
-
-      notificationIntent.setComponent(
-        ComponentName(
-          "expo.modules.liveupdates.example",
-          "expo.modules.liveupdates.example.MainActivity",
-        )
-      )
-      notificationIntent.addCategory("android.intent.category.LAUNCHER")
-      val pendingIntent =
-        PendingIntent.getActivity(
-          this,
-          0,
-          notificationIntent,
-          PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-
       val notificationBuilder =
         NotificationCompat.Builder(this, channelId)
           .setContentTitle(title)
           .setSmallIcon(android.R.drawable.star_on)
           .setContentText(text)
-          .setContentIntent(pendingIntent)
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
         notificationBuilder.setStyle(
@@ -148,10 +135,6 @@ class LiveUpdatesForegroundService : Service() {
           notificationBuilder.setColor(backgroundColor.toColorInt())
           notificationBuilder.setColorized(true)
         }
-      }
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
       }
 
       return notificationBuilder.build()

@@ -15,9 +15,6 @@ import expo.modules.liveupdates.service.NotificationData
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
-const val CHANNEL_ID = "Firebase notifications channel"
-const val CHANNEL_DESCRIPTION =
-  "Channel to handle push notifications for Live Updates form Firebase"
 
 class FirebaseService : FirebaseMessagingService() {
 
@@ -28,7 +25,7 @@ class FirebaseService : FirebaseMessagingService() {
     val androidNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
     val channel =
-      NotificationChannel(CHANNEL_ID, CHANNEL_DESCRIPTION, NotificationManager.IMPORTANCE_DEFAULT)
+      NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
 
     androidNotificationManager.createNotificationChannel(channel)
     notificationManager = androidNotificationManager
@@ -47,9 +44,11 @@ class FirebaseService : FirebaseMessagingService() {
     val notificationData = NotificationData(message.data)
     val notification = createNotification(notificationData)
 
-    notificationManager?.let {
-      Log.i(FIREBASE_TAG, "message displayed")
-      it.notify(NOTIFICATION_ID, notification)
+    notificationData.notificationId?.let { notificationId ->
+      notificationManager?.let { notificationManager ->
+        Log.i(FIREBASE_TAG, "message displayed")
+        notificationManager.notify(notificationId, notification)
+      }
     }
   }
 

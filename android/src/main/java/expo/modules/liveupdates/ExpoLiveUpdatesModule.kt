@@ -25,6 +25,10 @@ data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
 const val NOTIFICATION_ID = 1
 
+// TODO: delete CHANNEL_ID and CHANNEL_NAME - make notification channel id and name configurable
+const val CHANNEL_ID = "Notifications channel"
+const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
+
 class ExpoLiveUpdatesModule : Module() {
   private var notificationManager: NotificationManager? = null
 
@@ -44,8 +48,8 @@ class ExpoLiveUpdatesModule : Module() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val serviceChannel =
           NotificationChannel(
-            channelId,
-            channelName,
+            CHANNEL_ID,
+            CHANNEL_NAME,
             android.app.NotificationManager.IMPORTANCE_DEFAULT,
           )
 
@@ -63,17 +67,20 @@ class ExpoLiveUpdatesModule : Module() {
           }
         }
       }
+      val notifManager = NotificationManager(context, CHANNEL_ID)
 
-      val notifManager = NotificationManager(context, channelId)
       notificationManager = notifManager
+      notificationManager?.startLiveUpdatesService()
     }
 
-    Function("startForegroundService") { state: LiveUpdateState, config: LiveUpdateConfig ->
-      notificationManager?.startForegroundService(state, config)
+    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
+      notificationManager?.startNotification(state, config)
     }
-    Function("stopForegroundService") { notificationManager?.stopForegroundService() }
-    Function("updateForegroundService") { state: LiveUpdateState ->
-      notificationManager?.updateNotification(state)
+    Function("stopLiveUpdate") { notificationId: Int ->
+      notificationManager?.stopNotification(notificationId)
+    }
+    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
+      notificationManager?.updateNotification(notificationId, state)
     }
     AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
       FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->

@@ -1,8 +1,8 @@
 import { Asset } from 'expo-asset'
 import {
-  startForegroundService,
-  stopForegroundService,
-  updateForegroundService,
+  startLiveUpdate,
+  stopLiveUpdate,
+  updateLiveUpdate,
   getDevicePushTokenAsync,
 } from 'expo-live-updates'
 import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
@@ -32,6 +32,9 @@ export default function CreateLiveUpdatesScreen() {
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
   const [tokenClipboardLoading, setTokenClipboardLoading] = useState(false)
+  const [notificationId, setNotificationId] = useState<number | undefined>(
+    undefined,
+  )
 
   useEffect(() => {
     const loadImages = async () => {
@@ -53,7 +56,7 @@ export default function CreateLiveUpdatesScreen() {
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })
 
-  const startLiveUpdate = () => {
+  const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
     console.log('+++++++++++++++++++++++' + Platform.Version)
 
@@ -61,29 +64,43 @@ export default function CreateLiveUpdatesScreen() {
       const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
       }
-      startForegroundService(getState(), liveUpdateConfig)
+      const id = startLiveUpdate(getState(), liveUpdateConfig)
+      if (id) {
+        setNotificationId(id)
+      } else {
+        throw new Error('no notificationId returned')
+      }
     } catch (e) {
       console.error('Starting Live Update failed! ' + e)
     }
   }
 
-  const stopLiveUpdate = () => {
+  const handleStopLiveUpdate = () => {
     try {
-      stopForegroundService()
+      if (notificationId) {
+        stopLiveUpdate(notificationId)
+        setNotificationId(undefined)
+      } else {
+        throw Error('notificationId is undefined')
+      }
     } catch (e) {
       console.error('Stopping live update failed! ' + e)
     }
   }
 
-  const updateLiveUpdate = () => {
+  const handleUpdateLiveUpdate = () => {
     try {
-      updateForegroundService(getState())
+      if (notificationId) {
+        updateLiveUpdate(notificationId, getState())
+      } else {
+        throw Error('notificationId is undefined')
+      }
     } catch (e) {
       console.error('Updating live update failed! ' + e)
     }
   }
 
-  const copyPushToken = () => {
+  const handleCopyPushToken = () => {
     if (!tokenClipboardLoading) {
       setTokenClipboardLoading(true)
       getDevicePushTokenAsync()
@@ -145,15 +162,15 @@ export default function CreateLiveUpdatesScreen() {
       )}
       <View style={styles.buttonsContainer}>
         <Button
-          title="Start Live Update"
-          onPress={startLiveUpdate}
+          title="Start"
+          onPress={handleStartLiveUpdate}
           disabled={title === ''}
         />
-        <Button title="Stop Live Update" onPress={stopLiveUpdate} />
-        <Button title="Update Live Update" onPress={updateLiveUpdate} />
+        <Button title="Stop" onPress={handleStopLiveUpdate} />
+        <Button title="Update" onPress={handleUpdateLiveUpdate} />
         <Button
           title="Copy Push Token"
-          onPress={copyPushToken}
+          onPress={handleCopyPushToken}
           disabled={tokenClipboardLoading}
         />
       </View>

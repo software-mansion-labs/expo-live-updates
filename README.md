@@ -31,6 +31,7 @@ Content-Length: 399
    "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
+        "notificationId":"1",
         "title":"Firebase message",
         "body":"This is a message sent via Firebase",
         "progress":"20",
@@ -54,6 +55,10 @@ Request variables:
 - Delete live update using FCM
 - Support missing fields of live update
 - Support multiple live updates at once
+- Listen to notification state changes - eg. dismiss by swipe
+- Handle notification ID after live update start triggered by FCM
+- Update `withLiveUpdatesService.ts` plugin
+- Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
 
 # API documentation
 

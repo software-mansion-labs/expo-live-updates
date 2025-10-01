@@ -1,18 +1,23 @@
 import type { ExpoConfig } from 'expo/config'
-import { AndroidConfig, ConfigPlugin, withAndroidManifest } from 'expo/config-plugins'
+import {
+  AndroidConfig,
+  ConfigPlugin,
+  withAndroidManifest,
+} from 'expo/config-plugins'
 
 type PluginProps = {
   foregroundServiceType: string
   explanationForSpecialUse?: string
 }
 
-const SERVICE_NAME = 'expo.modules.liveupdates.LiveUpdatesForegroundService'
+const SERVICE_NAME = 'expo.modules.liveupdates.LiveUpdatesService'
 
 const ensureService = (
   androidManifest: AndroidConfig.Manifest.AndroidManifest,
   { foregroundServiceType, explanationForSpecialUse }: PluginProps,
 ) => {
-  const mainApplication = AndroidConfig.Manifest.getMainApplicationOrThrow(androidManifest)
+  const mainApplication =
+    AndroidConfig.Manifest.getMainApplicationOrThrow(androidManifest)
 
   const existingServices = (mainApplication.service ??= [])
 
@@ -49,12 +54,10 @@ const withLiveUpdatesForegroundService: ConfigPlugin<PluginProps> = (
   config: ExpoConfig,
   props: PluginProps,
 ) => {
-  return withAndroidManifest(config, (configWithManifest) => {
+  return withAndroidManifest(config, configWithManifest => {
     ensureService(configWithManifest.modResults, props)
     return configWithManifest
   })
 }
 
 export default withLiveUpdatesForegroundService
-
-
