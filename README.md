@@ -58,6 +58,7 @@ Request variables:
 - Listen to notification state changes - eg. dismiss by swipe
 - Handle notification ID after live update start triggered by FCM
 - Update `withLiveUpdatesService.ts` plugin
+- Make notification channel id and name configurable - use `channelId` and `channelName` props instead of const `CHANNEL_ID` and `CHANNEL_NAME` to create notification channel
 
 # API documentation
 
