@@ -12,8 +12,8 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.FirebaseTokenHandler.Companion.addTokenListener
+import expo.modules.liveupdates.service.FirebaseTokenListener
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.liveupdates.service.PushTokenListener
 
 data class LiveUpdateState(
   @Field val title: String,
@@ -32,7 +32,7 @@ const val NOTIFICATION_ID = 1
 const val CHANNEL_ID = "Notifications channel"
 const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
 
-class ExpoLiveUpdatesModule : Module(), PushTokenListener {
+class ExpoLiveUpdatesModule : Module(), FirebaseTokenListener {
   private var notificationManager: NotificationManager? = null
 
   // Each module class must implement the definition function. The definition consists of components
@@ -116,11 +116,11 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
     }
   }
 
-  private val context
-    get() = requireNotNull(appContext.reactContext)
-
   override fun onNewToken(token: String) {
     Log.i(TAG, "New token received: $token")
     this@ExpoLiveUpdatesModule.sendEvent("onTokenChange", bundleOf("token" to token))
   }
+
+  private val context
+    get() = requireNotNull(appContext.reactContext)
 }

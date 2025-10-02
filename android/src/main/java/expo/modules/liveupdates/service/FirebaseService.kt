@@ -11,8 +11,8 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import expo.modules.liveupdates.service.FirebaseTokenHandler
 import expo.modules.liveupdates.service.NotificationData
-import expo.modules.liveupdates.service.PushTokenHandler
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -20,7 +20,7 @@ const val FIREBASE_TAG = "FIREBASE SERVICE"
 class FirebaseService : FirebaseMessagingService() {
 
   var notificationManager: NotificationManager? = null
-  val pushTokenHandler: PushTokenHandler = expo.modules.liveupdates.service.FirebaseTokenHandler()
+  val pushTokenHandler: FirebaseTokenHandler = FirebaseTokenHandler()
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
