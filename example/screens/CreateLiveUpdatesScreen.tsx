@@ -102,7 +102,7 @@ export default function CreateLiveUpdatesScreen() {
 
   const handleCopyPushToken = () => {
     if (token !== undefined) {
-      Clipboard.setStringAsync(token ?? 'something went wrong')
+      Clipboard.setStringAsync(token)
     }
   }
 
