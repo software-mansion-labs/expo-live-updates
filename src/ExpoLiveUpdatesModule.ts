@@ -10,7 +10,6 @@ declare class ExpoLiveUpdatesModule extends NativeModule {
   startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
   stopLiveUpdate: (notificationId: number) => void
   updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
-  getDevicePushTokenAsync: () => Promise<string> | null
   onTokenChange: (params: TokenChangeEvent) => void
 }
 

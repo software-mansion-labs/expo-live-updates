@@ -5,8 +5,6 @@ import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
-import com.google.firebase.messaging.FirebaseMessaging
-import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
@@ -88,31 +86,6 @@ class ExpoLiveUpdatesModule : Module(), FirebaseTokenListener {
     }
     Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
       notificationManager?.updateNotification(notificationId, state)
-    }
-    AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
-      FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-        if (!task.isSuccessful) {
-          val exception = task.exception
-          promise.reject(
-            GET_PUSH_TOKEN_FAILED_CODE,
-            "Fetching the token failed: ${exception?.message ?: "unknown"}",
-            exception,
-          )
-          return@addOnCompleteListener
-        }
-        val token =
-          task.result
-            ?: run {
-              promise.reject(
-                GET_PUSH_TOKEN_FAILED_CODE,
-                "Fetching the token failed. Invalid token.",
-                null,
-              )
-              return@addOnCompleteListener
-            }
-
-        promise.resolve(token)
-      }
     }
   }
 

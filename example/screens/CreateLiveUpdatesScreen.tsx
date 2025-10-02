@@ -3,7 +3,6 @@ import {
   startLiveUpdate,
   stopLiveUpdate,
   updateLiveUpdate,
-  getDevicePushTokenAsync,
   addTokenListener,
 } from 'expo-live-updates'
 import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
@@ -32,7 +31,6 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
-  const [tokenClipboardLoading, setTokenClipboardLoading] = useState(false)
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
   )
@@ -103,11 +101,8 @@ export default function CreateLiveUpdatesScreen() {
   }
 
   const handleCopyPushToken = () => {
-    if (!tokenClipboardLoading) {
-      setTokenClipboardLoading(true)
-      getDevicePushTokenAsync()
-        .then(t => Clipboard.setStringAsync(t ?? 'someting went wrong'))
-        .finally(() => setTokenClipboardLoading(false))
+    if (token !== undefined) {
+      Clipboard.setStringAsync(token ?? 'something went wrong')
     }
   }
 
@@ -122,7 +117,6 @@ export default function CreateLiveUpdatesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Push token: {token ?? ':('}</Text>
       <Text style={styles.label}>Set Live live update title:</Text>
       <TextInput
         style={styles.input}
@@ -183,7 +177,7 @@ export default function CreateLiveUpdatesScreen() {
         <Button
           title="Copy Push Token"
           onPress={handleCopyPushToken}
-          disabled={tokenClipboardLoading}
+          disabled={token === undefined}
         />
       </View>
     </View>

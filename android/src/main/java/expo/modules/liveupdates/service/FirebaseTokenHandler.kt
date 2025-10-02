@@ -1,6 +1,7 @@
 package expo.modules.liveupdates.service
 
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 
 interface FirebaseTokenListener {
   fun onNewToken(token: String)
@@ -17,7 +18,13 @@ class FirebaseTokenHandler() {
     fun addTokenListener(listener: FirebaseTokenListener) {
       Log.i(TAG, "Listener added")
       this.listener = listener
+
       token?.let { listener.onNewToken(it) }
+        ?: run {
+          FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            task.result?.let { result -> listener.onNewToken(result) }
+          }
+        }
     }
   }
 

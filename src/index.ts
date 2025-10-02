@@ -60,14 +60,6 @@ export function updateLiveUpdate(
     return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state)
 }
 
-export async function getDevicePushTokenAsync() {
-  if (assertAndroid('getDevicePushTokenAsync')) {
-    return await ExpoLiveUpdatesModule.getDevicePushTokenAsync()
-  } else {
-    return null
-  }
-}
-
 export function addTokenListener(
   listener: (event: TokenChangeEvent) => void,
 ): EventSubscription {
