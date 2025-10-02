@@ -101,8 +101,14 @@ export default function CreateLiveUpdatesScreen() {
   }
 
   const handleCopyPushToken = () => {
-    if (token !== undefined) {
-      Clipboard.setStringAsync(token)
+    try {
+      if (token !== undefined) {
+        Clipboard.setStringAsync(token)
+      } else {
+        throw Error('push token is undefined')
+      }
+    } catch (e) {
+      console.error('Copying push token failed! ' + e)
     }
   }
 
@@ -174,11 +180,7 @@ export default function CreateLiveUpdatesScreen() {
         />
         <Button title="Stop" onPress={handleStopLiveUpdate} />
         <Button title="Update" onPress={handleUpdateLiveUpdate} />
-        <Button
-          title="Copy Push Token"
-          onPress={handleCopyPushToken}
-          disabled={token === undefined}
-        />
+        <Button title="Copy Push Token" onPress={handleCopyPushToken} />
       </View>
     </View>
   )

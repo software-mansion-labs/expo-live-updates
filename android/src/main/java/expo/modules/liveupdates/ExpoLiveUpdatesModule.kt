@@ -46,7 +46,6 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
     Name("ExpoLiveUpdatesModule")
 
     Events("onTokenChange")
-
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val serviceChannel =
