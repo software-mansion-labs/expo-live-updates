@@ -15,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
 import expo.modules.liveupdates.service.NotificationEvent
+import java.lang.Exception
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
 
@@ -36,21 +37,21 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
-    val notificationData = NotificationData(message.data)
-    val notification = createNotification(notificationData)
+    try {
+      val notificationData = NotificationData(message.data)
+      val notification = createNotification(notificationData)
 
-    Log.i(FIREBASE_TAG, "[${notificationData.notificationId}] message received: ${notificationData.event}")
+      val (event, notificationId) = notificationData
 
-    notificationData.notificationId?.let { notificationId ->
+      Log.i(FIREBASE_TAG, "[${notificationId}] message received: $event")
 
-      notificationData.event?.let { event ->
-        Log.i(FIREBASE_TAG, "EVENTTTTT $event")
-        when (event) {
-          NotificationEvent.START -> startNotification(notificationId, notification)
-          NotificationEvent.UPDATE -> updateNotification(notificationId, notification)
-          NotificationEvent.STOP -> stopNotification(notificationId)
-        }
+      when (notificationData.event) {
+        NotificationEvent.START -> startNotification(notificationId, notification)
+        NotificationEvent.UPDATE -> updateNotification(notificationId, notification)
+        NotificationEvent.STOP -> stopNotification(notificationId)
       }
+    } catch (e: Exception) {
+      Log.e(FIREBASE_TAG, e.message.toString())
     }
   }
 
@@ -100,7 +101,8 @@ class FirebaseService : FirebaseMessagingService() {
   private fun isNotificationIdFree(notificationId: Int): Boolean {
     val notifications: Array<out StatusBarNotification?>? = notificationManager?.activeNotifications
 
-    val isIdFree = notifications?.none { notification -> notification?.id == notificationId } ?: true
+    val isIdFree =
+      notifications?.none { notification -> notification?.id == notificationId } ?: true
     return isIdFree
   }
 

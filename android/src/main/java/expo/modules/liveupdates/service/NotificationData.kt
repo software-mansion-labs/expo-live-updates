@@ -7,20 +7,33 @@ enum class NotificationEvent {
 }
 
 data class NotificationData(
-  var event: NotificationEvent? = null,
-  var notificationId: Int? = null,
-  var title: String? = null,
-  var subtitle: String? = null,
-  var progress: Int? = null,
-  var progressPoints: List<Int>? = null,
+  val event: NotificationEvent,
+  val notificationId: Int,
+  val title: String,
+  var subtitle: String,
+  var progress: Int?,
+  var progressPoints: List<Int>?,
 ) {
-  constructor(data: Map<String, String>) : this() {
-    this.event = NotificationEvent.entries.find { it.name == data["event"]?.uppercase() }
-    this.notificationId = data["notificationId"]?.toIntOrNull()
-    this.title = data["title"]
-    this.subtitle = data["subtitle"]
-    this.progress = data["progress"]?.toIntOrNull()
-    this.progressPoints =
-      listOf(data["progressPointOne"], data["progressPointTwo"]).mapNotNull { it?.toIntOrNull() }
+  companion object {
+    private fun <T> validateNotNull(value: T?, propertyName: String): T {
+      return value
+        ?: throw IllegalArgumentException("Property $propertyName is missing or invalid.")
+    }
   }
+
+  constructor(
+    data: Map<String, String>
+  ) : this(
+    event =
+      validateNotNull(
+        NotificationEvent.entries.find { it.name == data["event"]?.uppercase() },
+        "event",
+      ),
+    notificationId = validateNotNull(data["notificationId"]?.toIntOrNull(), "notificationId"),
+    title = validateNotNull(data["title"], "title"),
+    subtitle = validateNotNull(data["subtitle"], "subtitle"),
+    progress = data["progress"]?.toIntOrNull(),
+    progressPoints =
+      listOf(data["progressPointOne"], data["progressPointTwo"]).mapNotNull { it?.toIntOrNull() },
+  )
 }
