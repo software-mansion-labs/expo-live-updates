@@ -51,7 +51,6 @@ Request variables:
 # TODO
 
 - Change package name in `google-service.json`
-- Handle push token change
 - Delete live update using FCM
 - Support missing fields of live update
 - Support multiple live updates at once
