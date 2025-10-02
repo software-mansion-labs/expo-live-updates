@@ -3,34 +3,35 @@ package expo.modules.liveupdates.service
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 
-interface FirebaseTokenListener {
+const val TAG = "PUSH TOKEN HANDLER"
+
+interface PushTokenListener {
   fun onNewToken(token: String)
 }
 
-const val TAG = "FIREBASE TOKEN HANDLER"
-
-class FirebaseTokenHandler() {
+class PushTokenHandler() {
   companion object {
-    var listener: FirebaseTokenListener? = null
-    var token: String? = null
+    var listener: PushTokenListener? = null
+    var lastReceivedToken: String? = null
 
     @JvmStatic
-    fun addTokenListener(listener: FirebaseTokenListener) {
-      Log.i(TAG, "Listener added")
+    fun addTokenListener(listener: PushTokenListener) {
       this.listener = listener
 
-      token?.let { listener.onNewToken(it) }
+      lastReceivedToken?.let { listener.onNewToken(it) }
         ?: run {
           FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             task.result?.let { result -> listener.onNewToken(result) }
           }
         }
+
+      Log.i(TAG, "Push token listener added")
     }
   }
 
   fun onNewToken(newToken: String) {
-    Log.i(TAG, "New token change received: $newToken")
-    token = newToken
+    Log.i(TAG, "New token received: $newToken")
+    lastReceivedToken = newToken
     listener?.onNewToken(newToken)
   }
 }

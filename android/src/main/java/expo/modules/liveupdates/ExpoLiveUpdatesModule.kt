@@ -9,9 +9,9 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
-import expo.modules.liveupdates.service.FirebaseTokenHandler.Companion.addTokenListener
-import expo.modules.liveupdates.service.FirebaseTokenListener
 import expo.modules.liveupdates.service.NotificationManager
+import expo.modules.liveupdates.service.PushTokenHandler.Companion.addTokenListener
+import expo.modules.liveupdates.service.PushTokenListener
 
 data class LiveUpdateState(
   @Field val title: String,
@@ -30,7 +30,7 @@ const val NOTIFICATION_ID = 1
 const val CHANNEL_ID = "Notifications channel"
 const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
 
-class ExpoLiveUpdatesModule : Module(), FirebaseTokenListener {
+class ExpoLiveUpdatesModule : Module(), PushTokenListener {
   private var notificationManager: NotificationManager? = null
 
   // Each module class must implement the definition function. The definition consists of components
