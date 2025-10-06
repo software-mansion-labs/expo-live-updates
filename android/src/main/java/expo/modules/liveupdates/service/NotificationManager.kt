@@ -5,7 +5,7 @@ import android.content.Intent
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
 import expo.modules.liveupdates.LiveUpdatesService
-import expo.modules.liveupdates.NOTIFICATION_ID
+import java.util.Random
 
 class NotificationManager(private var context: Context, private val channelId: String) {
   // TODO: keep separate last config for each live update
@@ -19,10 +19,17 @@ class NotificationManager(private var context: Context, private val channelId: S
   }
 
   fun startNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int {
-    // TODO: notificationId should be unique value for each live update
-    val notificationId = NOTIFICATION_ID
+    val notificationId = getNotificationId()
     updateNotification(notificationId, state, config)
     return notificationId
+  }
+
+  // TODO: getNotificationId should be safer
+  private fun getNotificationId(): Int {
+    val random = Random()
+    val from = 100
+    val to = 1000
+    return random.nextInt(to - from) + from
   }
 
   fun updateNotification(

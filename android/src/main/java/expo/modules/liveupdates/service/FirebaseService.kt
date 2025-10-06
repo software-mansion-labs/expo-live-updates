@@ -61,7 +61,7 @@ class FirebaseService : FirebaseMessagingService() {
   private fun createNotification(notificationData: NotificationData): Notification {
     val notificationBuilder =
       NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle(notificationData.title)
+        .setContentTitle("[${notificationData.notificationId}] ${notificationData.title}")
         .setSmallIcon(android.R.drawable.star_on)
         .setContentText(notificationData.subtitle)
 

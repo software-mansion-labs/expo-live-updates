@@ -77,7 +77,7 @@ class LiveUpdatesService : Service() {
     val smallImageName = extras?.getString(ServiceActionExtra.smallImageName)
     val backgroundColor = extras?.getString(ServiceActionExtra.backgroundColor)
 
-    val notification = createNotification(title, text, backgroundColor, imageName, smallImageName)
+    val notification = createNotification(notificationId, title, text, backgroundColor, imageName, smallImageName)
     val notificationManager = NotificationManagerCompat.from(this)
 
     if (
@@ -94,6 +94,7 @@ class LiveUpdatesService : Service() {
   }
 
   private fun createNotification(
+    notificationId: Int,
     title: String,
     text: String,
     backgroundColor: String? = null,
@@ -104,7 +105,7 @@ class LiveUpdatesService : Service() {
     channelId?.let { channelId ->
       val notificationBuilder =
         NotificationCompat.Builder(this, channelId)
-          .setContentTitle(title)
+          .setContentTitle("[$notificationId] $title")
           .setSmallIcon(android.R.drawable.star_on)
           .setContentText(text)
 
