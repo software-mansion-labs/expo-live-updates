@@ -10,7 +10,7 @@ data class NotificationData(
   val event: NotificationEvent,
   val notificationId: Int,
   val title: String,
-  var subtitle: String,
+  var subtitle: String?,
   var progress: Int?,
   var progressPoints: List<Int>?,
 ) {
@@ -31,7 +31,7 @@ data class NotificationData(
       ),
     notificationId = validateNotNull(data["notificationId"]?.toIntOrNull(), "notificationId"),
     title = validateNotNull(data["title"], "title"),
-    subtitle = validateNotNull(data["subtitle"], "subtitle"),
+    subtitle = data["subtitle"],
     progress = data["progress"]?.toIntOrNull(),
     progressPoints =
       listOf(data["progressPointOne"], data["progressPointTwo"]).mapNotNull { it?.toIntOrNull() },

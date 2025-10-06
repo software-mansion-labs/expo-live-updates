@@ -1,12 +1,10 @@
 package expo.modules.liveupdates
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
@@ -93,6 +91,14 @@ class FirebaseService : FirebaseMessagingService() {
     return progressStyle
   }
 
+  private fun isNotificationIdFree(notificationId: Int): Boolean {
+    val notifications = notificationManager?.activeNotifications
+
+    val isIdFree =
+      notifications?.none { notification -> notification?.id == notificationId } ?: true
+    return isIdFree
+  }
+
   private fun startNotification(notificationId: Int, notification: Notification) {
     Log.i(FIREBASE_TAG, "start started")
     if (isNotificationIdFree(notificationId)) {
@@ -101,14 +107,6 @@ class FirebaseService : FirebaseMessagingService() {
     } else {
       Log.i(FIREBASE_TAG, "Notification of given id is already created")
     }
-  }
-
-  private fun isNotificationIdFree(notificationId: Int): Boolean {
-    val notifications: Array<out StatusBarNotification?>? = notificationManager?.activeNotifications
-
-    val isIdFree =
-      notifications?.none { notification -> notification?.id == notificationId } ?: true
-    return isIdFree
   }
 
   private fun updateNotification(notificationId: Int, notification: Notification) {
