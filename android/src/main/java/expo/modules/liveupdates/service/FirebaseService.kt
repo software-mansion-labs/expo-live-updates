@@ -19,7 +19,6 @@ import java.lang.Exception
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
 
-@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class FirebaseService : FirebaseMessagingService() {
 
   var notificationManager: NotificationManager? = null
@@ -33,6 +32,12 @@ class FirebaseService : FirebaseMessagingService() {
 
     androidNotificationManager.createNotificationChannel(channel)
     notificationManager = androidNotificationManager
+  }
+
+  // TODO: update token in RN
+  override fun onNewToken(token: String) {
+    Log.i(FIREBASE_TAG, "new token received: $token")
+    super.onNewToken(token)
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)

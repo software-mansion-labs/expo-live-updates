@@ -23,7 +23,7 @@ data class LiveUpdateState(
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
-const val NOTIFICATION_ID = 3
+const val NOTIFICATION_ID = 1
 
 // TODO: delete CHANNEL_ID and CHANNEL_NAME - make notification channel id and name configurable
 const val CHANNEL_ID = "Notifications channel"
