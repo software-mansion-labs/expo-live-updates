@@ -77,7 +77,8 @@ class LiveUpdatesService : Service() {
     val smallImageName = extras?.getString(ServiceActionExtra.smallImageName)
     val backgroundColor = extras?.getString(ServiceActionExtra.backgroundColor)
 
-    val notification = createNotification(notificationId, title, text, backgroundColor, imageName, smallImageName)
+    val notification =
+      createNotification(notificationId, title, text, backgroundColor, imageName, smallImageName)
     val notificationManager = NotificationManagerCompat.from(this)
 
     if (
