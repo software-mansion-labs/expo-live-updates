@@ -23,7 +23,6 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
-private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
 const val NOTIFICATION_ID = 1
 
 // TODO: delete CHANNEL_ID and CHANNEL_NAME - make notification channel id and name configurable
@@ -46,6 +45,7 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
     Name("ExpoLiveUpdatesModule")
 
     Events("onTokenChange")
+
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val serviceChannel =
@@ -71,10 +71,10 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
       }
       val notifManager = NotificationManager(context, CHANNEL_ID)
 
-      addTokenListener(this@ExpoLiveUpdatesModule)
-
       notificationManager = notifManager
       notificationManager?.startLiveUpdatesService()
+
+      addTokenListener(this@ExpoLiveUpdatesModule)
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
