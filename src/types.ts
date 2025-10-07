@@ -10,6 +10,10 @@ export type LiveUpdateConfig = {
   backgroundColor?: string // only SDK < 16
 }
 
+export type ExpoLiveUpdatesModuleEvents = {
+  onTokenChange: (params: TokenChangeEvent) => void
+}
+
 export type TokenChangeEvent = {
   token: string
 }
