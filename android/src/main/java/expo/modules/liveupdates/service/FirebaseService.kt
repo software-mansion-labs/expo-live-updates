@@ -91,27 +91,24 @@ class FirebaseService : FirebaseMessagingService() {
     return progressStyle
   }
 
-  private fun isNotificationIdFree(notificationId: Int): Boolean {
+  private fun doesNotificationExist(notificationId: Int): Boolean {
     val notifications = notificationManager?.activeNotifications
 
-    val isIdFree =
-      notifications?.none { notification -> notification?.id == notificationId } ?: true
-    return isIdFree
+    val notification =
+      notifications?.find { notification -> notification?.id == notificationId }
+    return notification !== null
   }
 
   private fun startNotification(notificationId: Int, notification: Notification) {
-    Log.i(FIREBASE_TAG, "start started")
-    if (isNotificationIdFree(notificationId)) {
-      Log.i(FIREBASE_TAG, "$notificationManager $notificationId start ")
+    if (!doesNotificationExist(notificationId)) {
       notificationManager?.notify(notificationId, notification)
     } else {
-      Log.i(FIREBASE_TAG, "Notification of given id is already created")
+      Log.i(FIREBASE_TAG, "Notification of given id already exists")
     }
   }
 
   private fun updateNotification(notificationId: Int, notification: Notification) {
-    if (!isNotificationIdFree(notificationId)) {
-      Log.i(FIREBASE_TAG, "$notificationManager $notificationId update ")
+    if (doesNotificationExist(notificationId)) {
       notificationManager?.notify(notificationId, notification)
     } else {
       Log.i(FIREBASE_TAG, "Notification of given id doesn't exist")
@@ -119,7 +116,7 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   private fun stopNotification(notificationId: Int) {
-    if (!isNotificationIdFree(notificationId)) {
+    if (doesNotificationExist(notificationId)) {
       notificationManager?.cancel(notificationId)
     } else {
       Log.i(FIREBASE_TAG, "Notification of given id doesn't exist")
