@@ -5,7 +5,6 @@ import {
   updateLiveUpdate,
   getDevicePushTokenAsync,
   addNotificationStateChangeListener,
-  removeNotificationStateChangeListener,
 } from 'expo-live-updates'
 import type {
   LiveUpdateConfig,

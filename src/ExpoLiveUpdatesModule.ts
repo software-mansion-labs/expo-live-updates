@@ -4,6 +4,7 @@ import type {
   LiveUpdateConfig,
   NotificationStateChangeEvent,
 } from './types'
+import type { EventSubscription } from 'react-native'
 
 declare class ExpoLiveUpdatesModule extends NativeModule<DirectionsHeadlessModuleEvents> {
   init: (channelId: string, channelName: string) => void
@@ -11,7 +12,7 @@ declare class ExpoLiveUpdatesModule extends NativeModule<DirectionsHeadlessModul
   stopLiveUpdate: (notificationId: number) => void
   updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
   getDevicePushTokenAsync: () => Promise<string> | null
-  addNotificationStateChangeListener: () => void
+  addNotificationStateChangeListener: () => EventSubscription | undefined
 }
 
 const module = requireNativeModule<ExpoLiveUpdatesModule>(
