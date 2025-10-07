@@ -2,6 +2,7 @@ package expo.modules.liveupdates
 
 import android.Manifest
 import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -20,6 +21,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
+import expo.modules.liveupdates.service.NotificationDismissedReceiver
 import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
 import java.io.File
@@ -77,7 +79,8 @@ class LiveUpdatesService : Service() {
     val smallImageName = extras?.getString(ServiceActionExtra.smallImageName)
     val backgroundColor = extras?.getString(ServiceActionExtra.backgroundColor)
 
-    val notification = createNotification(title, text, backgroundColor, imageName, smallImageName)
+    val notification =
+      createNotification(title, text, backgroundColor, imageName, smallImageName, notificationId)
     val notificationManager = NotificationManagerCompat.from(this)
 
     if (
@@ -85,6 +88,7 @@ class LiveUpdatesService : Service() {
         PackageManager.PERMISSION_GRANTED && notification !== null
     ) {
       notificationManager.notify(notificationId, notification)
+      ExpoLiveUpdatesModule.emitNotificationStateChange(notificationId, NotificationAction.UPDATED)
     }
   }
 
@@ -99,6 +103,7 @@ class LiveUpdatesService : Service() {
     backgroundColor: String? = null,
     image: String? = null,
     smallImageName: String? = null,
+    notificationId: Int = 1,
   ): Notification? {
 
     channelId?.let { channelId ->
@@ -136,6 +141,18 @@ class LiveUpdatesService : Service() {
           notificationBuilder.setColorized(true)
         }
       }
+
+      // Add delete intent to detect user swipe dismissals
+      val deleteIntent = Intent(this, NotificationDismissedReceiver::class.java)
+      deleteIntent.putExtra("notificationId", notificationId)
+      val deletePendingIntent =
+        PendingIntent.getBroadcast(
+          this,
+          notificationId,
+          deleteIntent,
+          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+      notificationBuilder.setDeleteIntent(deletePendingIntent)
 
       return notificationBuilder.build()
     }

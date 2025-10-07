@@ -4,8 +4,14 @@ import {
   stopLiveUpdate,
   updateLiveUpdate,
   getDevicePushTokenAsync,
+  addNotificationStateChangeListener,
+  removeNotificationStateChangeListener,
 } from 'expo-live-updates'
-import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
+import type {
+  LiveUpdateConfig,
+  LiveUpdateState,
+  NotificationStateChangeEvent,
+} from 'expo-live-updates/types'
 import { useEffect, useState } from 'react'
 import {
   Button,
@@ -35,6 +41,9 @@ export default function CreateLiveUpdatesScreen() {
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
   )
+  const [notificationEvents, setNotificationEvents] = useState<
+    NotificationStateChangeEvent[]
+  >([])
 
   useEffect(() => {
     const loadImages = async () => {
@@ -45,6 +54,20 @@ export default function CreateLiveUpdatesScreen() {
 
     loadImages()
     requestCameraPermission()
+
+    const handleNotificationStateChange = (
+      event: NotificationStateChangeEvent,
+    ) => {
+      setNotificationEvents(prev => [...prev, event])
+    }
+
+    const subscription = addNotificationStateChangeListener(
+      handleNotificationStateChange,
+    )
+
+    return () => {
+      subscription?.remove()
+    }
   }, [])
 
   const getState = (): LiveUpdateState => ({
@@ -174,6 +197,20 @@ export default function CreateLiveUpdatesScreen() {
           disabled={tokenClipboardLoading}
         />
       </View>
+
+      <View style={styles.eventsContainer}>
+        <Text style={styles.eventsTitle}>Notification Events:</Text>
+        {notificationEvents.length === 0 ? (
+          <Text style={styles.noEventsText}>No events yet</Text>
+        ) : (
+          notificationEvents.map((event, index) => (
+            <Text key={index} style={styles.eventText}>
+              {event.action} (ID: {event.notificationId}) -{' '}
+              {new Date(event.timestamp).toLocaleTimeString()}
+            </Text>
+          ))
+        )}
+      </View>
     </View>
   )
 }
@@ -240,6 +277,22 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '90%',
   },
+  eventText: {
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  eventsContainer: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    margin: 20,
+    padding: 15,
+    width: '90%',
+  },
+  eventsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   input: {
     borderColor: '#808080',
     borderRadius: 10,
@@ -257,5 +310,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingEnd: 15,
     width: '90%',
+  },
+  noEventsText: {
+    color: '#666',
+    fontStyle: 'italic',
   },
 })

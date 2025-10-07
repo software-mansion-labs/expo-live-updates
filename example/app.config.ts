@@ -25,7 +25,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     edgeToEdgeEnabled: true,
-    package: 'com.test.test',
+    package: 'expo.modules.liveupdates.example',
     permissions: [
       'android.permission.POST_NOTIFICATIONS',
       'android.permission.FOREGROUND_SERVICE_SPECIAL_USE',

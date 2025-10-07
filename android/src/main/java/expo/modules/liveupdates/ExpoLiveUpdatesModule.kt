@@ -10,6 +10,7 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
+import expo.modules.kotlin.types.Enumerable
 import expo.modules.liveupdates.service.NotificationManager
 
 data class LiveUpdateState(
@@ -22,6 +23,21 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
+data class NotificationStateChangeEvent(
+  @Field val notificationId: Int,
+  @Field val action: String,
+  @Field val timestamp: Long,
+) : Record {
+  fun toMap(): Map<String, Any> =
+    mapOf("notificationId" to notificationId, "action" to action, "timestamp" to timestamp)
+}
+
+enum class NotificationAction : Enumerable {
+  DISMISSED,
+  CLICKED,
+  UPDATED,
+}
+
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
 const val NOTIFICATION_ID = 1
 
@@ -31,6 +47,14 @@ const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
 
 class ExpoLiveUpdatesModule : Module() {
   private var notificationManager: NotificationManager? = null
+
+  companion object {
+    private var staticModule: ExpoLiveUpdatesModule? = null
+
+    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
+      staticModule?.emitNotificationStateChangeInternal(notificationId, action)
+    }
+  }
 
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
@@ -71,6 +95,8 @@ class ExpoLiveUpdatesModule : Module() {
 
       notificationManager = notifManager
       notificationManager?.startLiveUpdatesService()
+
+      staticModule = this@ExpoLiveUpdatesModule
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
@@ -107,6 +133,18 @@ class ExpoLiveUpdatesModule : Module() {
         promise.resolve(token)
       }
     }
+
+    Events("onNotificationStateChange")
+  }
+
+  fun emitNotificationStateChangeInternal(notificationId: Int, action: NotificationAction) {
+    val event =
+      NotificationStateChangeEvent(
+        notificationId = notificationId,
+        action = action.name.lowercase(),
+        timestamp = System.currentTimeMillis(),
+      )
+    sendEvent("onNotificationStateChange", event.toMap())
   }
 
   private val context

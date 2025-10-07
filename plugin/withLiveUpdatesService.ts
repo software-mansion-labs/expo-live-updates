@@ -11,6 +11,7 @@ type PluginProps = {
 }
 
 const SERVICE_NAME = 'expo.modules.liveupdates.LiveUpdatesService'
+const RECEIVER_NAME = 'expo.modules.liveupdates.service.NotificationDismissedReceiver'
 
 const ensureService = (
   androidManifest: AndroidConfig.Manifest.AndroidManifest,
@@ -50,12 +51,40 @@ const ensureService = (
   }
 }
 
+const ensureReceiver = (
+  androidManifest: AndroidConfig.Manifest.AndroidManifest,
+) => {
+  const mainApplication =
+    AndroidConfig.Manifest.getMainApplicationOrThrow(androidManifest)
+
+  const existingReceivers = (mainApplication.receiver ??= [])
+
+  const existingReceiverIndex = existingReceivers.findIndex(
+    (rcv: any) => rcv?.$?.['android:name'] === RECEIVER_NAME,
+  )
+
+  const baseReceiver = {
+    $: {
+      'android:name': RECEIVER_NAME,
+      'android:exported': 'false',
+      'android:enabled': 'true',
+    },
+  } as any
+
+  if (existingReceiverIndex >= 0) {
+    existingReceivers[existingReceiverIndex] = baseReceiver
+  } else {
+    existingReceivers.push(baseReceiver)
+  }
+}
+
 const withLiveUpdatesForegroundService: ConfigPlugin<PluginProps> = (
   config: ExpoConfig,
   props: PluginProps,
 ) => {
   return withAndroidManifest(config, configWithManifest => {
     ensureService(configWithManifest.modResults, props)
+    ensureReceiver(configWithManifest.modResults)
     return configWithManifest
   })
 }
