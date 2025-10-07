@@ -48,6 +48,32 @@ Request variables:
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
 
+# Notification state updates
+
+`ExpoLiveUpdatesModule.addNotificationStateChangeListener` API allows you to subscribe to changes in notification state. This is useful, for example, when you want to react to a user interacting with a notification or when a notification is updated or dismissed.
+
+The handler will receive a `NotificationStateChangeEvent` object, which contains:
+
+- `notificationId` – the ID of the notification.
+- `action` – the type of change, which can be `'dismissed'`, `'clicked'`, or `'updated'`.
+- `timestamp` – the time when the change occurred, in milliseconds.
+
+Example usage in a React component:
+
+```ts
+useEffect(() => {
+   const subscription = ExpoLiveUpdatesModule.addNotificationStateChangeListener(
+      (event: NotificationStateChangeEvent) => {
+         console.log(`Notification ${event.notificationId} was ${event.action} at ${event.timestamp}`);
+      }
+   );
+
+   return () => {
+      subscription?.remove();
+   };
+}, []);
+```
+
 # TODO
 
 - Change package name in `google-service.json`
