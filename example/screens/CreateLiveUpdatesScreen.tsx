@@ -113,12 +113,11 @@ export default function CreateLiveUpdatesScreen() {
   }
 
   useEffect(() => {
-    const subscription = addTokenListener(({ token: receivedToken }) => {
-      console.log('Push token received: ', receivedToken)
-      setToken(receivedToken)
-    })
+    const subscription = addTokenListener(({ token: receivedToken }) =>
+      setToken(receivedToken),
+    )
 
-    return () => subscription.remove()
+    return () => subscription?.remove()
   }, [setToken])
 
   return (

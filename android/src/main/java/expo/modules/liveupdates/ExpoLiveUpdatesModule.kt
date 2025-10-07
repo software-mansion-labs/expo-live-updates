@@ -89,7 +89,6 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
   }
 
   override fun onNewToken(token: String) {
-    Log.i(TAG, "New token received: $token")
     this@ExpoLiveUpdatesModule.sendEvent("onTokenChange", bundleOf("token" to token))
   }
 

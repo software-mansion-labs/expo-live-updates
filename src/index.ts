@@ -62,6 +62,7 @@ export function updateLiveUpdate(
 
 export function addTokenListener(
   listener: (event: TokenChangeEvent) => void,
-): EventSubscription {
-  return ExpoLiveUpdatesModule.addListener('onTokenChange', listener)
+): Voidable<EventSubscription> {
+  if (assertAndroid('addTokenListener'))
+    return ExpoLiveUpdatesModule.addListener('onTokenChange', listener)
 }

@@ -17,6 +17,7 @@ class PushTokenHandler() {
     @JvmStatic
     fun addTokenListener(listener: PushTokenListener) {
       this.listener = listener
+      Log.i(TAG, "Push token listener added")
 
       lastReceivedToken?.let { listener.onNewToken(it) }
         ?: run {
@@ -24,8 +25,6 @@ class PushTokenHandler() {
             task.result?.let { token -> listener.onNewToken(token) }
           }
         }
-
-      Log.i(TAG, "Push token listener added")
     }
   }
 
