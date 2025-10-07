@@ -5,10 +5,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 const val TAG = "PUSH TOKEN HANDLER"
 
-interface PushTokenListener {
-  fun onNewToken(token: String)
-}
-
 class PushTokenHandler() {
   companion object {
     var listener: PushTokenListener? = null
