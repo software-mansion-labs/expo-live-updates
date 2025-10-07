@@ -12,7 +12,7 @@ export type LiveUpdateConfig = {
 
 export type NotificationStateChangeEvent = {
   notificationId: number
-  action: 'dismissed' | 'clicked' | 'updated'
+  action: 'dismissed' | 'updated'
   timestamp: number
 }
 

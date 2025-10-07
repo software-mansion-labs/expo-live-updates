@@ -25,7 +25,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     edgeToEdgeEnabled: true,
-    package: 'expo.modules.liveupdates.example',
+    package: 'com.test.test',
     permissions: [
       'android.permission.POST_NOTIFICATIONS',
       'android.permission.FOREGROUND_SERVICE_SPECIAL_USE',
@@ -39,13 +39,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     'expo-asset',
-    [
-      '../plugin/withLiveUpdatesService',
-      {
-        foregroundServiceType: 'specialUse',
-        explanationForSpecialUse: 'explanation_for_special_use',
-      },
-    ],
+    '../plugin/withNotificationDismissedReceiver',
     '../plugin/withFirebaseService',
   ],
 })

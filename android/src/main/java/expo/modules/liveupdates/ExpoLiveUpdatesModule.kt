@@ -34,7 +34,6 @@ data class NotificationStateChangeEvent(
 
 enum class NotificationAction : Enumerable {
   DISMISSED,
-  CLICKED,
   UPDATED,
 }
 

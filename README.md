@@ -55,7 +55,7 @@ Request variables:
 The handler will receive a `NotificationStateChangeEvent` object, which contains:
 
 - `notificationId` – the ID of the notification.
-- `action` – the type of change, which can be `'dismissed'`, `'clicked'`, or `'updated'`.
+- `action` – the type of change, which can be `'dismissed'`, or `'updated'`.
 - `timestamp` – the time when the change occurred, in milliseconds.
 
 Example usage in a React component:
@@ -76,14 +76,11 @@ useEffect(() => {
 
 # TODO
 
-- Change package name in `google-service.json`
 - Handle push token change
 - Delete live update using FCM
 - Support missing fields of live update
 - Support multiple live updates at once
-- Listen to notification state changes - eg. dismiss by swipe
 - Handle notification ID after live update start triggered by FCM
-- Update `withLiveUpdatesService.ts` plugin
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
 
 # API documentation
