@@ -15,7 +15,7 @@ class PushTokenHandler() {
       this.listener = listener
       Log.i(TAG, "Push token listener added")
 
-      lastReceivedToken?.let { listener.onNewToken(it) }
+      lastReceivedToken?.let { token -> listener.onNewToken(token) }
         ?: run {
           FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             task.result?.let { token -> listener.onNewToken(token) }
