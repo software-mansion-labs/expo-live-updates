@@ -13,6 +13,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
 import expo.modules.liveupdates.service.NotificationEvent
+import expo.modules.liveupdates.service.checkNotificationExistence
 import java.lang.Exception
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -91,35 +92,30 @@ class FirebaseService : FirebaseMessagingService() {
     return progressStyle
   }
 
-  private fun doesNotificationExist(notificationId: Int): Boolean {
-    val notifications = notificationManager?.activeNotifications
-
-    val notification =
-      notifications?.find { notification -> notification?.id == notificationId }
-    return notification !== null
-  }
-
   private fun startNotification(notificationId: Int, notification: Notification) {
-    if (!doesNotificationExist(notificationId)) {
-      notificationManager?.notify(notificationId, notification)
-    } else {
-      Log.i(FIREBASE_TAG, "Notification of given id already exists")
+    notificationManager?.let { notificationManager ->
+      {
+        checkNotificationExistence(notificationManager, notificationId, shouldExist = false)
+        notificationManager.notify(notificationId, notification)
+      }
     }
   }
 
   private fun updateNotification(notificationId: Int, notification: Notification) {
-    if (doesNotificationExist(notificationId)) {
-      notificationManager?.notify(notificationId, notification)
-    } else {
-      Log.i(FIREBASE_TAG, "Notification of given id doesn't exist")
+    notificationManager?.let { notificationManager ->
+      {
+        checkNotificationExistence(notificationManager, notificationId, shouldExist = true)
+        notificationManager.notify(notificationId, notification)
+      }
     }
   }
 
   private fun stopNotification(notificationId: Int) {
-    if (doesNotificationExist(notificationId)) {
-      notificationManager?.cancel(notificationId)
-    } else {
-      Log.i(FIREBASE_TAG, "Notification of given id doesn't exist")
+    notificationManager?.let { notificationManager ->
+      {
+        checkNotificationExistence(notificationManager, notificationId, shouldExist = true)
+        notificationManager.cancel(notificationId)
+      }
     }
   }
 }
