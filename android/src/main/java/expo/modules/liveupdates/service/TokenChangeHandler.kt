@@ -6,15 +6,16 @@ import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessaging
 
 const val TAG = "TokenChangeHandler"
+const val TOKEN_CHANGE_EVENT = "onTokenChange"
 
 class TokenChangeHandler() {
   companion object {
-    var callback: ((String, Bundle) -> Unit)? = null
+    var sendEvent: ((String, Bundle) -> Unit)? = null
     var lastReceivedToken: String? = null
 
     @JvmStatic
-    fun setTokenChangeCallback(callback: (String, Bundle) -> Unit) {
-      this.callback = callback
+    fun setHandlerSendEvent(sendEvent: (String, Bundle) -> Unit) {
+      this.sendEvent = sendEvent
       Log.i(TAG, "Push token callback added")
 
       lastReceivedToken?.let { token -> sendTokenChangeEvent(token) }
@@ -26,7 +27,7 @@ class TokenChangeHandler() {
     }
 
     fun sendTokenChangeEvent(token: String) {
-      callback?.let { it("onTokenChange", bundleOf("token" to token)) }
+      sendEvent?.let { it(TOKEN_CHANGE_EVENT, bundleOf("token" to token)) }
     }
   }
 

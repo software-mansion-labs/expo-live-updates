@@ -9,7 +9,8 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.liveupdates.service.TokenChangeHandler.Companion.setTokenChangeCallback
+import expo.modules.liveupdates.service.TOKEN_CHANGE_EVENT
+import expo.modules.liveupdates.service.TokenChangeHandler.Companion.setHandlerSendEvent
 
 data class LiveUpdateState(
   @Field val title: String,
@@ -42,7 +43,7 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
-    Events("onTokenChange")
+    Events(TOKEN_CHANGE_EVENT)
 
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -72,7 +73,7 @@ class ExpoLiveUpdatesModule : Module() {
       notificationManager = notifManager
       notificationManager?.startLiveUpdatesService()
 
-      setTokenChangeCallback(this@ExpoLiveUpdatesModule::sendEvent)
+      setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
