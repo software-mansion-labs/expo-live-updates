@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import expo.modules.liveupdates.ExpoLiveUpdatesModule
 import expo.modules.liveupdates.NotificationAction
+import expo.modules.liveupdates.NotificationStateEventEmitter
 
 const val TAG = "NotificationDismissedReceiver"
 
@@ -14,7 +14,7 @@ class NotificationDismissedReceiver : BroadcastReceiver() {
     Log.i(TAG, "Notification dismissed by user")
     val notificationId = intent.getIntExtra("notificationId", -1)
     if (notificationId != -1) {
-      ExpoLiveUpdatesModule.emitNotificationStateChange(
+      NotificationStateEventEmitter.emitNotificationStateChange(
         notificationId,
         NotificationAction.DISMISSED,
       )

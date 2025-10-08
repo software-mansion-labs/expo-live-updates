@@ -87,7 +87,10 @@ class LiveUpdatesService : Service() {
         PackageManager.PERMISSION_GRANTED && notification !== null
     ) {
       notificationManager.notify(notificationId, notification)
-      ExpoLiveUpdatesModule.emitNotificationStateChange(notificationId, NotificationAction.UPDATED)
+      NotificationStateEventEmitter.emitNotificationStateChange(
+        notificationId,
+        NotificationAction.UPDATED,
+      )
     }
   }
 

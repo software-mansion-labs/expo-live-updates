@@ -2,10 +2,8 @@ package expo.modules.liveupdates
 
 import android.app.NotificationChannel
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessaging
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
@@ -24,15 +22,6 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
-data class NotificationStateChangeEvent(
-  @Field val notificationId: Int,
-  @Field val action: String,
-  @Field val timestamp: Long,
-) : Record {
-  fun toBundle(): Bundle =
-    bundleOf("notificationId" to notificationId, "action" to action, "timestamp" to timestamp)
-}
-
 enum class NotificationAction {
   DISMISSED,
   UPDATED,
@@ -47,14 +36,6 @@ const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
 
 class ExpoLiveUpdatesModule : Module() {
   private var notificationManager: NotificationManager? = null
-
-  companion object {
-    private var staticModule: ExpoLiveUpdatesModule? = null
-
-    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
-      staticModule?.emitNotificationStateChangeInternal(notificationId, action)
-    }
-  }
 
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
@@ -96,7 +77,7 @@ class ExpoLiveUpdatesModule : Module() {
       notificationManager = notifManager
       notificationManager?.startLiveUpdatesService()
 
-      staticModule = this@ExpoLiveUpdatesModule
+      NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
@@ -135,16 +116,6 @@ class ExpoLiveUpdatesModule : Module() {
     }
 
     Events("onNotificationStateChange")
-  }
-
-  fun emitNotificationStateChangeInternal(notificationId: Int, action: NotificationAction) {
-    val event =
-      NotificationStateChangeEvent(
-        notificationId = notificationId,
-        action = action.name.lowercase(),
-        timestamp = System.currentTimeMillis(),
-      )
-    sendEvent("onNotificationStateChange", event.toBundle())
   }
 
   private val context

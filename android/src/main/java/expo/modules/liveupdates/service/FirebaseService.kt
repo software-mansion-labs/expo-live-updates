@@ -49,7 +49,7 @@ class FirebaseService : FirebaseMessagingService() {
       notificationManager?.let { notificationManager ->
         Log.i(FIREBASE_TAG, "message displayed")
         notificationManager.notify(notificationId, notification)
-        ExpoLiveUpdatesModule.emitNotificationStateChange(
+        NotificationStateEventEmitter.emitNotificationStateChange(
           notificationId,
           NotificationAction.UPDATED,
         )

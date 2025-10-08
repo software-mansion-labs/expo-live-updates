@@ -76,6 +76,7 @@ useEffect(() => {
 
 # TODO
 - Handle click with deeplink functionality
+- Add `started` & `stopped` events
 - Handle push token change
 - Delete live update using FCM
 - Support missing fields of live update
