@@ -4,14 +4,12 @@ import android.app.NotificationChannel
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.os.bundleOf
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.liveupdates.service.PushTokenHandler.Companion.addTokenListener
-import expo.modules.liveupdates.service.PushTokenListener
+import expo.modules.liveupdates.service.TokenChangeHandler.Companion.setTokenChangeCallback
 
 data class LiveUpdateState(
   @Field val title: String,
@@ -29,7 +27,7 @@ const val NOTIFICATION_ID = 1
 const val CHANNEL_ID = "Notifications channel"
 const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
 
-class ExpoLiveUpdatesModule : Module(), PushTokenListener {
+class ExpoLiveUpdatesModule : Module() {
   private var notificationManager: NotificationManager? = null
 
   // Each module class must implement the definition function. The definition consists of components
@@ -74,7 +72,7 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
       notificationManager = notifManager
       notificationManager?.startLiveUpdatesService()
 
-      addTokenListener(this@ExpoLiveUpdatesModule)
+      setTokenChangeCallback(this@ExpoLiveUpdatesModule::sendEvent)
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
@@ -86,10 +84,6 @@ class ExpoLiveUpdatesModule : Module(), PushTokenListener {
     Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
       notificationManager?.updateNotification(notificationId, state)
     }
-  }
-
-  override fun onNewToken(token: String) {
-    this@ExpoLiveUpdatesModule.sendEvent("onTokenChange", bundleOf("token" to token))
   }
 
   private val context

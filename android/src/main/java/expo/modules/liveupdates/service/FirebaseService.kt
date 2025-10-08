@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
-import expo.modules.liveupdates.service.PushTokenHandler
+import expo.modules.liveupdates.service.TokenChangeHandler
 import kotlin.String
 
 const val FIREBASE_TAG = "FirebaseService"
@@ -20,7 +20,7 @@ const val FIREBASE_TAG = "FirebaseService"
 class FirebaseService : FirebaseMessagingService() {
 
   var notificationManager: NotificationManager? = null
-  val pushTokenHandler: PushTokenHandler = PushTokenHandler()
+  val tokenChangeHandler: TokenChangeHandler = TokenChangeHandler()
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
@@ -33,7 +33,7 @@ class FirebaseService : FirebaseMessagingService() {
     notificationManager = androidNotificationManager
   }
 
-  override fun onNewToken(token: String) = pushTokenHandler.onNewToken(token)
+  override fun onNewToken(token: String) = tokenChangeHandler.onNewToken(token)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
