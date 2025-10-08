@@ -6,7 +6,7 @@ import type {
 } from './types'
 import type { EventSubscription } from 'react-native'
 
-declare class ExpoLiveUpdatesModule extends NativeModule<DirectionsHeadlessModuleEvents> {
+declare class ExpoLiveUpdatesModule extends NativeModule<ExpoLiveUpdatesModuleEvents> {
   init: (channelId: string, channelName: string) => void
   startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
   stopLiveUpdate: (notificationId: number) => void
@@ -19,7 +19,7 @@ const module = requireNativeModule<ExpoLiveUpdatesModule>(
   'ExpoLiveUpdatesModule',
 )
 
-export type DirectionsHeadlessModuleEvents = {
+export type ExpoLiveUpdatesModuleEvents = {
   onNotificationStateChange: (event: NotificationStateChangeEvent) => void
 }
 

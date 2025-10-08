@@ -1,4 +1,5 @@
 import { Platform } from 'react-native'
+import type { EventSubscription } from 'expo-modules-core'
 import ExpoLiveUpdatesModule from './ExpoLiveUpdatesModule'
 import type {
   LiveUpdateState,
@@ -73,13 +74,12 @@ export async function getDevicePushTokenAsync() {
  */
 export function addNotificationStateChangeListener(
   listener: (event: NotificationStateChangeEvent) => void,
-) {
+): Voidable<EventSubscription> {
   if (assertAndroid('addNotificationStateChangeListener')) {
-    const subscription = ExpoLiveUpdatesModule.addListener(
+    return ExpoLiveUpdatesModule.addListener(
       'onNotificationStateChange',
       listener,
     )
-    return subscription
   }
   return undefined
 }

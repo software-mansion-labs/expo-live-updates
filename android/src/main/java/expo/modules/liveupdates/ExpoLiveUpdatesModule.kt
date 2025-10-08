@@ -2,15 +2,16 @@ package expo.modules.liveupdates
 
 import android.app.NotificationChannel
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessaging
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
-import expo.modules.kotlin.types.Enumerable
 import expo.modules.liveupdates.service.NotificationManager
 
 data class LiveUpdateState(
@@ -28,11 +29,11 @@ data class NotificationStateChangeEvent(
   @Field val action: String,
   @Field val timestamp: Long,
 ) : Record {
-  fun toMap(): Map<String, Any> =
-    mapOf("notificationId" to notificationId, "action" to action, "timestamp" to timestamp)
+  fun toBundle(): Bundle =
+    bundleOf("notificationId" to notificationId, "action" to action, "timestamp" to timestamp)
 }
 
-enum class NotificationAction : Enumerable {
+enum class NotificationAction {
   DISMISSED,
   UPDATED,
 }
@@ -143,7 +144,7 @@ class ExpoLiveUpdatesModule : Module() {
         action = action.name.lowercase(),
         timestamp = System.currentTimeMillis(),
       )
-    sendEvent("onNotificationStateChange", event.toMap())
+    sendEvent("onNotificationStateChange", event.toBundle())
   }
 
   private val context

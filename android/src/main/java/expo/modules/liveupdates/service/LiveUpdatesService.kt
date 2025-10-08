@@ -144,7 +144,7 @@ class LiveUpdatesService : Service() {
 
       // Add delete intent to detect user swipe dismissals
       val deleteIntent = Intent(this, NotificationDismissedReceiver::class.java)
-      deleteIntent.putExtra("notificationId", notificationId)
+      deleteIntent.putExtra(ServiceActionExtra.notificationId, notificationId)
       val deletePendingIntent =
         PendingIntent.getBroadcast(
           this,

@@ -41,7 +41,6 @@ const ensureReceiver = (
 
 const withNotificationDismissedReceiver: ConfigPlugin<PluginProps> = (
   config: ExpoConfig,
-  props: PluginProps,
 ) => {
   return withAndroidManifest(config, configWithManifest => {
     ensureReceiver(configWithManifest.modResults)

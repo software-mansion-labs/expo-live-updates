@@ -15,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
 import expo.modules.liveupdates.service.NotificationDismissedReceiver
+import expo.modules.liveupdates.service.ServiceActionExtra
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -78,7 +79,7 @@ class FirebaseService : FirebaseMessagingService() {
     // Attach delete intent so user swipe dismiss triggers our receiver
     notificationData.notificationId?.let { notificationId ->
       val deleteIntent = Intent(this, NotificationDismissedReceiver::class.java)
-      deleteIntent.putExtra("notificationId", notificationId)
+      deleteIntent.putExtra(ServiceActionExtra.notificationId, notificationId)
       val deletePendingIntent =
         PendingIntent.getBroadcast(
           this,
