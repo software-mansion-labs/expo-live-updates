@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
-import expo.modules.liveupdates.service.NotificationIntentUtils
+import expo.modules.liveupdates.service.setNotificationDeleteIntent
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -74,7 +74,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     notificationData.notificationId?.let { notificationId ->
-      NotificationIntentUtils.setDeleteIntent(this, notificationId, notificationBuilder)
+      setNotificationDeleteIntent(this, notificationId, notificationBuilder)
     }
 
     return notificationBuilder.build()

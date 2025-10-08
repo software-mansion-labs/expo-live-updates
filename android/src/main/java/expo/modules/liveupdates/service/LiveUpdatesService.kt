@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
-import expo.modules.liveupdates.service.NotificationIntentUtils
+import expo.modules.liveupdates.service.setNotificationDeleteIntent
 import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
 import java.io.File
@@ -141,7 +141,7 @@ class LiveUpdatesService : Service() {
         }
       }
 
-      NotificationIntentUtils.setDeleteIntent(this, notificationId, notificationBuilder)
+        setNotificationDeleteIntent(this, notificationId, notificationBuilder)
 
       return notificationBuilder.build()
     }
