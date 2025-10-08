@@ -6,7 +6,7 @@ enum class NotificationEvent {
   STOP,
 }
 
-data class NotificationData(
+data class FirebaseNotificationData(
   val event: NotificationEvent,
   val notificationId: Int,
   val title: String,

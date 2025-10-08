@@ -11,7 +11,7 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import expo.modules.liveupdates.service.NotificationData
+import expo.modules.liveupdates.service.FirebaseNotificationData
 import expo.modules.liveupdates.service.NotificationEvent
 import expo.modules.liveupdates.service.checkNotificationExistence
 import java.lang.Exception
@@ -42,7 +42,7 @@ class FirebaseService : FirebaseMessagingService() {
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
     try {
-      val notificationData = NotificationData(message.data)
+      val notificationData = FirebaseNotificationData(message.data)
       val notification = createNotification(notificationData)
 
       val (event, notificationId) = notificationData
@@ -59,7 +59,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
   }
 
-  private fun createNotification(notificationData: NotificationData): Notification {
+  private fun createNotification(notificationData: FirebaseNotificationData): Notification {
     val notificationBuilder =
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setContentTitle("[${notificationData.notificationId}] ${notificationData.title}")
@@ -79,7 +79,7 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   private fun createProgressStyle(
-    notificationData: NotificationData
+    notificationData: FirebaseNotificationData
   ): NotificationCompat.ProgressStyle {
     val progressStyle = NotificationCompat.ProgressStyle()
 
