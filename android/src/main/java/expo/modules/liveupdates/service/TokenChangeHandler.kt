@@ -16,7 +16,7 @@ class TokenChangeHandler() {
     @JvmStatic
     fun setHandlerSendEvent(sendEvent: (String, Bundle) -> Unit) {
       this.sendEvent = sendEvent
-      Log.i(TAG, "Push token callback added")
+      Log.i(TAG, "Token change handler setEvent added")
 
       lastReceivedToken?.let { token -> sendTokenChangeEvent(token) }
         ?: run {
