@@ -75,18 +75,20 @@ class ExpoLiveUpdatesModule : Module() {
       val notifManager = NotificationManager(context, CHANNEL_ID)
 
       notificationManager = notifManager
-      notificationManager?.startLiveUpdatesService()
-
       NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
     }
 
-    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
+    Function("startLiveUpdate") @androidx.annotation.RequiresPermission(
+      android.Manifest.permission.POST_NOTIFICATIONS
+    ) { state: LiveUpdateState, config: LiveUpdateConfig ->
       notificationManager?.startNotification(state, config)
     }
     Function("stopLiveUpdate") { notificationId: Int ->
       notificationManager?.stopNotification(notificationId)
     }
-    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
+    Function("updateLiveUpdate") @androidx.annotation.RequiresPermission(
+      android.Manifest.permission.POST_NOTIFICATIONS
+    ) { notificationId: Int, state: LiveUpdateState ->
       notificationManager?.updateNotification(notificationId, state)
     }
     AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
