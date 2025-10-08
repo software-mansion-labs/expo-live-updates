@@ -15,7 +15,7 @@ import expo.modules.liveupdates.service.NotificationData
 import expo.modules.liveupdates.service.PushTokenHandler
 import kotlin.String
 
-const val FIREBASE_TAG = "FIREBASE SERVICE"
+const val FIREBASE_TAG = "FirebaseService"
 
 class FirebaseService : FirebaseMessagingService() {
 

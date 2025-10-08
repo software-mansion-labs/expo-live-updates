@@ -3,7 +3,7 @@ package expo.modules.liveupdates.service
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 
-const val TAG = "PUSH TOKEN HANDLER"
+const val TAG = "PushTokenHandler"
 
 class PushTokenHandler() {
   companion object {
