@@ -4,8 +4,6 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -14,8 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
-import expo.modules.liveupdates.service.NotificationDismissedReceiver
-import expo.modules.liveupdates.service.ServiceActionExtra
+import expo.modules.liveupdates.service.NotificationIntentUtils
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -76,18 +73,8 @@ class FirebaseService : FirebaseMessagingService() {
       notificationBuilder.setStyle(progressStyle)
     }
 
-    // Attach delete intent so user swipe dismiss triggers our receiver
     notificationData.notificationId?.let { notificationId ->
-      val deleteIntent = Intent(this, NotificationDismissedReceiver::class.java)
-      deleteIntent.putExtra(ServiceActionExtra.notificationId, notificationId)
-      val deletePendingIntent =
-        PendingIntent.getBroadcast(
-          this,
-          notificationId,
-          deleteIntent,
-          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-      notificationBuilder.setDeleteIntent(deletePendingIntent)
+      NotificationIntentUtils.setDeleteIntent(this, notificationId, notificationBuilder)
     }
 
     return notificationBuilder.build()

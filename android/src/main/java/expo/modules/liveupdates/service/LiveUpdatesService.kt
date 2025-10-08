@@ -2,7 +2,6 @@ package expo.modules.liveupdates
 
 import android.Manifest
 import android.app.Notification
-import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -21,7 +20,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
-import expo.modules.liveupdates.service.NotificationDismissedReceiver
+import expo.modules.liveupdates.service.NotificationIntentUtils
 import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
 import java.io.File
@@ -142,17 +141,7 @@ class LiveUpdatesService : Service() {
         }
       }
 
-      // Add delete intent to detect user swipe dismissals
-      val deleteIntent = Intent(this, NotificationDismissedReceiver::class.java)
-      deleteIntent.putExtra(ServiceActionExtra.notificationId, notificationId)
-      val deletePendingIntent =
-        PendingIntent.getBroadcast(
-          this,
-          notificationId,
-          deleteIntent,
-          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-      notificationBuilder.setDeleteIntent(deletePendingIntent)
+      NotificationIntentUtils.setDeleteIntent(this, notificationId, notificationBuilder)
 
       return notificationBuilder.build()
     }
