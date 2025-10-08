@@ -103,7 +103,7 @@ class LiveUpdatesService : Service() {
     backgroundColor: String? = null,
     image: String? = null,
     smallImageName: String? = null,
-    notificationId: Int = 1,
+    notificationId: Int,
   ): Notification? {
 
     channelId?.let { channelId ->
