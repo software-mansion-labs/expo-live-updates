@@ -50,6 +50,9 @@ Request variables:
 
 # TODO
 
+- Validate notification existence on start/update/stop in LiveUpdatesService
+- Check behavior of devices which do not support live updates
+- Check if permissions are properly handled
 - Change package name in `google-service.json`
 - Handle push token change
 - Support missing fields of live update
