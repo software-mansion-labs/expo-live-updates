@@ -1,25 +1,24 @@
 package expo.modules.liveupdates
 
 import android.Manifest
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import expo.modules.liveupdates.service.NotificationData
-import expo.modules.liveupdates.service.setNotificationDeleteIntent
-import kotlin.String
+import expo.modules.liveupdates.LiveUpdateState
+import expo.modules.liveupdates.NOTIFICATION_ID
+import expo.modules.liveupdates.service.LiveUpdatesManager
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
 
 class FirebaseService : FirebaseMessagingService() {
 
   var notificationManager: NotificationManager? = null
+  private var liveUpdatesManager: LiveUpdatesManager? = null
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
@@ -30,6 +29,9 @@ class FirebaseService : FirebaseMessagingService() {
 
     androidNotificationManager.createNotificationChannel(channel)
     notificationManager = androidNotificationManager
+    
+    // Initialize unified notification manager
+    liveUpdatesManager = LiveUpdatesManager(this, CHANNEL_ID)
   }
 
   // TODO: update token in RN
@@ -42,55 +44,16 @@ class FirebaseService : FirebaseMessagingService() {
   override fun onMessageReceived(message: RemoteMessage) {
     Log.i(FIREBASE_TAG, "message received")
 
-    val notificationData = NotificationData(message.data)
-    val notification = createNotification(notificationData)
+    val state = LiveUpdateState(
+      title = message.data["title"] ?: "Live Update",
+      subtitle = message.data["subtitle"],
+    )
 
-    notificationData.notificationId?.let { notificationId ->
-      notificationManager?.let { notificationManager ->
-        Log.i(FIREBASE_TAG, "message displayed")
-        notificationManager.notify(notificationId, notification)
-        NotificationStateEventEmitter.emitNotificationStateChange(
-          notificationId,
-          NotificationAction.UPDATED,
-        )
-      }
+    liveUpdatesManager?.let { manager ->
+      val notificationId = message.data["notificationId"]?.toInt() ?: NOTIFICATION_ID
+      manager.updateLiveUpdateNotification(notificationId, state)
+      Log.i(FIREBASE_TAG, "message updated")
     }
   }
 
-  private fun createNotification(notificationData: NotificationData): Notification {
-    val notificationBuilder =
-      NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle(notificationData.title)
-        .setSmallIcon(android.R.drawable.star_on)
-        .setContentText(notificationData.subtitle)
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-      notificationBuilder.setShortCriticalText("SWM")
-      notificationBuilder.setOngoing(true)
-      notificationBuilder.setRequestPromotedOngoing(true)
-
-      val progressStyle = createProgressStyle(notificationData)
-      notificationBuilder.setStyle(progressStyle)
-    }
-
-    notificationData.notificationId?.let { notificationId ->
-      setNotificationDeleteIntent(this, notificationId, notificationBuilder)
-    }
-
-    return notificationBuilder.build()
-  }
-
-  private fun createProgressStyle(
-    notificationData: NotificationData
-  ): NotificationCompat.ProgressStyle {
-    val progressStyle = NotificationCompat.ProgressStyle()
-
-    notificationData.progress?.let { progressStyle.setProgress(it) }
-
-    notificationData.progressPoints?.forEach {
-      progressStyle.addProgressPoint(NotificationCompat.ProgressStyle.Point(it))
-    }
-
-    return progressStyle
-  }
 }

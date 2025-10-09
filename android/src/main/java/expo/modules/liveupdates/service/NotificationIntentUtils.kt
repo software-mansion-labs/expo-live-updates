@@ -18,7 +18,7 @@ fun setNotificationDeleteIntent(
   notificationBuilder: NotificationCompat.Builder,
 ) {
   val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
-  deleteIntent.putExtra(ServiceActionExtra.notificationId, notificationId)
+  deleteIntent.putExtra("notificationId", notificationId)
   val deletePendingIntent =
     PendingIntent.getBroadcast(
       context,

@@ -89,7 +89,9 @@ export default function CreateLiveUpdatesScreen() {
       const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
         setNotificationId(id)
+        console.log('WORKS')
       } else {
+        console.log('DUPA')
         throw new Error('no notificationId returned')
       }
     } catch (e) {
