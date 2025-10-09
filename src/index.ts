@@ -5,6 +5,7 @@ import type {
   LiveUpdateState,
   LiveUpdateConfig,
   TokenChangeEvent,
+  NotificationStateChangeEvent,
 } from './types'
 
 type Voidable<T> = T | void
@@ -65,4 +66,20 @@ export function addTokenListener(
 ): Voidable<EventSubscription> {
   if (assertAndroid('addTokenListener'))
     return ExpoLiveUpdatesModule.addListener('onTokenChange', listener)
+}
+
+/**
+ * Add a notification state change listener using Expo's event system.
+ * @param {function} listener The listener function to be called when notification state changes.
+ */
+export function addNotificationStateChangeListener(
+  listener: (event: NotificationStateChangeEvent) => void,
+): Voidable<EventSubscription> {
+  if (assertAndroid('addNotificationStateChangeListener')) {
+    return ExpoLiveUpdatesModule.addListener(
+      'onNotificationStateChange',
+      listener,
+    )
+  }
+  return undefined
 }

@@ -22,6 +22,11 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
+enum class NotificationAction {
+  DISMISSED,
+  UPDATED,
+}
+
 const val NOTIFICATION_ID = 1
 
 // TODO: delete CHANNEL_ID and CHANNEL_NAME - make notification channel id and name configurable
@@ -43,7 +48,7 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
-    Events(TOKEN_CHANGE_EVENT)
+    Events(TOKEN_CHANGE_EVENT, "onNotificationStateChange")
 
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -74,6 +79,8 @@ class ExpoLiveUpdatesModule : Module() {
       notificationManager?.startLiveUpdatesService()
 
       setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
+
+      NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
