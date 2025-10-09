@@ -6,7 +6,6 @@ import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessaging
 
 const val TAG = "TokenChangeHandler"
-const val TOKEN_CHANGE_EVENT = "onTokenChange"
 
 class TokenChangeHandler() {
   companion object {
@@ -27,7 +26,7 @@ class TokenChangeHandler() {
     }
 
     fun sendTokenChangeEvent(token: String) {
-      sendEvent?.let { it(TOKEN_CHANGE_EVENT, bundleOf("token" to token)) }
+      sendEvent?.let { it(LiveUpdateEvents.onTokenChange, bundleOf("token" to token)) }
     }
   }
 

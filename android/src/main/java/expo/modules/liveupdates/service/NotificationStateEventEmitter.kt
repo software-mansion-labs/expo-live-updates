@@ -2,6 +2,7 @@ package expo.modules.liveupdates
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import expo.modules.liveupdates.service.LiveUpdateEvents
 
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
   companion object {
@@ -23,7 +24,7 @@ class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> U
         action = action.name.lowercase(),
         timestamp = System.currentTimeMillis(),
       )
-    sendEvent("onNotificationStateChange", event.toBundle())
+    sendEvent(LiveUpdateEvents.onNotificationStateChange, event.toBundle())
   }
 }
 
