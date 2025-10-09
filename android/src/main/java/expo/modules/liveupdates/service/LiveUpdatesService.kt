@@ -22,6 +22,7 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
 import expo.modules.liveupdates.service.ServiceAction
 import expo.modules.liveupdates.service.ServiceActionExtra
+import expo.modules.liveupdates.service.setNotificationDeleteIntent
 import java.io.File
 
 const val TAG = "LiveUpdatesService"
@@ -86,6 +87,10 @@ class LiveUpdatesService : Service() {
         PackageManager.PERMISSION_GRANTED && notification !== null
     ) {
       notificationManager.notify(notificationId, notification)
+      NotificationStateEventEmitter.emitNotificationStateChange(
+        notificationId,
+        NotificationAction.UPDATED,
+      )
     }
   }
 
@@ -138,6 +143,8 @@ class LiveUpdatesService : Service() {
           notificationBuilder.setColorized(true)
         }
       }
+
+      setNotificationDeleteIntent(this, notificationId, notificationBuilder)
 
       return notificationBuilder.build()
     }

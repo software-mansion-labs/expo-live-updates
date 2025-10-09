@@ -14,7 +14,7 @@ To run example app:
 # How to add Firebase Cloud Messaging
 
 1. Create project at [Firebase](https://firebase.google.com/).
-2. Add android app to created project. Set package name to `com.com.test` and download `google-service.json`. Skip other steps of Firebase instructions.
+2. Add android app to created project. To work with example app set package name to `com.test.test` and download `google-service.json`. Skip other steps of Firebase instructions.
 3. Place `google-service.json` in `/example` folder.
 
 # Send Firebase Message
@@ -48,18 +48,44 @@ Request variables:
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
 
+# Notification state updates
+
+`ExpoLiveUpdatesModule.addNotificationStateChangeListener` API allows you to subscribe to changes in notification state. This is useful, for example, when you want to react to a user interacting with a notification or when a notification is updated or dismissed.
+
+The handler will receive a `NotificationStateChangeEvent` object, which contains:
+
+- `notificationId` – the ID of the notification.
+- `action` – the type of change, which can be `'dismissed'`, or `'updated'`.
+- `timestamp` – the time when the change occurred, in milliseconds.
+
+Example usage in a React component:
+
+```ts
+useEffect(() => {
+  const subscription = ExpoLiveUpdatesModule.addNotificationStateChangeListener(
+    (event: NotificationStateChangeEvent) => {
+      console.log(
+        `Notification ${event.notificationId} was ${event.action} at ${event.timestamp}`,
+      )
+    },
+  )
+
+  return () => {
+    subscription?.remove()
+  }
+}, [])
+```
+
 # TODO
 
+- Handle click with deeplink functionality
+- Add `started` & `stopped` events
 - Validate notification existence on start/update/stop in LiveUpdatesService
 - Check behavior of devices which do not support live updates
 - Check if permissions are properly handled
-- Change package name in `google-service.json`
-- Handle push token change
 - Support missing fields of live update
 - Support multiple live updates at once
-- Listen to notification state changes - eg. dismiss by swipe
 - Handle notification ID after live update start triggered by FCM
-- Update `withLiveUpdatesService.ts` plugin
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
 
 # API documentation

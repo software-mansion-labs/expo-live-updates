@@ -1,6 +1,12 @@
+import type { EventSubscription } from 'expo-modules-core'
 import { Platform } from 'react-native'
 import ExpoLiveUpdatesModule from './ExpoLiveUpdatesModule'
-import type { LiveUpdateState, LiveUpdateConfig } from './types'
+import type {
+  LiveUpdateState,
+  LiveUpdateConfig,
+  TokenChangeEvent,
+  NotificationStateChangeEvent,
+} from './types'
 
 type Voidable<T> = T | void
 
@@ -55,10 +61,25 @@ export function updateLiveUpdate(
     return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state)
 }
 
-export async function getDevicePushTokenAsync() {
-  if (assertAndroid('getDevicePushTokenAsync')) {
-    return await ExpoLiveUpdatesModule.getDevicePushTokenAsync()
-  } else {
-    return null
+export function addTokenChangeListener(
+  listener: (event: TokenChangeEvent) => void,
+): Voidable<EventSubscription> {
+  if (assertAndroid('addTokenChangeListener'))
+    return ExpoLiveUpdatesModule.addListener('onTokenChange', listener)
+}
+
+/**
+ * Add a notification state change listener using Expo's event system.
+ * @param {function} listener The listener function to be called when notification state changes.
+ */
+export function addNotificationStateChangeListener(
+  listener: (event: NotificationStateChangeEvent) => void,
+): Voidable<EventSubscription> {
+  if (assertAndroid('addNotificationStateChangeListener')) {
+    return ExpoLiveUpdatesModule.addListener(
+      'onNotificationStateChange',
+      listener,
+    )
   }
+  return undefined
 }

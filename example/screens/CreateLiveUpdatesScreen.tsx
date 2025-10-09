@@ -3,9 +3,14 @@ import {
   startLiveUpdate,
   stopLiveUpdate,
   updateLiveUpdate,
-  getDevicePushTokenAsync,
+  addTokenChangeListener,
+  addNotificationStateChangeListener,
 } from 'expo-live-updates'
-import type { LiveUpdateConfig, LiveUpdateState } from 'expo-live-updates/types'
+import type {
+  LiveUpdateConfig,
+  LiveUpdateState,
+  NotificationStateChangeEvent,
+} from 'expo-live-updates/types'
 import { useEffect, useMemo, useState } from 'react'
 import {
   Button,
@@ -31,8 +36,11 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
-  const [tokenClipboardLoading, setTokenClipboardLoading] = useState(false)
   const [notificationIdString, setNotificationIdString] = useState<string>('')
+  const [token, setToken] = useState<string | undefined>(undefined)
+  const [notificationEvents, setNotificationEvents] = useState<
+    NotificationStateChangeEvent[]
+  >([])
 
   const notificationId = useMemo(() => {
     const parsedNotificationId = parseInt(notificationIdString)
@@ -48,6 +56,20 @@ export default function CreateLiveUpdatesScreen() {
 
     loadImages()
     requestCameraPermission()
+
+    const handleNotificationStateChange = (
+      event: NotificationStateChangeEvent,
+    ) => {
+      setNotificationEvents(prev => [...prev, event])
+    }
+
+    const subscription = addNotificationStateChangeListener(
+      handleNotificationStateChange,
+    )
+
+    return () => {
+      subscription?.remove()
+    }
   }, [])
 
   const getState = (): LiveUpdateState => ({
@@ -103,13 +125,24 @@ export default function CreateLiveUpdatesScreen() {
   }
 
   const handleCopyPushToken = () => {
-    if (!tokenClipboardLoading) {
-      setTokenClipboardLoading(true)
-      getDevicePushTokenAsync()
-        .then(token => Clipboard.setStringAsync(token ?? 'someting went wrong'))
-        .finally(() => setTokenClipboardLoading(false))
+    try {
+      if (token !== undefined) {
+        Clipboard.setStringAsync(token)
+      } else {
+        throw Error('push token is undefined')
+      }
+    } catch (e) {
+      console.error('Copying push token failed! ' + e)
     }
   }
+
+  useEffect(() => {
+    const subscription = addTokenChangeListener(({ token: receivedToken }) =>
+      setToken(receivedToken),
+    )
+
+    return () => subscription?.remove()
+  }, [setToken])
 
   return (
     <View style={styles.container}>
@@ -175,21 +208,22 @@ export default function CreateLiveUpdatesScreen() {
           onPress={handleStartLiveUpdate}
           disabled={title === '' || notificationId !== undefined}
         />
-        <Button
-          title="Stop"
-          onPress={handleStopLiveUpdate}
-          disabled={notificationId === undefined}
-        />
-        <Button
-          title="Update"
-          onPress={handleUpdateLiveUpdate}
-          disabled={notificationId === undefined}
-        />
-        <Button
-          title="Copy Push Token"
-          onPress={handleCopyPushToken}
-          disabled={tokenClipboardLoading}
-        />
+        <Button title="Stop" onPress={handleStopLiveUpdate} />
+        <Button title="Update" onPress={handleUpdateLiveUpdate} />
+        <Button title="Copy Push Token" onPress={handleCopyPushToken} />
+      </View>
+      <View style={styles.eventsContainer}>
+        <Text style={styles.eventsTitle}>Notification Events:</Text>
+        {notificationEvents.length === 0 ? (
+          <Text style={styles.noEventsText}>No events yet</Text>
+        ) : (
+          notificationEvents.map((event, index) => (
+            <Text key={index} style={styles.eventText}>
+              {event.action} (ID: {event.notificationId}) -{' '}
+              {new Date(event.timestamp).toLocaleTimeString()}
+            </Text>
+          ))
+        )}
       </View>
     </View>
   )
@@ -257,6 +291,22 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '90%',
   },
+  eventText: {
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  eventsContainer: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    margin: 20,
+    padding: 15,
+    width: '90%',
+  },
+  eventsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   input: {
     borderColor: '#808080',
     borderRadius: 10,
@@ -274,5 +324,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingEnd: 15,
     width: '90%',
+  },
+  noEventsText: {
+    color: '#666',
+    fontStyle: 'italic',
   },
 })

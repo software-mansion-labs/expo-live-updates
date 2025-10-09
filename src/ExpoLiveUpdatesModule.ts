@@ -1,12 +1,23 @@
 import { NativeModule, requireNativeModule } from 'expo'
-import type { LiveUpdateState, LiveUpdateConfig } from './types'
+import type {
+  LiveUpdateState,
+  LiveUpdateConfig,
+  NotificationStateChangeEvent,
+  TokenChangeEvent,
+} from './types'
+import type { EventSubscription } from 'react-native'
 
-declare class ExpoLiveUpdatesModule extends NativeModule {
+type ExpoLiveUpdatesModuleEvents = {
+  onNotificationStateChange: (event: NotificationStateChangeEvent) => void
+  onTokenChange: (event: TokenChangeEvent) => void
+}
+declare class ExpoLiveUpdatesModule extends NativeModule<ExpoLiveUpdatesModuleEvents> {
   init: (channelId: string, channelName: string) => void
   startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
   stopLiveUpdate: (notificationId: number) => void
   updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
-  getDevicePushTokenAsync: () => Promise<string> | null
+  addNotificationStateChangeListener: () => EventSubscription | undefined
+  addTokenChangeListener: () => EventSubscription | undefined
 }
 
 const module = requireNativeModule<ExpoLiveUpdatesModule>(

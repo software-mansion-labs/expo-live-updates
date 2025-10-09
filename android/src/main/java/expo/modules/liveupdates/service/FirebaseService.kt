@@ -13,14 +13,17 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.FirebaseNotificationData
 import expo.modules.liveupdates.service.NotificationEvent
+import expo.modules.liveupdates.service.TokenChangeHandler
 import expo.modules.liveupdates.service.checkNotificationExistence
+import expo.modules.liveupdates.service.setNotificationDeleteIntent
 import java.lang.Exception
 
-const val FIREBASE_TAG = "FIREBASE SERVICE"
+const val FIREBASE_TAG = "FirebaseService"
 
 class FirebaseService : FirebaseMessagingService() {
 
   var notificationManager: NotificationManager? = null
+  val tokenChangeHandler: TokenChangeHandler = TokenChangeHandler()
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
@@ -33,11 +36,7 @@ class FirebaseService : FirebaseMessagingService() {
     notificationManager = androidNotificationManager
   }
 
-  // TODO: update token in RN
-  override fun onNewToken(token: String) {
-    Log.i(FIREBASE_TAG, "new token received: $token")
-    super.onNewToken(token)
-  }
+  override fun onNewToken(token: String) = tokenChangeHandler.onNewToken(token)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
@@ -75,6 +74,8 @@ class FirebaseService : FirebaseMessagingService() {
       notificationBuilder.setStyle(progressStyle)
     }
 
+    setNotificationDeleteIntent(this, notificationData.notificationId, notificationBuilder)
+
     return notificationBuilder.build()
   }
 
@@ -94,28 +95,32 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun startNotification(notificationId: Int, notification: Notification) {
     notificationManager?.let { notificationManager ->
-      {
-        checkNotificationExistence(notificationManager, notificationId, shouldExist = false)
-        notificationManager.notify(notificationId, notification)
-      }
+      checkNotificationExistence(notificationManager, notificationId, shouldExist = false)
+      notificationManager.notify(notificationId, notification)
+
+      NotificationStateEventEmitter.emitNotificationStateChange(
+        notificationId,
+        NotificationAction.UPDATED,
+      )
     }
   }
 
   private fun updateNotification(notificationId: Int, notification: Notification) {
     notificationManager?.let { notificationManager ->
-      {
-        checkNotificationExistence(notificationManager, notificationId, shouldExist = true)
-        notificationManager.notify(notificationId, notification)
-      }
+      checkNotificationExistence(notificationManager, notificationId, shouldExist = true)
+      notificationManager.notify(notificationId, notification)
+
+      NotificationStateEventEmitter.emitNotificationStateChange(
+        notificationId,
+        NotificationAction.UPDATED,
+      )
     }
   }
 
   private fun stopNotification(notificationId: Int) {
     notificationManager?.let { notificationManager ->
-      {
-        checkNotificationExistence(notificationManager, notificationId, shouldExist = true)
-        notificationManager.cancel(notificationId)
-      }
+      checkNotificationExistence(notificationManager, notificationId, shouldExist = true)
+      notificationManager.cancel(notificationId)
     }
   }
 }
