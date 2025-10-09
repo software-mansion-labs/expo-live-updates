@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.NotificationData
+import expo.modules.liveupdates.service.setNotificationDeleteIntent
 import kotlin.String
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -48,6 +49,10 @@ class FirebaseService : FirebaseMessagingService() {
       notificationManager?.let { notificationManager ->
         Log.i(FIREBASE_TAG, "message displayed")
         notificationManager.notify(notificationId, notification)
+        NotificationStateEventEmitter.emitNotificationStateChange(
+          notificationId,
+          NotificationAction.UPDATED,
+        )
       }
     }
   }
@@ -66,6 +71,10 @@ class FirebaseService : FirebaseMessagingService() {
 
       val progressStyle = createProgressStyle(notificationData)
       notificationBuilder.setStyle(progressStyle)
+    }
+
+    notificationData.notificationId?.let { notificationId ->
+      setNotificationDeleteIntent(this, notificationId, notificationBuilder)
     }
 
     return notificationBuilder.build()
