@@ -6,7 +6,9 @@ import android.content.Intent
 import android.util.Log
 import expo.modules.liveupdates.NotificationAction
 import expo.modules.liveupdates.NotificationStateEventEmitter
+
 const val TAG = "NotificationDismissedReceiver"
+
 class NotificationDismissedReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
