@@ -83,8 +83,8 @@ useEffect(() => {
 - Validate notification existence on start/update/stop in LiveUpdatesService
 - Check behavior of devices which do not support live updates
 - Check if permissions are properly handled
+- Handle previous notification config
 - Support missing fields of live update
-- Support multiple live updates at once
 - Handle notification ID after live update start triggered by FCM
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
 
