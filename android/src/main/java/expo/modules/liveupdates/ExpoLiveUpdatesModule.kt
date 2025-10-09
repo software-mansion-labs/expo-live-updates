@@ -27,8 +27,6 @@ enum class NotificationAction {
   UPDATED,
 }
 
-const val NOTIFICATION_ID = 1 // TODO: delete
-
 // TODO: delete CHANNEL_ID and CHANNEL_NAME - make notification channel id and name configurable
 const val CHANNEL_ID = "Notifications channel"
 const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"

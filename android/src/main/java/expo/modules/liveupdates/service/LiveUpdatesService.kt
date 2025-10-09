@@ -79,7 +79,7 @@ class LiveUpdatesService : Service() {
     val backgroundColor = extras?.getString(ServiceActionExtra.backgroundColor)
 
     val notification =
-      createNotification(notificationId, title, text, backgroundColor, imageName, smallImageName)
+      createNotification(title, text, backgroundColor, imageName, smallImageName, notificationId)
     val notificationManager = NotificationManagerCompat.from(this)
 
     if (
@@ -100,12 +100,12 @@ class LiveUpdatesService : Service() {
   }
 
   private fun createNotification(
-    notificationId: Int,
     title: String,
     text: String,
     backgroundColor: String? = null,
     image: String? = null,
     smallImageName: String? = null,
+    notificationId: Int,
   ): Notification? {
 
     channelId?.let { channelId ->
