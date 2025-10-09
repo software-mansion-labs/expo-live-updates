@@ -4,6 +4,18 @@ import android.os.Bundle
 import androidx.core.os.bundleOf
 
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
+  companion object {
+    private var instance: NotificationStateEventEmitter? = null
+
+    fun setInstance(emitter: NotificationStateEventEmitter) {
+      instance = emitter
+    }
+
+    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
+      instance?.emit(notificationId, action)
+    }
+  }
+
   fun emit(notificationId: Int, action: NotificationAction) {
     val event =
       NotificationStateChangeEventData(
@@ -12,18 +24,6 @@ class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> U
         timestamp = System.currentTimeMillis(),
       )
     sendEvent("onNotificationStateChange", event.toBundle())
-  }
-
-  companion object {
-    private var instance: NotificationStateEventEmitter? = null
-
-    fun setInstance(event: NotificationStateEventEmitter) {
-      instance = event
-    }
-
-    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
-      instance?.emit(notificationId, action)
-    }
   }
 }
 

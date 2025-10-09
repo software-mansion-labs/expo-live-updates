@@ -5,11 +5,6 @@ import {
   withAndroidManifest,
 } from 'expo/config-plugins'
 
-type PluginProps = {
-  foregroundServiceType: string
-  explanationForSpecialUse?: string
-}
-
 const RECEIVER_NAME = 'expo.modules.liveupdates.service.NotificationDismissedReceiver'
 
 const ensureReceiver = (
@@ -39,7 +34,7 @@ const ensureReceiver = (
   }
 }
 
-const withNotificationDismissedReceiver: ConfigPlugin<PluginProps> = (
+const withNotificationDismissedReceiver: ConfigPlugin = (
   config: ExpoConfig,
 ) => {
   return withAndroidManifest(config, configWithManifest => {

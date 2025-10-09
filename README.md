@@ -14,7 +14,7 @@ To run example app:
 # How to add Firebase Cloud Messaging
 
 1. Create project at [Firebase](https://firebase.google.com/).
-2. Add android app to created project. Set package name to `com.com.test` and download `google-service.json`. Skip other steps of Firebase instructions.
+2. Add android app to created project. To work with example app set package name to `com.test.test` and download `google-service.json`. Skip other steps of Firebase instructions.
 3. Place `google-service.json` in `/example` folder.
 
 # Send Firebase Message

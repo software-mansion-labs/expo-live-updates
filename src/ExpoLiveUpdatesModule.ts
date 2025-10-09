@@ -9,6 +9,7 @@ import type { EventSubscription } from 'react-native'
 type ExpoLiveUpdatesModuleEvents = {
   onNotificationStateChange: (event: NotificationStateChangeEvent) => void
 }
+
 declare class ExpoLiveUpdatesModule extends NativeModule<ExpoLiveUpdatesModuleEvents> {
   init: (channelId: string, channelName: string) => void
   startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
