@@ -10,7 +10,6 @@ import expo.modules.liveupdates.NotificationStateEventEmitter
 const val TAG = "NotificationDismissedReceiver"
 
 class NotificationDismissedReceiver : BroadcastReceiver() {
-
   override fun onReceive(context: Context, intent: Intent) {
     Log.i(TAG, "Notification dismissed by user")
     val notificationId = intent.getIntExtra("notificationId", -1)
