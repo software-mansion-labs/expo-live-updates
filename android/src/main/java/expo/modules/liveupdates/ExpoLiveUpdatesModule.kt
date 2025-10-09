@@ -8,9 +8,8 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
-import expo.modules.liveupdates.service.LiveUpdateEvents
+import expo.modules.liveupdates.service.LiveUpdatesEvents
 import expo.modules.liveupdates.service.NotificationManager
-import expo.modules.liveupdates.service.TOKEN_CHANGE_EVENT
 import expo.modules.liveupdates.service.TokenChangeHandler.Companion.setHandlerSendEvent
 
 data class LiveUpdateState(
@@ -49,7 +48,7 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
-    Events(LiveUpdateEvents.onNotificationStateChange, LiveUpdateEvents.onTokenChange)
+    Events(LiveUpdatesEvents.onNotificationStateChange, LiveUpdatesEvents.onTokenChange)
 
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
