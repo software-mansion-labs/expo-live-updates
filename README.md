@@ -62,22 +62,24 @@ Example usage in a React component:
 
 ```ts
 useEffect(() => {
-   const subscription = ExpoLiveUpdatesModule.addNotificationStateChangeListener(
-      (event: NotificationStateChangeEvent) => {
-         console.log(`Notification ${event.notificationId} was ${event.action} at ${event.timestamp}`);
-      }
-   );
+  const subscription = ExpoLiveUpdatesModule.addNotificationStateChangeListener(
+    (event: NotificationStateChangeEvent) => {
+      console.log(
+        `Notification ${event.notificationId} was ${event.action} at ${event.timestamp}`,
+      )
+    },
+  )
 
-   return () => {
-      subscription?.remove();
-   };
-}, []);
+  return () => {
+    subscription?.remove()
+  }
+}, [])
 ```
 
 # TODO
+
 - Handle click with deeplink functionality
 - Add `started` & `stopped` events
-- Handle push token change
 - Delete live update using FCM
 - Support missing fields of live update
 - Support multiple live updates at once
