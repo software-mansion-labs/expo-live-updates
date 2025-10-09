@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessaging
 
-const val TAG = "TokenChangeHandler"
+const val TOKEN_HANDLER_TAG = "TokenChangeHandler"
 
 class TokenChangeHandler() {
   companion object {
@@ -15,7 +15,7 @@ class TokenChangeHandler() {
     @JvmStatic
     fun setHandlerSendEvent(sendEvent: (String, Bundle) -> Unit) {
       this.sendEvent = sendEvent
-      Log.i(TAG, "Token change handler setEvent added")
+      Log.i(TOKEN_HANDLER_TAG, "Token change handler setEvent added")
 
       lastReceivedToken?.let { token -> sendTokenChangeEvent(token) }
         ?: run {
@@ -31,7 +31,7 @@ class TokenChangeHandler() {
   }
 
   fun onNewToken(newToken: String) {
-    Log.i(TAG, "New token received: $newToken")
+    Log.i(TOKEN_HANDLER_TAG, "New token received: $newToken")
     lastReceivedToken = newToken
     sendTokenChangeEvent(newToken)
   }
