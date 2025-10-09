@@ -81,12 +81,14 @@ useEffect(() => {
 - Handle click with deeplink functionality
 - Add `started` & `stopped` events
 - Validate notification existence on start/update/stop in LiveUpdatesService
-- Check behavior of devices which do not support live updates
-- Check if permissions are properly handled
+- Correct algorithm for choosing new notification ID
 - Handle previous notification config
+- Unify Firebase and LiveUpdates services notification data type
 - Support missing fields of live update
 - Handle notification ID after live update start triggered by FCM
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
+- Check behavior of older devices which do not support live updates
+- Check if permissions are properly handled
 
 # API documentation
 

@@ -1,13 +1,14 @@
 package expo.modules.liveupdates.service
 
-enum class NotificationEvent {
+enum class FirebaseNotificationEvent {
   START,
   UPDATE,
   STOP,
 }
 
+// TODO: this state should be same as LiveUpdateState
 data class FirebaseNotificationData(
-  val event: NotificationEvent,
+  val event: FirebaseNotificationEvent,
   val notificationId: Int,
   val title: String,
   var subtitle: String?,
@@ -26,7 +27,7 @@ data class FirebaseNotificationData(
   ) : this(
     event =
       validateNotNull(
-        NotificationEvent.entries.find { it.name == data["event"]?.uppercase() },
+        FirebaseNotificationEvent.entries.find { it.name == data["event"]?.uppercase() },
         "event",
       ),
     notificationId = validateNotNull(data["notificationId"]?.toIntOrNull(), "notificationId"),

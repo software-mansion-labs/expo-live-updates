@@ -111,7 +111,7 @@ class LiveUpdatesService : Service() {
     channelId?.let { channelId ->
       val notificationBuilder =
         NotificationCompat.Builder(this, channelId)
-          .setContentTitle("[$notificationId] $title")
+          .setContentTitle(title)
           .setSmallIcon(android.R.drawable.star_on)
           .setContentText(text)
 

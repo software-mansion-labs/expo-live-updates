@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.liveupdates.service.FirebaseNotificationData
-import expo.modules.liveupdates.service.NotificationEvent
+import expo.modules.liveupdates.service.FirebaseNotificationEvent
 import expo.modules.liveupdates.service.TokenChangeHandler
 import expo.modules.liveupdates.service.checkNotificationExistence
 import expo.modules.liveupdates.service.setNotificationDeleteIntent
@@ -49,9 +49,9 @@ class FirebaseService : FirebaseMessagingService() {
       Log.i(FIREBASE_TAG, "[${notificationId}] message received: $event")
 
       when (notificationData.event) {
-        NotificationEvent.START -> startNotification(notificationId, notification)
-        NotificationEvent.UPDATE -> updateNotification(notificationId, notification)
-        NotificationEvent.STOP -> stopNotification(notificationId)
+        FirebaseNotificationEvent.START -> startNotification(notificationId, notification)
+        FirebaseNotificationEvent.UPDATE -> updateNotification(notificationId, notification)
+        FirebaseNotificationEvent.STOP -> stopNotification(notificationId)
       }
     } catch (e: Exception) {
       Log.e(FIREBASE_TAG, e.message.toString())
@@ -61,7 +61,7 @@ class FirebaseService : FirebaseMessagingService() {
   private fun createNotification(notificationData: FirebaseNotificationData): Notification {
     val notificationBuilder =
       NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("[${notificationData.notificationId}] ${notificationData.title}")
+        .setContentTitle(notificationData.title)
         .setSmallIcon(android.R.drawable.star_on)
         .setContentText(notificationData.subtitle)
 
