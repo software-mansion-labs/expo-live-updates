@@ -78,9 +78,9 @@ class ExpoLiveUpdatesModule : Module() {
       notificationManager = notifManager
       notificationManager?.startLiveUpdatesService()
 
-      setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
-
       NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
+
+      setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->

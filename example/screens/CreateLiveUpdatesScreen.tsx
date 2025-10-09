@@ -3,7 +3,7 @@ import {
   startLiveUpdate,
   stopLiveUpdate,
   updateLiveUpdate,
-  addTokenListener,
+  addTokenChangeListener,
   addNotificationStateChangeListener,
 } from 'expo-live-updates'
 import type {
@@ -135,7 +135,7 @@ export default function CreateLiveUpdatesScreen() {
   }
 
   useEffect(() => {
-    const subscription = addTokenListener(({ token: receivedToken }) =>
+    const subscription = addTokenChangeListener(({ token: receivedToken }) =>
       setToken(receivedToken),
     )
 
