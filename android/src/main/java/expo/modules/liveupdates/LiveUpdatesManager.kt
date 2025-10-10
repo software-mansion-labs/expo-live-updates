@@ -111,8 +111,12 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     // TODO: save config by id to apply it when updating notification
     config?.backgroundColor?.let { backgroundColor ->
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
-        notificationBuilder.setColor(backgroundColor.toColorInt())
-        notificationBuilder.setColorized(true)
+        try {
+          notificationBuilder.setColor(backgroundColor.toColorInt())
+          notificationBuilder.setColorized(true)
+        } catch (e: IllegalArgumentException) {
+          Log.e("LiveUpdatesManager", "Invalid color format for backgroundColor: $backgroundColor", e)
+        }
       }
     }
 
