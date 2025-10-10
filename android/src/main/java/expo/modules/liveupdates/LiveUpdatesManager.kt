@@ -12,6 +12,7 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import androidx.core.graphics.toColorInt
 import expo.modules.liveupdates.FIREBASE_TAG
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
@@ -22,9 +23,6 @@ import java.io.File
 
 class LiveUpdatesManager(private val context: Context, private val channelId: String) {
   val notificationManager = NotificationManagerCompat.from(context)
-
-  // TODO: keep separate last config for each live update
-  var lastConfig: LiveUpdateConfig? = null
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
@@ -41,7 +39,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     }
 
     val notification = createNotification(channelId, state, notificationId)
-    // TODO: handle passing config
+
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -83,6 +81,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     channelId: String,
     state: LiveUpdateState,
     notificationId: Int,
+    config: LiveUpdateConfig? = null,
   ): Notification {
     val notificationBuilder =
       NotificationCompat.Builder(context, channelId)
@@ -109,13 +108,13 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       }
     }
 
-    // TODO: Handle backgroundColor - this field doesn't exist in LiveUpdateState
-    // state.backgroundColor?.let { backgroundColor ->
-    //   if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
-    //     notificationBuilder.setColor(backgroundColor.toColorInt())
-    //     notificationBuilder.setColorized(true)
-    //   }
-    // }
+    // TODO: save config by id to apply it when updating notification
+    config?.backgroundColor?.let { backgroundColor ->
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
+        notificationBuilder.setColor(backgroundColor.toColorInt())
+        notificationBuilder.setColorized(true)
+      }
+    }
 
     setNotificationDeleteIntent(notificationId, notificationBuilder)
 

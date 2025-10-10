@@ -3,6 +3,13 @@ package expo.modules.liveupdates
 import android.os.Bundle
 import androidx.core.os.bundleOf
 
+enum class NotificationAction {
+  DISMISSED,
+  UPDATED,
+  STARTED,
+  STOPPED,
+}
+
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
   fun emit(notificationId: Int, action: NotificationAction) {
     val event =

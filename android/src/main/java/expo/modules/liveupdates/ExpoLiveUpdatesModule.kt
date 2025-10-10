@@ -21,13 +21,6 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
-enum class NotificationAction {
-  DISMISSED,
-  UPDATED,
-  STARTED,
-  STOPPED,
-}
-
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"
 const val NOTIFICATION_ID = 1
 
