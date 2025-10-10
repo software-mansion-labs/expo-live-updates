@@ -21,6 +21,8 @@ import expo.modules.liveupdates.NotificationAction
 import expo.modules.liveupdates.NotificationStateEventEmitter
 import java.io.File
 
+private const val TAG = "LiveUpdatesManager"
+
 class LiveUpdatesManager(private val context: Context, private val channelId: String) {
   val notificationManager = NotificationManagerCompat.from(context)
 
@@ -32,14 +34,13 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     val notificationExist = notificationManager.activeNotifications.any { it.id == notificationId }
     if (notificationExist) {
       Log.w(
-        FIREBASE_TAG,
+        TAG,
         "failed to start notification - notification with id $notificationId already exist",
       )
       return null
     }
 
     val notification = createNotification(channelId, state, notificationId)
-
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -50,11 +51,10 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState) {
-
     val notificationExist = notificationManager.activeNotifications.any { it.id == notificationId }
     if (!notificationExist) {
       Log.w(
-        FIREBASE_TAG,
+        TAG,
         "failed to update notification - notification with id $notificationId does not exist",
       )
       return
@@ -69,7 +69,6 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   fun stopNotification(notificationId: Int) {
-    val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.cancel(notificationId)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
