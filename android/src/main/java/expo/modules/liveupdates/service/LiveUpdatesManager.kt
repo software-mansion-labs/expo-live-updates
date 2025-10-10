@@ -1,18 +1,24 @@
 package expo.modules.liveupdates.service
 
 import android.Manifest
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
-import android.content.pm.PackageManager
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresPermission
-import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import expo.modules.liveupdates.FIREBASE_TAG
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
 import expo.modules.liveupdates.NOTIFICATION_ID
 import expo.modules.liveupdates.NotificationAction
 import expo.modules.liveupdates.NotificationStateEventEmitter
+import java.io.File
 
 class LiveUpdatesManager(private val context: Context, private val channelId: String) {
   val notificationManager = NotificationManagerCompat.from(context)
@@ -21,42 +27,126 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   var lastConfig: LiveUpdateConfig? = null
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int {
+  fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
     // TODO: notificationId should be unique value for each live update
     val notificationId = NOTIFICATION_ID
 
-    val notification = NotificationUtils.createNotification(context, channelId, state)
+    val notificationExist = notificationManager.activeNotifications.any { it.id == notificationId }
+    if (notificationExist) {
+      Log.w(
+        FIREBASE_TAG,
+        "failed to start notification - notification with id $notificationId already exist",
+      )
+      return null
+    }
+
+    val notification = createNotification(channelId, state, notificationId)
     // TODO: handle passing config
     notificationManager.notify(notificationId, notification)
-    NotificationStateEventEmitter.emitNotificationStateChange(notificationId, NotificationAction.STARTED)
+    NotificationStateEventEmitter.emitNotificationStateChange(
+      notificationId,
+      NotificationAction.STARTED,
+    )
     return notificationId
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  fun updateLiveUpdateNotification(
-    notificationId: Int,
-    state: LiveUpdateState,
-  ) {
+  fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState) {
 
     val notificationExist = notificationManager.activeNotifications.any { it.id == notificationId }
     if (!notificationExist) {
-      Log.w(FIREBASE_TAG, "failed to display notification - no permission or invalid data")
+      Log.w(
+        FIREBASE_TAG,
+        "failed to update notification - notification with id $notificationId does not exist",
+      )
       return
     }
 
-    val notification = NotificationUtils.createNotification(context, channelId, state)
+    val notification = createNotification(channelId, state, notificationId)
     notificationManager.notify(notificationId, notification)
-    NotificationStateEventEmitter.emitNotificationStateChange(notificationId, NotificationAction.UPDATED)
+    NotificationStateEventEmitter.emitNotificationStateChange(
+      notificationId,
+      NotificationAction.UPDATED,
+    )
   }
 
   fun stopNotification(notificationId: Int) {
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.cancel(notificationId)
-    NotificationStateEventEmitter.emitNotificationStateChange(notificationId, NotificationAction.DISMISSED)
+    NotificationStateEventEmitter.emitNotificationStateChange(
+      notificationId,
+      NotificationAction.STOPPED,
+    )
   }
 
-  private fun hasNotificationPermission(): Boolean {
-    return ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-        PackageManager.PERMISSION_GRANTED
+  private fun createNotification(
+    channelId: String,
+    state: LiveUpdateState,
+    notificationId: Int,
+  ): Notification {
+    val notificationBuilder =
+      NotificationCompat.Builder(context, channelId)
+        .setContentTitle(state.title)
+        .setSmallIcon(android.R.drawable.star_on)
+        .setContentText(state.subtitle)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+      notificationBuilder.setShortCriticalText("SWM")
+      notificationBuilder.setOngoing(true)
+      notificationBuilder.setRequestPromotedOngoing(true)
+    }
+
+    state.imageName?.let { imageName ->
+      val bitmap = loadBitmapByName(imageName)
+      bitmap?.let { bitmap -> notificationBuilder.setLargeIcon(bitmap) }
+    }
+
+    state.smallImageName?.let { smallImageName ->
+      val bitmap = loadBitmapByName(smallImageName)
+      bitmap?.let { bitmap ->
+        val icon = IconCompat.createWithBitmap(bitmap)
+        notificationBuilder.setSmallIcon(icon)
+      }
+    }
+
+    // TODO: Handle backgroundColor - this field doesn't exist in LiveUpdateState
+    // state.backgroundColor?.let { backgroundColor ->
+    //   if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
+    //     notificationBuilder.setColor(backgroundColor.toColorInt())
+    //     notificationBuilder.setColorized(true)
+    //   }
+    // }
+
+    setNotificationDeleteIntent(notificationId, notificationBuilder)
+
+    return notificationBuilder.build()
+  }
+
+  private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
+    val fileUrl = name.replace("file://", "")
+    val file = File(fileUrl)
+    if (file.exists()) {
+      val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+      return bitmap
+    } else {
+      Log.e("NotificationUtils", "FileCheck could not find file at $fileUrl")
+      return null
+    }
+  }
+
+  private fun setNotificationDeleteIntent(
+    notificationId: Int,
+    notificationBuilder: NotificationCompat.Builder,
+  ) {
+    val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
+    deleteIntent.putExtra("notificationId", notificationId)
+    val deletePendingIntent =
+      PendingIntent.getBroadcast(
+        context,
+        notificationId,
+        deleteIntent,
+        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+      )
+    notificationBuilder.setDeleteIntent(deletePendingIntent)
   }
 }

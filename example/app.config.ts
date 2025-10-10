@@ -28,8 +28,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: 'com.test.test',
     permissions: [
       'android.permission.POST_NOTIFICATIONS',
-      'android.permission.FOREGROUND_SERVICE_SPECIAL_USE',
-      'android.permission.FOREGROUND_SERVICE',
       'android.permission.POST_PROMOTED_NOTIFICATIONS',
     ],
     googleServicesFile: './google-services.json',

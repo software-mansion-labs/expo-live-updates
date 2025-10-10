@@ -25,6 +25,7 @@ enum class NotificationAction {
   DISMISSED,
   UPDATED,
   STARTED,
+  STOPPED,
 }
 
 private const val GET_PUSH_TOKEN_FAILED_CODE = "GET_PUSH_TOKEN_FAILED"

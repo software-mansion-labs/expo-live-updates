@@ -9,8 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import expo.modules.liveupdates.LiveUpdateState
-import expo.modules.liveupdates.NOTIFICATION_ID
 import expo.modules.liveupdates.service.LiveUpdatesManager
 
 const val FIREBASE_TAG = "FIREBASE SERVICE"
@@ -29,8 +27,7 @@ class FirebaseService : FirebaseMessagingService() {
 
     androidNotificationManager.createNotificationChannel(channel)
     notificationManager = androidNotificationManager
-    
-    // Initialize unified notification manager
+
     liveUpdatesManager = LiveUpdatesManager(this, CHANNEL_ID)
   }
 
@@ -44,16 +41,15 @@ class FirebaseService : FirebaseMessagingService() {
   override fun onMessageReceived(message: RemoteMessage) {
     Log.i(FIREBASE_TAG, "message received")
 
-    val state = LiveUpdateState(
-      title = message.data["title"] ?: "Live Update",
-      subtitle = message.data["subtitle"],
-    )
+    val state =
+      LiveUpdateState(
+        title = message.data["title"] ?: "Live Update",
+        subtitle = message.data["subtitle"],
+      )
 
     liveUpdatesManager?.let { manager ->
       val notificationId = message.data["notificationId"]?.toInt() ?: NOTIFICATION_ID
       manager.updateLiveUpdateNotification(notificationId, state)
-      Log.i(FIREBASE_TAG, "message updated")
     }
   }
-
 }

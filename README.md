@@ -76,7 +76,8 @@ useEffect(() => {
 
 # TODO
 - Handle click with deeplink functionality
-- Add `started` & `stopped` events
+- Handle progress bar
+- Make short critical text customizable
 - Handle push token change
 - Delete live update using FCM
 - Support missing fields of live update
