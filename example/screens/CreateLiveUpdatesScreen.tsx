@@ -72,7 +72,6 @@ export default function CreateLiveUpdatesScreen() {
   const getState = (): LiveUpdateState => ({
     title,
     subtitle: passSubtitle ? subtitle : undefined,
-    // date: passDate ? date.getTime() : undefined,
     date: undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
@@ -80,7 +79,6 @@ export default function CreateLiveUpdatesScreen() {
 
   const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
-    console.log('+++++++++++++++++++++++' + Platform.Version)
 
     try {
       const liveUpdateConfig: LiveUpdateConfig = {

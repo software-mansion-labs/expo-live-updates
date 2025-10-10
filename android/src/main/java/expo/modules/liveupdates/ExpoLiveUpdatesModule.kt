@@ -1,8 +1,11 @@
 package expo.modules.liveupdates
 
+import android.Manifest
 import android.app.NotificationChannel
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.google.firebase.messaging.FirebaseMessaging
 import expo.modules.kotlin.Promise
@@ -111,4 +114,5 @@ class ExpoLiveUpdatesModule : Module() {
 
   private val context
     get() = requireNotNull(appContext.reactContext)
+
 }

@@ -1,7 +1,6 @@
 package expo.modules.liveupdates
 
 import android.Manifest
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
@@ -20,14 +19,6 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
-    val androidNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-    val channel =
-      NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
-
-    androidNotificationManager.createNotificationChannel(channel)
-    notificationManager = androidNotificationManager
-
     liveUpdatesManager = LiveUpdatesManager(this, CHANNEL_ID)
   }
 
