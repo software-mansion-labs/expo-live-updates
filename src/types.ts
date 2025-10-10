@@ -16,7 +16,7 @@ export type TokenChangeEvent = {
 
 export type NotificationStateChangeEvent = {
   notificationId: number
-  action: 'dismissed' | 'updated'
+  action: 'dismissed' | 'updated' | 'started' | 'stopped'
   timestamp: number
 }
 
