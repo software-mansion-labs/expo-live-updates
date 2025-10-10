@@ -82,7 +82,7 @@ useEffect(() => {
 - Make short critical text customizable
 - Support multiple live updates at once
 - Handle notification ID after live update start triggered by FCM
-- Delete live update using FCM
+- Allow to start/update/stop live update using FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
 - Handle progress bar
