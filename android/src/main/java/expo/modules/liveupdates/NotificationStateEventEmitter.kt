@@ -2,6 +2,7 @@ package expo.modules.liveupdates
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import expo.modules.liveupdates.service.LiveUpdatesEvents
 
 enum class NotificationAction {
   DISMISSED,
@@ -11,6 +12,18 @@ enum class NotificationAction {
 }
 
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
+  companion object {
+    private var instance: NotificationStateEventEmitter? = null
+
+    fun setInstance(emitter: NotificationStateEventEmitter) {
+      instance = emitter
+    }
+
+    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
+      instance?.emit(notificationId, action)
+    }
+  }
+
   fun emit(notificationId: Int, action: NotificationAction) {
     val event =
       NotificationStateChangeEventData(
@@ -18,19 +31,7 @@ class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> U
         action = action.name.lowercase(),
         timestamp = System.currentTimeMillis(),
       )
-    sendEvent("onNotificationStateChange", event.toBundle())
-  }
-
-  companion object {
-    private var instance: NotificationStateEventEmitter? = null
-
-    fun setInstance(event: NotificationStateEventEmitter) {
-      instance = event
-    }
-
-    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
-      instance?.emit(notificationId, action)
-    }
+    sendEvent(LiveUpdatesEvents.onNotificationStateChange, event.toBundle())
   }
 }
 

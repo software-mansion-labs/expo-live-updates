@@ -7,13 +7,13 @@ import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
-import com.google.firebase.messaging.FirebaseMessaging
-import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.service.LiveUpdatesManager
+import expo.modules.liveupdates.service.TokenChangeHandler.Companion.setHandlerSendEvent
+import expo.modules.liveupdates.service.LiveUpdatesEvents
 
 data class LiveUpdateState(
   @Field val title: String,
@@ -46,6 +46,8 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
+    Events(LiveUpdatesEvents.onNotificationStateChange, LiveUpdatesEvents.onTokenChange)
+
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val serviceChannel =
@@ -72,6 +74,8 @@ class ExpoLiveUpdatesModule : Module() {
 
       liveUpdatesManager = LiveUpdatesManager(context, CHANNEL_ID)
       NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
+
+      setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
@@ -83,33 +87,6 @@ class ExpoLiveUpdatesModule : Module() {
     Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
       liveUpdatesManager?.updateLiveUpdateNotification(notificationId, state)
     }
-    AsyncFunction("getDevicePushTokenAsync") { promise: Promise ->
-      FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-        if (!task.isSuccessful) {
-          val exception = task.exception
-          promise.reject(
-            GET_PUSH_TOKEN_FAILED_CODE,
-            "Fetching the token failed: ${exception?.message ?: "unknown"}",
-            exception,
-          )
-          return@addOnCompleteListener
-        }
-        val token =
-          task.result
-            ?: run {
-              promise.reject(
-                GET_PUSH_TOKEN_FAILED_CODE,
-                "Fetching the token failed. Invalid token.",
-                null,
-              )
-              return@addOnCompleteListener
-            }
-
-        promise.resolve(token)
-      }
-    }
-
-    Events("onNotificationStateChange")
   }
 
   private val context
