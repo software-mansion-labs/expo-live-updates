@@ -1,7 +1,6 @@
 package expo.modules.liveupdates
 
 import android.Manifest
-import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi

@@ -1,19 +1,16 @@
 package expo.modules.liveupdates
 
-import android.Manifest
 import android.app.NotificationChannel
-import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
+import expo.modules.liveupdates.service.LiveUpdatesEvents
 import expo.modules.liveupdates.service.LiveUpdatesManager
 import expo.modules.liveupdates.service.TokenChangeHandler.Companion.setHandlerSendEvent
-import expo.modules.liveupdates.service.LiveUpdatesEvents
 
 data class LiveUpdateState(
   @Field val title: String,
@@ -91,5 +88,4 @@ class ExpoLiveUpdatesModule : Module() {
 
   private val context
     get() = requireNotNull(appContext.reactContext)
-
 }

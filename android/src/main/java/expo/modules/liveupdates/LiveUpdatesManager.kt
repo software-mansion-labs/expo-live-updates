@@ -13,7 +13,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
-import expo.modules.liveupdates.FIREBASE_TAG
 import expo.modules.liveupdates.LiveUpdateConfig
 import expo.modules.liveupdates.LiveUpdateState
 import expo.modules.liveupdates.NOTIFICATION_ID
@@ -114,7 +113,11 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
           notificationBuilder.setColor(backgroundColor.toColorInt())
           notificationBuilder.setColorized(true)
         } catch (e: IllegalArgumentException) {
-          Log.e("LiveUpdatesManager", "Invalid color format for backgroundColor: $backgroundColor", e)
+          Log.e(
+            "LiveUpdatesManager",
+            "Invalid color format for backgroundColor: $backgroundColor",
+            e,
+          )
         }
       }
     }
