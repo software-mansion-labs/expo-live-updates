@@ -43,7 +43,7 @@ export default function CreateLiveUpdatesScreen() {
     NotificationStateChangeEvent[]
   >([])
 
-  const ref = useRef<ScrollView>(null)
+  const scrollViewRef = useRef<ScrollView>(null)
 
   const notificationId = useMemo(() => {
     const parsedNotificationId = parseInt(notificationIdString)
@@ -226,13 +226,12 @@ export default function CreateLiveUpdatesScreen() {
           <Text style={styles.label}>Set Live Update ID:</Text>
           <View style={styles.manageUpdatesContainer}>
             <TextInput
-              style={[styles.input, styles.manageInput]}
+              style={[styles.input, styles.manageUpdatesInput]}
               placeholder="Live Update ID"
               onChangeText={setNotificationIdString}
               value={notificationIdString}
               keyboardType="numeric"
             />
-
             <Button title="Stop" onPress={handleStopLiveUpdate} />
             <Button title="Update" onPress={handleUpdateLiveUpdate} />
           </View>
@@ -243,8 +242,8 @@ export default function CreateLiveUpdatesScreen() {
         <Text style={styles.eventsTitle}>Notification Events:</Text>
 
         <ScrollView
-          ref={ref}
-          onContentSizeChange={() => ref.current?.scrollToEnd()}>
+          ref={scrollViewRef}
+          onContentSizeChange={() => scrollViewRef.current?.scrollToEnd()}>
           {notificationEvents.length === 0 ? (
             <Text style={styles.noEventsText}>No events yet</Text>
           ) : (
@@ -341,7 +340,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  manageInput: {
+  manageUpdatesInput: {
     flex: 1,
   },
   manageUpdatesContainer: {
