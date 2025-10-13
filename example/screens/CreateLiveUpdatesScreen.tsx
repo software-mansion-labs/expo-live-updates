@@ -232,8 +232,8 @@ export default function CreateLiveUpdatesScreen() {
               value={notificationIdString}
               keyboardType="numeric"
             />
-            <Button title="Stop" onPress={handleStopLiveUpdate} />
             <Button title="Update" onPress={handleUpdateLiveUpdate} />
+            <Button title="Stop" onPress={handleStopLiveUpdate} />
           </View>
         </View>
       </View>
