@@ -25,8 +25,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     // TODO: notificationId should be unique value for each live update
     val notificationId = NOTIFICATION_ID
 
-    val notificationExists = notificationManager.activeNotifications.any { it.id == notificationId }
-    if (notificationExists) {
+    if (notificationExists(notificationId)) {
       Log.w(
         TAG,
         "failed to start notification - notification with id $notificationId already exist",
@@ -45,8 +44,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState) {
-    val notificationExists = notificationManager.activeNotifications.any { it.id == notificationId }
-    if (!notificationExists) {
+    if (!notificationExists(notificationId)) {
       Log.w(
         TAG,
         "failed to update notification - notification with id $notificationId does not exist",
@@ -68,6 +66,10 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       notificationId,
       NotificationAction.STOPPED,
     )
+  }
+
+  private fun notificationExists(notificationId: Int): Boolean {
+    return notificationManager.activeNotifications.any { it.id == notificationId }
   }
 
   private fun createNotification(
