@@ -203,7 +203,7 @@ export default function CreateLiveUpdatesScreen() {
         <Button
           title="Start"
           onPress={handleStartLiveUpdate}
-          disabled={title === '' || notificationId !== undefined}
+          disabled={title === ''}
         />
         <Button title="Stop" onPress={handleStopLiveUpdate} />
         <Button title="Update" onPress={handleUpdateLiveUpdate} />
