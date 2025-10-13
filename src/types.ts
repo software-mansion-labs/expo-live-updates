@@ -1,7 +1,6 @@
 export type LiveUpdateState = {
   title: string
   subtitle?: string
-  date?: number
   imageName?: string
   dynamicIslandImageName?: string
 }

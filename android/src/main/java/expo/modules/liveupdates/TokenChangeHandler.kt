@@ -1,4 +1,4 @@
-package expo.modules.liveupdates.service
+package expo.modules.liveupdates
 
 import android.os.Bundle
 import android.util.Log

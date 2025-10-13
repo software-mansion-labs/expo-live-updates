@@ -72,7 +72,6 @@ export default function CreateLiveUpdatesScreen() {
   const getState = (): LiveUpdateState => ({
     title,
     subtitle: passSubtitle ? subtitle : undefined,
-    date: undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })

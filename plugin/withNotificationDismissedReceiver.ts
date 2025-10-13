@@ -5,7 +5,7 @@ import {
   withAndroidManifest,
 } from 'expo/config-plugins'
 
-const RECEIVER_NAME = 'expo.modules.liveupdates.service.NotificationDismissedReceiver'
+const RECEIVER_NAME = 'expo.modules.liveupdates.NotificationDismissedReceiver'
 
 const ensureReceiver = (
   androidManifest: AndroidConfig.Manifest.AndroidManifest,

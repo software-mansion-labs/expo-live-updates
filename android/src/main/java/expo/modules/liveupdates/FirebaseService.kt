@@ -7,14 +7,12 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import expo.modules.liveupdates.service.LiveUpdatesManager
-import expo.modules.liveupdates.service.TokenChangeHandler
 
-const val FIREBASE_TAG = "FIREBASE SERVICE"
+const val FIREBASE_TAG = "FirebaseService"
 
 class FirebaseService : FirebaseMessagingService() {
 
-  private var liveUpdatesManager: LiveUpdatesManager? = null
+  private lateinit var liveUpdatesManager: LiveUpdatesManager
   val tokenChangeHandler: TokenChangeHandler = TokenChangeHandler()
 
   @RequiresApi(Build.VERSION_CODES.O)
@@ -34,9 +32,6 @@ class FirebaseService : FirebaseMessagingService() {
         subtitle = message.data["subtitle"],
       )
 
-    liveUpdatesManager?.let { manager ->
-      val notificationId = message.data["notificationId"]?.toInt() ?: NOTIFICATION_ID
-      manager.updateLiveUpdateNotification(notificationId, state)
-    }
+    liveUpdatesManager.startLiveUpdateNotification(state)
   }
 }

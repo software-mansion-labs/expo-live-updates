@@ -1,4 +1,4 @@
-package expo.modules.liveupdates.service
+package expo.modules.liveupdates
 
 import android.Manifest
 import android.app.Notification
@@ -13,11 +13,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
-import expo.modules.liveupdates.LiveUpdateConfig
-import expo.modules.liveupdates.LiveUpdateState
-import expo.modules.liveupdates.NOTIFICATION_ID
-import expo.modules.liveupdates.NotificationAction
-import expo.modules.liveupdates.NotificationStateEventEmitter
 import java.io.File
 
 private const val TAG = "LiveUpdatesManager"
@@ -30,8 +25,8 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     // TODO: notificationId should be unique value for each live update
     val notificationId = NOTIFICATION_ID
 
-    val notificationExist = notificationManager.activeNotifications.any { it.id == notificationId }
-    if (notificationExist) {
+    val notificationExists = notificationManager.activeNotifications.any { it.id == notificationId }
+    if (notificationExists) {
       Log.w(
         TAG,
         "failed to start notification - notification with id $notificationId already exist",
@@ -50,8 +45,8 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState) {
-    val notificationExist = notificationManager.activeNotifications.any { it.id == notificationId }
-    if (!notificationExist) {
+    val notificationExists = notificationManager.activeNotifications.any { it.id == notificationId }
+    if (!notificationExists) {
       Log.w(
         TAG,
         "failed to update notification - notification with id $notificationId does not exist",
@@ -113,11 +108,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
           notificationBuilder.setColor(backgroundColor.toColorInt())
           notificationBuilder.setColorized(true)
         } catch (e: IllegalArgumentException) {
-          Log.e(
-            "LiveUpdatesManager",
-            "Invalid color format for backgroundColor: $backgroundColor",
-            e,
-          )
+          Log.e(TAG, "Invalid color format for backgroundColor: $backgroundColor", e)
         }
       }
     }
@@ -134,7 +125,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       val bitmap = BitmapFactory.decodeFile(file.absolutePath)
       return bitmap
     } else {
-      Log.e("NotificationUtils", "FileCheck could not find file at $fileUrl")
+      Log.e(TAG, "FileCheck could not find file at $fileUrl")
       return null
     }
   }
