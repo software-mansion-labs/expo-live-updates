@@ -31,11 +31,13 @@ export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('Title')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
+  const [deepLinkUrl, setDeepLinkUrl] = useState('')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+  const [passDeepLink, setPassDeepLink] = useState(false)
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
   )
@@ -82,6 +84,7 @@ export default function CreateLiveUpdatesScreen() {
     try {
       const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
+        deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
       }
       const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
@@ -173,6 +176,21 @@ export default function CreateLiveUpdatesScreen() {
           value={passIconImage}
         />
       </View>
+      <View style={styles.labelWithSwitch}>
+        <Text style={styles.label}>Set Deep Link URL:</Text>
+        <Switch
+          onValueChange={() => setPassDeepLink(toggle)}
+          value={passDeepLink}
+        />
+      </View>
+      <TextInput
+        style={passDeepLink ? styles.input : styles.diabledInput}
+        onChangeText={setDeepLinkUrl}
+        placeholder="Deep link URL (e.g., https://example.com/page)"
+        value={deepLinkUrl}
+        editable={passDeepLink}
+        autoCapitalize="none"
+      />
 
       {!isBaklava() && (
         <>

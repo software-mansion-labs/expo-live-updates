@@ -55,7 +55,7 @@ Request variables:
 The handler will receive a `NotificationStateChangeEvent` object, which contains:
 
 - `notificationId` – the ID of the notification.
-- `action` – the type of change, which can be `'dismissed'`, or `'updated'`.
+- `action` – the type of change, which can be `'dismissed'`, `'updated'`, or `'clicked'`.
 - `timestamp` – the time when the change occurred, in milliseconds.
 
 Example usage in a React component:
@@ -76,9 +76,28 @@ useEffect(() => {
 }, [])
 ```
 
+# Deep Link Support
+
+The `LiveUpdateConfig` now supports a `deepLinkUrl` property that allows you to specify a URL to open when the notification is clicked. If no `deepLinkUrl` is provided, the default behavior is to open the app.
+
+Example usage:
+
+```ts
+const liveUpdateConfig: LiveUpdateConfig = {
+  backgroundColor: '#FF0000',
+  deepLinkUrl: 'https://example.com/specific-page', // Optional deep link URL
+}
+
+const notificationId = startLiveUpdate(liveUpdateState, liveUpdateConfig)
+```
+
+When a user clicks on the notification:
+- If `deepLinkUrl` is provided, it will open the specified URL
+- If `deepLinkUrl` is not provided, it will open the app (default behavior)
+- A `'clicked'` event will be emitted through the notification state change listener
+
 # TODO
 
-- Handle click with deeplink functionality
 - Make short critical text customizable
 - Support multiple live updates at once
 - Handle notification ID after live update start triggered by FCM

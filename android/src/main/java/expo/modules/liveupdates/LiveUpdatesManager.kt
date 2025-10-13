@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresPermission
@@ -33,7 +34,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return null
     }
 
-    val notification = createNotification(channelId, state, notificationId)
+    val notification = createNotification(channelId, state, notificationId, config)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -116,6 +117,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     }
 
     setNotificationDeleteIntent(notificationId, notificationBuilder)
+    setNotificationClickIntent(notificationId, config, notificationBuilder)
 
     return notificationBuilder.build()
   }
@@ -146,5 +148,32 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
       )
     notificationBuilder.setDeleteIntent(deletePendingIntent)
+  }
+
+  private fun setNotificationClickIntent(
+    notificationId: Int,
+    config: LiveUpdateConfig?,
+    notificationBuilder: NotificationCompat.Builder,
+  ) {
+    val clickIntent = if (!config?.deepLinkUrl.isNullOrEmpty()) {
+      Intent(Intent.ACTION_VIEW, Uri.parse(config!!.deepLinkUrl))
+    } else {
+      context.packageManager.getLaunchIntentForPackage(context.packageName) ?: run {
+        Intent().apply {
+          action = Intent.ACTION_MAIN
+          addCategory(Intent.CATEGORY_LAUNCHER)
+          setPackage(context.packageName)
+        }
+      }
+    }
+
+    val clickPendingIntent =
+      PendingIntent.getActivity(
+        context,
+        notificationId,
+        clickIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+      )
+    notificationBuilder.setContentIntent(clickPendingIntent)
   }
 }

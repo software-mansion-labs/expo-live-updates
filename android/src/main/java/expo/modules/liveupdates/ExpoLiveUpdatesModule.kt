@@ -17,7 +17,10 @@ data class LiveUpdateState(
   @Field val smallImageName: String? = null,
 ) : Record
 
-data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
+data class LiveUpdateConfig(
+  @Field val backgroundColor: String? = null,
+  @Field val deepLinkUrl: String? = null
+) : Record
 
 const val NOTIFICATION_ID = 1
 
