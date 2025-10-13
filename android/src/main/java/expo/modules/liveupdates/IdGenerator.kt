@@ -4,29 +4,29 @@ import android.content.Context
 import androidx.core.content.edit
 
 const val PREFERENCES_NAME = "liveUpdatesPreferences"
-const val VALUE_NAME = "lastNotificationID"
+const val VALUE_NAME = "lastNotificationId"
 
-class IDGenerator(private val context: Context) {
-  private fun saveID(number: Int) {
+class IdGenerator(private val context: Context) {
+  private fun saveId(number: Int) {
     val sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
     sharedPreferences.edit { putInt(VALUE_NAME, number) }
   }
 
-  private fun getID(): Int {
+  private fun getId(): Int {
     val sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
     return sharedPreferences.getInt(VALUE_NAME, -1)
   }
 
-  fun generateNextID(): Int {
-    val lastID = getID()
-    val nextID =
-      if (lastID == -1 || lastID == Int.MAX_VALUE) {
+  fun generateNextId(): Int {
+    val lastId = getId()
+    val nextId =
+      if (lastId == -1 || lastId == Int.MAX_VALUE) {
         1
       } else {
-        lastID + 1
+        lastId + 1
       }
 
-    saveID(nextID)
-    return nextID
+    saveId(nextId)
+    return nextId
   }
 }

@@ -19,11 +19,11 @@ private const val TAG = "LiveUpdatesManager"
 
 class LiveUpdatesManager(private val context: Context, private val channelId: String) {
   private val notificationManager = NotificationManagerCompat.from(context)
-  private val idGenerator = IDGenerator(context)
+  private val idGenerator = IdGenerator(context)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
-    val notificationId = idGenerator.generateNextID()
+    val notificationId = idGenerator.generateNextId()
 
     if (notificationExists(notificationId)) {
       Log.w(
