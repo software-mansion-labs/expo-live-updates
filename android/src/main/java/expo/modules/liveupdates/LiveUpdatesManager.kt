@@ -18,8 +18,8 @@ import java.io.File
 private const val TAG = "LiveUpdatesManager"
 
 class LiveUpdatesManager(private val context: Context, private val channelId: String) {
-  val notificationManager = NotificationManagerCompat.from(context)
-  val idGenerator = IDGenerator(context)
+  private val notificationManager = NotificationManagerCompat.from(context)
+  private val idGenerator = IDGenerator(context)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {

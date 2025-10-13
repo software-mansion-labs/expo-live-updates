@@ -10,7 +10,7 @@ import com.google.firebase.messaging.RemoteMessage
 
 const val FIREBASE_TAG = "FirebaseService"
 
-enum class FirebaseNotificationEvent {
+enum class FirebaseMessageEvent {
   START,
   UPDATE,
   STOP,
@@ -30,23 +30,43 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
-    val notificationId = message.data["notificationId"]?.toIntOrNull()
-    val event = FirebaseNotificationEvent.entries.find { it.name == message.data["event"]?.uppercase() }
+    val event = FirebaseMessageEvent.entries.find { it.name == message.data["event"]?.uppercase() }
+    Log.i(FIREBASE_TAG, "Message received: $event")
 
-    Log.i(FIREBASE_TAG, "[${notificationId}] message received: $event")
+    event
+      ?.let {
+        val state = getLiveUpdateState(message)
 
-    event?.let { event ->
-      val notificationData =
-        LiveUpdateState(
-          title = "[$notificationId] ${message.data["title"] ?: "Live Update"}",
-          subtitle = message.data["subtitle"],
-        )
+        when (event) {
+          FirebaseMessageEvent.START -> liveUpdatesManager.startLiveUpdateNotification(state)
+          FirebaseMessageEvent.UPDATE,
+          FirebaseMessageEvent.STOP -> {
+            val notificationId = message.data["notificationId"]?.toIntOrNull()
 
-      when (event) {
-        FirebaseNotificationEvent.START -> liveUpdatesManager.startLiveUpdateNotification(notificationData)
-        FirebaseNotificationEvent.UPDATE -> notificationId?.let{liveUpdatesManager.updateLiveUpdateNotification(it, notificationData)}.run {Log.i(FIREBASE_TAG, "cannot update - notificationId is null")}
-        FirebaseNotificationEvent.STOP -> notificationId?.let{liveUpdatesManager.stopNotification(it)}.run{Log.i(FIREBASE_TAG, "cannot stop - notificationId is null")}
+            notificationId
+              ?.let { notificationId ->
+                if (event == FirebaseMessageEvent.UPDATE) {
+                  liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
+                } else {
+                  liveUpdatesManager.stopNotification(notificationId)
+                }
+              }
+              .run {
+                Log.i(
+                  FIREBASE_TAG,
+                  "Cannot $event notification - notificationId is invalid or missing.",
+                )
+              }
+          }
+        }
       }
-    }
+      .run { Log.i(FIREBASE_TAG, "Received message with invalid or missing event.") }
+  }
+
+  fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
+    return LiveUpdateState(
+      title = message.data["title"] ?: "Live Update",
+      subtitle = message.data["subtitle"],
+    )
   }
 }
