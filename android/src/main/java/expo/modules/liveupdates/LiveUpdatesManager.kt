@@ -61,6 +61,14 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   fun stopNotification(notificationId: Int) {
+    if (!notificationExists(notificationId)) {
+      Log.w(
+        TAG,
+        "failed to stop notification - notification with id $notificationId does not exists",
+      )
+      return
+    }
+
     notificationManager.cancel(notificationId)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
