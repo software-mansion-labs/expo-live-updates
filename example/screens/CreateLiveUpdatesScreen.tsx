@@ -29,7 +29,7 @@ import * as Clipboard from 'expo-clipboard'
 const toggle = (previousState: boolean) => !previousState
 
 export default function CreateLiveUpdatesScreen() {
-  const [title, onChangeTitle] = useState('This is title')
+  const [title, onChangeTitle] = useState('This is a title')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
   const [imageUri, setImageUri] = useState<string>()
