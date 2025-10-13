@@ -16,6 +16,13 @@ enum class FirebaseMessageEvent {
   STOP,
 }
 
+data object FirebaseMessageProps {
+  const val NOTIFICATION_ID = "notificationId"
+  const val EVENT = "event"
+  const val TITLE = "title"
+  const val SUBTITLE = "subtitle"
+}
+
 class FirebaseService : FirebaseMessagingService() {
 
   private lateinit var liveUpdatesManager: LiveUpdatesManager
@@ -30,43 +37,49 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
-    val event = FirebaseMessageEvent.entries.find { it.name == message.data["event"]?.uppercase() }
-    Log.i(FIREBASE_TAG, "Message received: $event")
+    Log.i(FIREBASE_TAG, "Message received: ${message.data[FirebaseMessageProps.EVENT]}")
 
-    event
-      ?.let {
-        val state = getLiveUpdateState(message)
+    try {
+      val event = getFirebaseMessageEvent(message)
+      val state = getLiveUpdateState(message)
 
-        when (event) {
-          FirebaseMessageEvent.START -> liveUpdatesManager.startLiveUpdateNotification(state)
-          FirebaseMessageEvent.UPDATE,
-          FirebaseMessageEvent.STOP -> {
-            val notificationId = message.data["notificationId"]?.toIntOrNull()
+      when (event) {
+        FirebaseMessageEvent.START -> liveUpdatesManager.startLiveUpdateNotification(state)
+        FirebaseMessageEvent.UPDATE,
+        FirebaseMessageEvent.STOP -> {
+          val notificationId =
+            mapPropertyNotNull(FirebaseMessageProps.NOTIFICATION_ID) {
+              message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull()
+            }
 
-            notificationId
-              ?.let { notificationId ->
-                if (event == FirebaseMessageEvent.UPDATE) {
-                  liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
-                } else {
-                  liveUpdatesManager.stopNotification(notificationId)
-                }
-              }
-              .run {
-                Log.i(
-                  FIREBASE_TAG,
-                  "Cannot $event notification - notificationId is invalid or missing.",
-                )
-              }
+          if (event == FirebaseMessageEvent.UPDATE) {
+            liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
+          } else {
+            liveUpdatesManager.stopNotification(notificationId)
           }
         }
       }
-      .run { Log.i(FIREBASE_TAG, "Received message with invalid or missing event.") }
+    } catch (e: Exception) {
+      Log.e(FIREBASE_TAG, e.message.toString())
+    }
   }
 
-  fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
+  private fun getFirebaseMessageEvent(message: RemoteMessage): FirebaseMessageEvent {
+    return mapPropertyNotNull(FirebaseMessageProps.EVENT) {
+      FirebaseMessageEvent.entries.find {
+        it.name == message.data[FirebaseMessageProps.EVENT]?.uppercase()
+      }
+    }
+  }
+
+  private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
     return LiveUpdateState(
-      title = message.data["title"] ?: "Live Update",
-      subtitle = message.data["subtitle"],
+      title =
+        mapPropertyNotNull(FirebaseMessageProps.TITLE) { message.data[FirebaseMessageProps.TITLE] },
+      subtitle = message.data[FirebaseMessageProps.SUBTITLE],
     )
+  }
+  private fun <T> mapPropertyNotNull(propertyName: String, mapProperty: () -> T?): T {
+    return mapProperty() ?: throw Exception("Property $propertyName is missing or invalid.")
   }
 }
