@@ -26,18 +26,15 @@ POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
 Host: fcm.googleapis.com
 Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 399
+Content-Length: 349
 {
-   "message":{
+  "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
-      "data":{
-        "notificationId":"1",
-        "title":"Firebase message",
-        "body":"This is a message sent via Firebase",
-        "progress":"20",
-        "progressPointOne":"40",
-        "progressPointTwo":"80"
-      }
+        "data":{
+            "notificationId":"1",
+            "title":"Firebase message",
+            "subtitle":"This is a message sent via Firebase"
+        }
    }
 }
 ```

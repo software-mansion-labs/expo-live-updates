@@ -28,7 +28,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     if (notificationExists(notificationId)) {
       Log.w(
         TAG,
-        "failed to start notification - notification with id $notificationId already exist",
+        "failed to start notification - notification with id $notificationId already exists",
       )
       return null
     }
@@ -47,7 +47,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     if (!notificationExists(notificationId)) {
       Log.w(
         TAG,
-        "failed to update notification - notification with id $notificationId does not exist",
+        "failed to update notification - notification with id $notificationId does not exists",
       )
       return
     }
