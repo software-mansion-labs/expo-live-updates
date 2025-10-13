@@ -19,7 +19,7 @@ To run example app:
 
 # Send Firebase Message
 
-To create/update live update via FCM you need to send data message:
+Live updates can be started, updated and stopped using FCM. To manage live update via FCM you need to send data message:
 
 ```
 POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
@@ -32,13 +32,15 @@ Content-Length: 349
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
           "event":"update",
-          "notificationId":"1",
+          "notificationId":"1", // passing notificationId is prohibited when data event is "start"
           "title":"Firebase message",
           "subtitle":"This is a message sent via Firebase"
       }
    }
 }
 ```
+
+Passing notificationId when event is set to "start" will result in error - ids are generated and returned on live update start.
 
 Request variables:
 

@@ -42,15 +42,23 @@ class FirebaseService : FirebaseMessagingService() {
     try {
       val event = getFirebaseMessageEvent(message)
       val state = getLiveUpdateState(message)
+      val mapNotificationId = { message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull() }
 
       when (event) {
-        FirebaseMessageEvent.START -> liveUpdatesManager.startLiveUpdateNotification(state)
+        FirebaseMessageEvent.START -> {
+          val notificationId = mapNotificationId()
+          notificationId?.let {
+            throw Exception(
+              "Passing notificationId to start live update is prohibited - it will be generated automatically."
+            )
+          }
+
+          liveUpdatesManager.startLiveUpdateNotification(state)
+        }
         FirebaseMessageEvent.UPDATE,
         FirebaseMessageEvent.STOP -> {
           val notificationId =
-            mapPropertyNotNull(FirebaseMessageProps.NOTIFICATION_ID) {
-              message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull()
-            }
+            mapPropertyNotNull(FirebaseMessageProps.NOTIFICATION_ID, mapNotificationId)
 
           if (event == FirebaseMessageEvent.UPDATE) {
             liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
@@ -79,6 +87,7 @@ class FirebaseService : FirebaseMessagingService() {
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
     )
   }
+
   private fun <T> mapPropertyNotNull(propertyName: String, mapProperty: () -> T?): T {
     return mapProperty() ?: throw Exception("Property $propertyName is missing or invalid.")
   }
