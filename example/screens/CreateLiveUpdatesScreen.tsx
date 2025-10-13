@@ -11,7 +11,7 @@ import type {
   LiveUpdateState,
   NotificationStateChangeEvent,
 } from 'expo-live-updates/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Keyboard,
@@ -36,13 +36,16 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
-  const [notificationId, setNotificationId] = useState<number | undefined>(
-    undefined,
-  )
+  const [notificationIdString, setNotificationIdString] = useState<string>('')
   const [token, setToken] = useState<string | undefined>(undefined)
   const [notificationEvents, setNotificationEvents] = useState<
     NotificationStateChangeEvent[]
   >([])
+
+  const notificationId = useMemo(() => {
+    const parsedNotificationId = parseInt(notificationIdString)
+    return !isNaN(parsedNotificationId) ? parsedNotificationId : undefined
+  }, [notificationIdString])
 
   useEffect(() => {
     const loadImages = async () => {
@@ -85,7 +88,7 @@ export default function CreateLiveUpdatesScreen() {
       }
       const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
-        setNotificationId(id)
+        console.log('Notification started with id: ', id)
       } else {
         throw new Error('no notificationId returned')
       }
@@ -98,7 +101,6 @@ export default function CreateLiveUpdatesScreen() {
     try {
       if (notificationId) {
         stopLiveUpdate(notificationId)
-        setNotificationId(undefined)
       } else {
         throw Error('notificationId is undefined')
       }
@@ -141,6 +143,13 @@ export default function CreateLiveUpdatesScreen() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>Set Live live update ID:</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setNotificationIdString}
+        value={notificationIdString}
+        keyboardType="numeric"
+      />
       <Text style={styles.label}>Set Live live update title:</Text>
       <TextInput
         style={styles.input}
@@ -156,7 +165,7 @@ export default function CreateLiveUpdatesScreen() {
         />
       </View>
       <TextInput
-        style={passSubtitle ? styles.input : styles.diabledInput}
+        style={passSubtitle ? styles.input : styles.disabledInput}
         onChangeText={onChangeSubtitle}
         placeholder="Live Update title"
         value={subtitle}
@@ -194,7 +203,7 @@ export default function CreateLiveUpdatesScreen() {
         <Button
           title="Start"
           onPress={handleStartLiveUpdate}
-          disabled={title === ''}
+          disabled={title === '' || notificationId !== undefined}
         />
         <Button title="Stop" onPress={handleStopLiveUpdate} />
         <Button title="Update" onPress={handleUpdateLiveUpdate} />
@@ -268,7 +277,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  diabledInput: {
+  disabledInput: {
     backgroundColor: '#ECECEC',
     borderColor: '#DEDEDE',
     borderRadius: 10,

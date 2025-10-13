@@ -10,6 +10,12 @@ import com.google.firebase.messaging.RemoteMessage
 
 const val FIREBASE_TAG = "FirebaseService"
 
+enum class FirebaseNotificationEvent {
+  START,
+  UPDATE,
+  STOP,
+}
+
 class FirebaseService : FirebaseMessagingService() {
 
   private lateinit var liveUpdatesManager: LiveUpdatesManager
@@ -24,14 +30,23 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
-    Log.i(FIREBASE_TAG, "message received")
+    val notificationId = message.data["notificationId"]?.toIntOrNull()
+    val event = FirebaseNotificationEvent.entries.find { it.name == message.data["event"]?.uppercase() }
 
-    val state =
-      LiveUpdateState(
-        title = message.data["title"] ?: "Live Update",
-        subtitle = message.data["subtitle"],
-      )
+    Log.i(FIREBASE_TAG, "[${notificationId}] message received: $event")
 
-    liveUpdatesManager.startLiveUpdateNotification(state)
+    event?.let { event ->
+      val notificationData =
+        LiveUpdateState(
+          title = "[$notificationId] ${message.data["title"] ?: "Live Update"}",
+          subtitle = message.data["subtitle"],
+        )
+
+      when (event) {
+        FirebaseNotificationEvent.START -> liveUpdatesManager.startLiveUpdateNotification(notificationData)
+        FirebaseNotificationEvent.UPDATE -> notificationId?.let{liveUpdatesManager.updateLiveUpdateNotification(it, notificationData)}.run {Log.i(FIREBASE_TAG, "cannot update - notificationId is null")}
+        FirebaseNotificationEvent.STOP -> notificationId?.let{liveUpdatesManager.stopNotification(it)}.run{Log.i(FIREBASE_TAG, "cannot stop - notificationId is null")}
+      }
+    }
   }
 }

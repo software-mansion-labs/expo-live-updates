@@ -30,11 +30,12 @@ Content-Length: 349
 {
   "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
-        "data":{
-            "notificationId":"1",
-            "title":"Firebase message",
-            "subtitle":"This is a message sent via Firebase"
-        }
+      "data":{
+          "event":"update",
+          "notificationId":"1",
+          "title":"Firebase message",
+          "subtitle":"This is a message sent via Firebase"
+      }
    }
 }
 ```
