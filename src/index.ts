@@ -34,7 +34,7 @@ export function init(channelId: string, channelName: string) {
  */
 export function startLiveUpdate(
   state: LiveUpdateState,
-  config: LiveUpdateConfig,
+  config?: LiveUpdateConfig,
 ): Voidable<number> {
   if (assertAndroid('startLiveUpdate')) {
     return ExpoLiveUpdatesModule.startLiveUpdate(state, config)
@@ -56,9 +56,10 @@ export function stopLiveUpdate(notificationId: number) {
 export function updateLiveUpdate(
   notificationId: number,
   state: LiveUpdateState,
+  config?: LiveUpdateConfig,
 ) {
   if (assertAndroid('updateLiveUpdate'))
-    return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state)
+    return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state, config)
 }
 
 export function addTokenChangeListener(

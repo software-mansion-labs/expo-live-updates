@@ -33,7 +33,9 @@ Content-Length: 349
         "data":{
             "notificationId":"1",
             "title":"Firebase message",
-            "subtitle":"This is a message sent via Firebase"
+            "subtitle":"This is a message sent via Firebase",
+            "backgroundColor":"#6888bd",
+            "shortCriticalText":"text"
         }
    }
 }

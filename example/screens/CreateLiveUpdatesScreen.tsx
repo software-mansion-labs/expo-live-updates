@@ -29,13 +29,16 @@ const toggle = (previousState: boolean) => !previousState
 
 export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('Title')
-  const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
+  const [backgroundColor, setBackgroundColor] = useState('red')
+  const [shortCriticalText, setShortCriticalText] = useState('')
+
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
   )
@@ -82,6 +85,7 @@ export default function CreateLiveUpdatesScreen() {
     try {
       const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
+        shortCriticalText,
       }
       const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
@@ -109,8 +113,12 @@ export default function CreateLiveUpdatesScreen() {
 
   const handleUpdateLiveUpdate = () => {
     try {
+      const liveUpdateConfig: LiveUpdateConfig = {
+        backgroundColor,
+        shortCriticalText,
+      }
       if (notificationId) {
-        updateLiveUpdate(notificationId, getState())
+        updateLiveUpdate(notificationId, getState(), liveUpdateConfig)
       } else {
         throw Error('notificationId is undefined')
       }
@@ -173,6 +181,14 @@ export default function CreateLiveUpdatesScreen() {
           value={passIconImage}
         />
       </View>
+      <Text style={styles.label}>Set Live Update short critical text:</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setShortCriticalText}
+        autoCapitalize="none"
+        placeholder="Live Update short critical text"
+        value={shortCriticalText}
+      />
 
       {!isBaklava() && (
         <>

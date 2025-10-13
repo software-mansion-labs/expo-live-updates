@@ -33,7 +33,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return null
     }
 
-    val notification = createNotification(channelId, state, notificationId)
+    val notification = createNotification(channelId, state, notificationId, config)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -43,7 +43,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState) {
+  fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState, config: LiveUpdateConfig?) {
     if (!notificationExists(notificationId)) {
       Log.w(
         TAG,
@@ -52,7 +52,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return
     }
 
-    val notification = createNotification(channelId, state, notificationId)
+    val notification = createNotification(channelId, state, notificationId, config)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -85,7 +85,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
         .setContentText(state.subtitle)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-      notificationBuilder.setShortCriticalText("SWM")
+      notificationBuilder.setShortCriticalText(config?.shortCriticalText)
       notificationBuilder.setOngoing(true)
       notificationBuilder.setRequestPromotedOngoing(true)
     }

@@ -17,7 +17,10 @@ data class LiveUpdateState(
   @Field val smallImageName: String? = null,
 ) : Record
 
-data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
+data class LiveUpdateConfig(
+  @Field val backgroundColor: String? = null,
+  @Field val shortCriticalText: String? = null,
+) : Record
 
 const val NOTIFICATION_ID = 1
 
@@ -72,14 +75,14 @@ class ExpoLiveUpdatesModule : Module() {
       setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
     }
 
-    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
+    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
     Function("stopLiveUpdate") { notificationId: Int ->
       liveUpdatesManager.stopNotification(notificationId)
     }
-    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
-      liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
+    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState, config: LiveUpdateConfig? ->
+      liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
   }
 

@@ -13,9 +13,13 @@ type ExpoLiveUpdatesModuleEvents = {
 }
 declare class ExpoLiveUpdatesModule extends NativeModule<ExpoLiveUpdatesModuleEvents> {
   init: (channelId: string, channelName: string) => void
-  startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
+  startLiveUpdate: (state: LiveUpdateState, config?: LiveUpdateConfig) => number
   stopLiveUpdate: (notificationId: number) => void
-  updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
+  updateLiveUpdate: (
+    notificationId: number,
+    state: LiveUpdateState,
+    config?: LiveUpdateConfig,
+  ) => void
   addNotificationStateChangeListener: () => EventSubscription | undefined
   addTokenChangeListener: () => EventSubscription | undefined
 }

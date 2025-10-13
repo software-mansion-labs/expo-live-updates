@@ -7,6 +7,7 @@ export type LiveUpdateState = {
 
 export type LiveUpdateConfig = {
   backgroundColor?: string // only SDK < 16
+  shortCriticalText?: string
 }
 
 export type TokenChangeEvent = {
