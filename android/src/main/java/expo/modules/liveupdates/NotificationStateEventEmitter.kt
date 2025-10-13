@@ -2,7 +2,13 @@ package expo.modules.liveupdates
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import expo.modules.liveupdates.service.LiveUpdatesEvents
+
+enum class NotificationAction {
+  DISMISSED,
+  UPDATED,
+  STARTED,
+  STOPPED,
+}
 
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
   companion object {

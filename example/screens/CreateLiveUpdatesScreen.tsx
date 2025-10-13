@@ -52,7 +52,7 @@ export default function CreateLiveUpdatesScreen() {
     }
 
     loadImages()
-    requestCameraPermission()
+    requestNotificationsPermission()
 
     const handleNotificationStateChange = (
       event: NotificationStateChangeEvent,
@@ -72,15 +72,12 @@ export default function CreateLiveUpdatesScreen() {
   const getState = (): LiveUpdateState => ({
     title,
     subtitle: passSubtitle ? subtitle : undefined,
-    // date: passDate ? date.getTime() : undefined,
-    date: undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })
 
   const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
-    console.log('+++++++++++++++++++++++' + Platform.Version)
 
     try {
       const liveUpdateConfig: LiveUpdateConfig = {
@@ -239,8 +236,7 @@ async function getImgsUri() {
   }
 }
 
-// TODO: add POST_PROMOTED_NOTIFICATIONS also
-const requestCameraPermission = async () => {
+const requestNotificationsPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,

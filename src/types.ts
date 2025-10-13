@@ -1,7 +1,6 @@
 export type LiveUpdateState = {
   title: string
   subtitle?: string
-  date?: number
   imageName?: string
   dynamicIslandImageName?: string
 }
@@ -16,7 +15,7 @@ export type TokenChangeEvent = {
 
 export type NotificationStateChangeEvent = {
   notificationId: number
-  action: 'dismissed' | 'updated'
+  action: 'dismissed' | 'updated' | 'started' | 'stopped'
   timestamp: number
 }
 

@@ -26,18 +26,15 @@ POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
 Host: fcm.googleapis.com
 Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 399
+Content-Length: 349
 {
-   "message":{
+  "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
-      "data":{
-        "notificationId":"1",
-        "title":"Firebase message",
-        "body":"This is a message sent via Firebase",
-        "progress":"20",
-        "progressPointOne":"40",
-        "progressPointTwo":"80"
-      }
+        "data":{
+            "notificationId":"1",
+            "title":"Firebase message",
+            "subtitle":"This is a message sent via Firebase"
+        }
    }
 }
 ```
@@ -79,12 +76,14 @@ useEffect(() => {
 # TODO
 
 - Handle click with deeplink functionality
-- Add `started` & `stopped` events
-- Delete live update using FCM
-- Support missing fields of live update
+- Make short critical text customizable
 - Support multiple live updates at once
 - Handle notification ID after live update start triggered by FCM
+- Allow to start/update/stop live update using FCM
+- Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
+- Handle progress bar
+- Support more Live Updates features
 
 # API documentation
 

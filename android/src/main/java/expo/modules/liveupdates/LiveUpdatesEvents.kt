@@ -1,4 +1,4 @@
-package expo.modules.liveupdates.service
+package expo.modules.liveupdates
 
 object LiveUpdatesEvents {
   const val onTokenChange = "onTokenChange"
