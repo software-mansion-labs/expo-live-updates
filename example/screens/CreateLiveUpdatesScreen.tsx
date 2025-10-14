@@ -38,6 +38,7 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+  const [passShortCriticalText, setPassShortCriticalText] = useState(true)
 
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
@@ -181,13 +182,21 @@ export default function CreateLiveUpdatesScreen() {
           value={passIconImage}
         />
       </View>
-      <Text style={styles.label}>Set Live Update short critical text:</Text>
+
+      <View style={styles.labelWithSwitch}>
+        <Text style={styles.label}>Set Live Update short critical text:</Text>
+        <Switch
+          onValueChange={() => setPassShortCriticalText(toggle)}
+          value={passShortCriticalText}
+        />
+      </View>
       <TextInput
-        style={styles.input}
+        style={passShortCriticalText ? styles.input : styles.diabledInput}
         onChangeText={setShortCriticalText}
         autoCapitalize="none"
         placeholder="Live Update short critical text"
         value={shortCriticalText}
+        editable={passShortCriticalText}
       />
 
       {!isBaklava() && (
