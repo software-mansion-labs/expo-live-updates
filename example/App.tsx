@@ -7,10 +7,15 @@ import * as Linking from 'expo-linking'
 import TestScreen from './screens/TestScreen'
 import CreateLiveUpdatesScreen from './screens/CreateLiveUpdatesScreen'
 
+export type RootStackParamList = {
+  Home: undefined
+  test: undefined
+}
+
 const CHANNEL_ID = 'LiveUpdatesServiceChannelId'
 const CHANNEL_NAME = 'Live Updates Service Channel Name'
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator<RootStackParamList>()
 const prefix = Linking.createURL('/')
 
 export default function App() {

@@ -37,7 +37,7 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
-  const [passDeepLink, setPassDeepLink] = useState(false)
+  const [passDeepLink, setPassDeepLink] = useState(true)
   const [notificationId, setNotificationId] = useState<number | undefined>(
     undefined,
   )
