@@ -26,7 +26,7 @@ POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
 Host: fcm.googleapis.com
 Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 349
+Content-Length: 424
 {
   "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
@@ -34,7 +34,7 @@ Content-Length: 349
             "notificationId":"1",
             "title":"Firebase message",
             "subtitle":"This is a message sent via Firebase",
-            "backgroundColor":"#6888bd",
+            "backgroundColor":"red",
             "shortCriticalText":"text"
         }
    }

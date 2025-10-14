@@ -33,7 +33,7 @@ export default function CreateLiveUpdatesScreen() {
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [backgroundColor, setBackgroundColor] = useState('red')
-  const [shortCriticalText, setShortCriticalText] = useState('')
+  const [shortCriticalText, setShortCriticalText] = useState('SWM')
 
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
@@ -80,15 +80,16 @@ export default function CreateLiveUpdatesScreen() {
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
   })
 
+  const getConfig = (): LiveUpdateConfig => ({
+    backgroundColor,
+    shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
+  })
+
   const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
 
     try {
-      const liveUpdateConfig: LiveUpdateConfig = {
-        backgroundColor,
-        shortCriticalText,
-      }
-      const id = startLiveUpdate(getState(), liveUpdateConfig)
+      const id = startLiveUpdate(getState(), getConfig())
       if (id) {
         setNotificationId(id)
       } else {
@@ -114,12 +115,8 @@ export default function CreateLiveUpdatesScreen() {
 
   const handleUpdateLiveUpdate = () => {
     try {
-      const liveUpdateConfig: LiveUpdateConfig = {
-        backgroundColor,
-        shortCriticalText,
-      }
       if (notificationId) {
-        updateLiveUpdate(notificationId, getState(), liveUpdateConfig)
+        updateLiveUpdate(notificationId, getState(), getConfig())
       } else {
         throw Error('notificationId is undefined')
       }
