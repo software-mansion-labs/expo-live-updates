@@ -28,10 +28,14 @@ class FirebaseService : FirebaseMessagingService() {
 
     val state =
       LiveUpdateState(
-        title = message.data["title"] ?: "Live Update",
-        subtitle = message.data["subtitle"],
+        title = message.data[LiveUpdateState.Props.TITLE] ?: "Live Update",
+        subtitle = message.data[LiveUpdateState.Props.SUBTITLE],
       )
-    val config = LiveUpdateConfig(message.data["backgroundColor"], message.data["shortCriticalText"])
+    val config =
+      LiveUpdateConfig(
+        message.data[LiveUpdateConfig.Props.BACKGROUND_COLOR],
+        message.data[LiveUpdateConfig.Props.SHORT_CRITICAL_TEXT],
+      )
 
     liveUpdatesManager.startLiveUpdateNotification(state, config)
   }

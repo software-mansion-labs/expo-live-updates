@@ -15,12 +15,24 @@ data class LiveUpdateState(
   @Field val subtitle: String? = null,
   @Field val imageName: String? = null,
   @Field val smallImageName: String? = null,
-) : Record
+) : Record {
+  data object Props {
+    const val TITLE = "title"
+    const val SUBTITLE = "subtitle"
+    const val IMAGE_NAME = "imageName"
+    const val SMALL_IMAGE_NAME = "smallImageName"
+  }
+}
 
 data class LiveUpdateConfig(
   @Field val backgroundColor: String? = null,
   @Field val shortCriticalText: String? = null,
-) : Record
+) : Record {
+  data object Props {
+    const val BACKGROUND_COLOR = "backgroundColor"
+    const val SHORT_CRITICAL_TEXT = "shortCriticalText"
+  }
+}
 
 const val NOTIFICATION_ID = 1
 
@@ -81,7 +93,10 @@ class ExpoLiveUpdatesModule : Module() {
     Function("stopLiveUpdate") { notificationId: Int ->
       liveUpdatesManager.stopNotification(notificationId)
     }
-    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState, config: LiveUpdateConfig? ->
+    Function("updateLiveUpdate") {
+      notificationId: Int,
+      state: LiveUpdateState,
+      config: LiveUpdateConfig? ->
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
   }

@@ -43,7 +43,11 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState, config: LiveUpdateConfig?) {
+  fun updateLiveUpdateNotification(
+    notificationId: Int,
+    state: LiveUpdateState,
+    config: LiveUpdateConfig?,
+  ) {
     if (!notificationExists(notificationId)) {
       Log.w(
         TAG,
