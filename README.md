@@ -76,25 +76,36 @@ useEffect(() => {
 }, [])
 ```
 
-# Deep Link Support
+# Deep Linking
 
-The `LiveUpdateConfig` now supports a `deepLinkUrl` property that allows you to specify a URL to open when the notification is clicked. If no `deepLinkUrl` is provided, the default behavior is to open the app.
+The `LiveUpdateConfig` supports a `deepLinkUrl` property that allows you to specify an in-app route to navigate to when the notification is clicked. If no `deepLinkUrl` is provided, the default behavior is to open the app.
 
-Example usage:
+## Setup
 
+1. Define a scheme in your `app.config.ts`:
 ```ts
-const liveUpdateConfig: LiveUpdateConfig = {
-  backgroundColor: '#FF0000',
-  deepLinkUrl: 'https://example.com/specific-page', // Optional deep link URL
+export default {
+  scheme: 'myapp', // Your custom scheme
+  // ... other config
 }
-
-const notificationId = startLiveUpdate(liveUpdateState, liveUpdateConfig)
 ```
 
-When a user clicks on the notification:
-- If `deepLinkUrl` is provided, it will open the specified URL
-- If `deepLinkUrl` is not provided, it will open the app (default behavior)
-- A `'clicked'` event will be emitted through the notification state change listener
+2. Use the `withAppScheme` plugin in your config:
+```ts
+plugins: [
+  '../plugin/withAppScheme',
+  // ... other plugins
+]
+```
+
+3. Handle deep links, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
+```ts
+  const linking = {
+    prefixes: [prefix],
+  };
+
+  return <Navigation linking={linking} />;
+```
 
 # TODO
 
