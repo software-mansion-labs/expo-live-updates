@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -155,15 +156,15 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     config: LiveUpdateConfig?,
     notificationBuilder: NotificationCompat.Builder,
   ) {
-    val clickIntent = if (!config?.deepLinkUrl.isNullOrEmpty()) {
-      Intent(Intent.ACTION_VIEW, Uri.parse(config!!.deepLinkUrl))
-    } else {
-      context.packageManager.getLaunchIntentForPackage(context.packageName) ?: run {
-        Intent().apply {
-          action = Intent.ACTION_MAIN
-          addCategory(Intent.CATEGORY_LAUNCHER)
-          setPackage(context.packageName)
-        }
+
+    val clickIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+
+    clickIntent?.apply {
+      action = Intent.ACTION_VIEW
+      setPackage(context.packageName)
+      config?.deepLinkUrl?.let { deepLink ->
+        val scheme = getScheme(context)
+        data = Uri.parse("$scheme://${deepLink.removePrefix("/")}")
       }
     }
 
@@ -175,5 +176,12 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
       )
     notificationBuilder.setContentIntent(clickPendingIntent)
+  }
+
+  fun getScheme(context: Context): String {
+    val ai =
+      context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+    return ai.metaData?.getString("expo.modules.scheme")
+      ?: throw IllegalStateException("expo.modules.scheme not found in AndroidManifest.xml")
   }
 }

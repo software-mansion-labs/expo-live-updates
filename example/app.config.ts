@@ -19,6 +19,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: true,
     bundleIdentifier: 'expo.modules.liveupdates.example',
   },
+  scheme: 'expo-live-updates-example',
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
@@ -40,5 +41,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     '../plugin/withLiveUpdatesService',
     '../plugin/withNotificationDismissedReceiver',
     '../plugin/withFirebaseService',
+    '../plugin/withAppScheme',
   ],
 })

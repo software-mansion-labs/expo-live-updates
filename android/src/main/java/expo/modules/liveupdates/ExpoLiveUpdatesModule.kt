@@ -19,7 +19,7 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(
   @Field val backgroundColor: String? = null,
-  @Field val deepLinkUrl: String? = null
+  @Field val deepLinkUrl: String? = null,
 ) : Record
 
 const val NOTIFICATION_ID = 1

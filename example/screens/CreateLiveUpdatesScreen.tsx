@@ -31,7 +31,7 @@ export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('Title')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
-  const [deepLinkUrl, setDeepLinkUrl] = useState('')
+  const [deepLinkUrl, setDeepLinkUrl] = useState('/test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [passSubtitle, setPassSubtitle] = useState(true)
@@ -186,7 +186,7 @@ export default function CreateLiveUpdatesScreen() {
       <TextInput
         style={passDeepLink ? styles.input : styles.diabledInput}
         onChangeText={setDeepLinkUrl}
-        placeholder="Deep link URL (e.g., https://example.com/page)"
+        placeholder="Deep link URL (e.g., /test)"
         value={deepLinkUrl}
         editable={passDeepLink}
         autoCapitalize="none"
