@@ -42,23 +42,18 @@ class FirebaseService : FirebaseMessagingService() {
     try {
       val event = getFirebaseMessageEvent(message)
       val state = getLiveUpdateState(message)
-      val mapNotificationId = { message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull() }
 
       when (event) {
         FirebaseMessageEvent.START -> {
-          val notificationId = mapNotificationId()
-          notificationId?.let {
-            throw Exception(
-              "Passing notificationId to start live update is prohibited - it will be generated automatically."
-            )
+          require(message.data[FirebaseMessageProps.NOTIFICATION_ID].isNullOrBlank()) {
+            "Passing notificationId to start live update is prohibited - it will be generated automatically."
           }
 
           liveUpdatesManager.startLiveUpdateNotification(state)
         }
         FirebaseMessageEvent.UPDATE,
         FirebaseMessageEvent.STOP -> {
-          val notificationId =
-            mapPropertyNotNull(FirebaseMessageProps.NOTIFICATION_ID, mapNotificationId)
+          val notificationId = getNotificationId(message)
 
           if (event == FirebaseMessageEvent.UPDATE) {
             liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
@@ -72,23 +67,21 @@ class FirebaseService : FirebaseMessagingService() {
     }
   }
 
-  private fun getFirebaseMessageEvent(message: RemoteMessage): FirebaseMessageEvent {
-    return mapPropertyNotNull(FirebaseMessageProps.EVENT) {
-      FirebaseMessageEvent.entries.find {
-        it.name == message.data[FirebaseMessageProps.EVENT]?.uppercase()
-      }
-    }
-  }
+  private fun getFirebaseMessageEvent(message: RemoteMessage): FirebaseMessageEvent =
+    FirebaseMessageEvent.entries.find {
+      it.name == message.data[FirebaseMessageProps.EVENT]?.uppercase()
+    } ?: error("Invalid or missing event type")
 
-  private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
-    return LiveUpdateState(
+  private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState =
+    LiveUpdateState(
       title =
-        mapPropertyNotNull(FirebaseMessageProps.TITLE) { message.data[FirebaseMessageProps.TITLE] },
+        requireNotNull(message.data[FirebaseMessageProps.TITLE]) {
+          "Missing property: ${FirebaseMessageProps.TITLE}"
+        },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
     )
-  }
 
-  private fun <T> mapPropertyNotNull(propertyName: String, mapProperty: () -> T?): T {
-    return mapProperty() ?: throw Exception("Property $propertyName is missing or invalid.")
-  }
+  private fun getNotificationId(message: RemoteMessage): Int =
+    message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull()
+      ?: error("Missing or invalid notificationId")
 }
