@@ -17,7 +17,7 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
-    liveUpdatesManager = LiveUpdatesManager(this, CHANNEL_ID)
+    liveUpdatesManager = LiveUpdatesManager(this)
   }
 
   override fun onNewToken(token: String) = tokenChangeHandler.onNewToken(token)
