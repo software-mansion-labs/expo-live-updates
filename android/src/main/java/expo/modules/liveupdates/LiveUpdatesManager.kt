@@ -156,7 +156,6 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     config: LiveUpdateConfig?,
     notificationBuilder: NotificationCompat.Builder,
   ) {
-
     val clickIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
 
     clickIntent?.apply {
