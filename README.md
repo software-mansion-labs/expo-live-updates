@@ -40,7 +40,7 @@ Content-Length: 349
 }
 ```
 
-Passing `notificationId` when event is set to `start` will result in error - ids are generated and returned on live update start.
+Passing `notificationId` when event is set to `start` will result in error - ids are generated on live update start.
 
 Request variables:
 

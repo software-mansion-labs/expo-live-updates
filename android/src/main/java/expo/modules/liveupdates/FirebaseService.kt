@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlin.text.get
 
 const val FIREBASE_TAG = "FirebaseService"
 
@@ -48,7 +47,7 @@ class FirebaseService : FirebaseMessagingService() {
       when (event) {
         FirebaseMessageEvent.START -> {
           require(notificationId == null) {
-            "Passing ${FirebaseMessageProps.NOTIFICATION_ID} to start live update is prohibited - it will be generated automatically."
+            "Passing ${FirebaseMessageProps.NOTIFICATION_ID} to start Live Update is prohibited - it will be generated automatically."
           }
 
           liveUpdatesManager.startLiveUpdateNotification(state)
@@ -76,6 +75,7 @@ class FirebaseService : FirebaseMessagingService() {
       FirebaseMessageEvent.entries.find {
         it.name == message.data[FirebaseMessageProps.EVENT]?.uppercase()
       }
+
     return requireNotNull(event) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.EVENT) }
   }
 
