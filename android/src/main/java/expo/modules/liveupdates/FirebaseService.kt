@@ -41,7 +41,6 @@ class FirebaseService : FirebaseMessagingService() {
 
     try {
       val event = getFirebaseMessageEvent(message)
-      val state = getLiveUpdateState(message)
       val notificationId = message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull()
 
       when (event) {
@@ -50,6 +49,7 @@ class FirebaseService : FirebaseMessagingService() {
             "Passing ${FirebaseMessageProps.NOTIFICATION_ID} to start Live Update is prohibited - it will be generated automatically."
           }
 
+          val state = getLiveUpdateState(message)
           liveUpdatesManager.startLiveUpdateNotification(state)
         }
         FirebaseMessageEvent.UPDATE,
@@ -59,6 +59,7 @@ class FirebaseService : FirebaseMessagingService() {
           }
 
           if (event == FirebaseMessageEvent.UPDATE) {
+            val state = getLiveUpdateState(message)
             liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
           } else {
             liveUpdatesManager.stopNotification(notificationId)
