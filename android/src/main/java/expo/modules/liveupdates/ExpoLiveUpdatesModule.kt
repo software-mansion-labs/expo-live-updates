@@ -6,33 +6,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import expo.modules.kotlin.records.Field
-import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.TokenChangeHandler.Companion.setHandlerSendEvent
-
-data class LiveUpdateState(
-  @Field val title: String,
-  @Field val subtitle: String? = null,
-  @Field val imageName: String? = null,
-  @Field val smallImageName: String? = null,
-) : Record {
-  data object Props {
-    const val TITLE = "title"
-    const val SUBTITLE = "subtitle"
-    const val IMAGE_NAME = "imageName"
-    const val SMALL_IMAGE_NAME = "smallImageName"
-  }
-}
-
-data class LiveUpdateConfig(
-  @Field val backgroundColor: String? = null,
-  @Field val shortCriticalText: String? = null,
-) : Record {
-  data object Props {
-    const val BACKGROUND_COLOR = "backgroundColor"
-    const val SHORT_CRITICAL_TEXT = "shortCriticalText"
-  }
-}
 
 const val NOTIFICATION_ID = 1
 
@@ -55,7 +29,7 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
-    Events(LiveUpdatesEvents.onNotificationStateChange, LiveUpdatesEvents.onTokenChange)
+    Events(LiveUpdatesEvents.ON_NOTIFICATION_STATE_CHANGE, LiveUpdatesEvents.ON_TOKEN_CHANGE)
 
     AsyncFunction("init") { channelId: String, channelName: String ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

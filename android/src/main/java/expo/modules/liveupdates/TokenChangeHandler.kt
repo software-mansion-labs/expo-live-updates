@@ -26,7 +26,7 @@ class TokenChangeHandler() {
     }
 
     fun sendTokenChangeEvent(token: String) {
-      sendEvent?.let { it(LiveUpdatesEvents.onTokenChange, bundleOf("token" to token)) }
+      sendEvent?.let { it(LiveUpdatesEvents.ON_TOKEN_CHANGE, bundleOf("token" to token)) }
     }
   }
 
