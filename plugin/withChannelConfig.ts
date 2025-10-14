@@ -29,14 +29,12 @@ const withChannelConfig: ConfigPlugin<ChannelConfigPluginProps> = (
       configWithManifest.modResults
     )
 
-    // Add channelId metadata
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
       'expo.modules.liveupdates.channelId',
       channelId
     )
 
-    // Add channelName metadata
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
       'expo.modules.liveupdates.channelName',
