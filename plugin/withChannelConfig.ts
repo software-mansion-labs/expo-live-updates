@@ -10,6 +10,9 @@ export interface ChannelConfigPluginProps {
   channelName: string
 }
 
+const CHANNEL_ID_KEY = "expo.modules.liveupdates.channelId"
+const CHANNEL_NAME_KEY = "expo.modules.liveupdates.channelName"
+
 const withChannelConfig: ConfigPlugin<ChannelConfigPluginProps> = (
   config: ExpoConfig,
   props: ChannelConfigPluginProps
@@ -31,13 +34,13 @@ const withChannelConfig: ConfigPlugin<ChannelConfigPluginProps> = (
 
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
-      'expo.modules.liveupdates.channelId',
+      CHANNEL_ID_KEY,
       channelId
     )
 
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
-      'expo.modules.liveupdates.channelName',
+      CHANNEL_NAME_KEY,
       channelName
     )
 
