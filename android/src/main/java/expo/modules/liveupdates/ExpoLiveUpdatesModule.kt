@@ -40,6 +40,8 @@ class ExpoLiveUpdatesModule : Module() {
 
     OnCreate { initializeModule() }
 
+    OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
+
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
@@ -80,7 +82,5 @@ class ExpoLiveUpdatesModule : Module() {
 
     liveUpdatesManager = LiveUpdatesManager(context)
     NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
-
-    setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
   }
 }
