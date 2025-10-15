@@ -31,7 +31,7 @@ export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('Title')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
-  const [deepLinkUrl, setDeepLinkUrl] = useState('/test')
+  const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [passSubtitle, setPassSubtitle] = useState(true)
@@ -144,7 +144,7 @@ export default function CreateLiveUpdatesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Set Live live update title:</Text>
+      <Text style={styles.label}>Live Update title:</Text>
       <TextInput
         style={styles.input}
         onChangeText={onChangeTitle}
@@ -152,7 +152,7 @@ export default function CreateLiveUpdatesScreen() {
         value={title}
       />
       <View style={styles.labelWithSwitch}>
-        <Text style={styles.label}>Set Live Update subtitle:</Text>
+        <Text style={styles.label}>Live Update subtitle:</Text>
         <Switch
           onValueChange={() => setPassSubtitle(toggle)}
           value={passSubtitle}
@@ -166,18 +166,18 @@ export default function CreateLiveUpdatesScreen() {
         editable={passSubtitle}
       />
       <View style={styles.labelWithSwitch}>
-        <Text style={styles.label}>Set Live Update image:</Text>
+        <Text style={styles.label}>Live Update image:</Text>
         <Switch onValueChange={() => setPassImage(toggle)} value={passImage} />
       </View>
       <View style={styles.labelWithSwitch}>
-        <Text style={styles.label}>Set Live Update icon image:</Text>
+        <Text style={styles.label}>Live Update icon image:</Text>
         <Switch
           onValueChange={() => setPassIconImage(toggle)}
           value={passIconImage}
         />
       </View>
       <View style={styles.labelWithSwitch}>
-        <Text style={styles.label}>Set Deep Link URL:</Text>
+        <Text style={styles.label}>Live Update deep link URL:</Text>
         <Switch
           onValueChange={() => setPassDeepLink(toggle)}
           value={passDeepLink}
@@ -186,7 +186,7 @@ export default function CreateLiveUpdatesScreen() {
       <TextInput
         style={passDeepLink ? styles.input : styles.diabledInput}
         onChangeText={setDeepLinkUrl}
-        placeholder="Deep link URL (e.g., /test)"
+        placeholder="Deep link URL (e.g., /Test)"
         value={deepLinkUrl}
         editable={passDeepLink}
         autoCapitalize="none"
@@ -196,7 +196,7 @@ export default function CreateLiveUpdatesScreen() {
         <>
           <View style={styles.labelWithSwitch}>
             <Text style={styles.label}>
-              Set Live Update background color (hex) (for SDK &lt; 16 Baklava):
+              Live Update background color (hex) (for SDK &lt; 16 Baklava):
             </Text>
           </View>
           <TextInput

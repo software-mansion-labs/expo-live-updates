@@ -8,8 +8,8 @@ import TestScreen from './screens/TestScreen'
 import CreateLiveUpdatesScreen from './screens/CreateLiveUpdatesScreen'
 
 export type RootStackParamList = {
-  Home: undefined
-  test: undefined
+  CreateLiveUpdates: undefined
+  Test: undefined
 }
 
 const CHANNEL_ID = 'LiveUpdatesServiceChannelId'
@@ -30,8 +30,11 @@ export default function App() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={CreateLiveUpdatesScreen} />
-        <Stack.Screen name="test" component={TestScreen} />
+        <Stack.Screen
+          name="CreateLiveUpdates"
+          component={CreateLiveUpdatesScreen}
+        />
+        <Stack.Screen name="Test" component={TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )

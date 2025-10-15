@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresPermission
@@ -15,9 +14,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import java.io.File
 
 private const val TAG = "LiveUpdatesManager"
+private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 
 class LiveUpdatesManager(private val context: Context, private val channelId: String) {
   val notificationManager = NotificationManagerCompat.from(context)
@@ -160,10 +161,9 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
 
     clickIntent?.apply {
       action = Intent.ACTION_VIEW
-      setPackage(context.packageName)
       config?.deepLinkUrl?.let { deepLink ->
         val scheme = getScheme(context)
-        data = Uri.parse("$scheme://${deepLink.removePrefix("/")}")
+        data = "$scheme://${deepLink.removePrefix("/")}".toUri()
       }
       putExtra("notificationAction", NotificationAction.CLICKED)
       putExtra("notificationId", notificationId)
@@ -180,9 +180,9 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   fun getScheme(context: Context): String {
-    val ai =
+    val applicationInfo =
       context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-    return ai.metaData?.getString("expo.modules.scheme")
-      ?: throw IllegalStateException("expo.modules.scheme not found in AndroidManifest.xml")
+    return applicationInfo.metaData?.getString(EXPO_MODULE_SCHEME_KEY)
+      ?: throw IllegalStateException("${EXPO_MODULE_SCHEME_KEY} not found in AndroidManifest.xml")
   }
 }

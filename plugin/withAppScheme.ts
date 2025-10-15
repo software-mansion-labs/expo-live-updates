@@ -5,24 +5,25 @@ import {
 } from 'expo/config-plugins'
 
 const DEFAULT_SCHEME = 'myapp'
+const EXPO_MODULE_SCHEME_KEY = 'expo.modules.scheme'
 
 const withAppScheme: ConfigPlugin<void> = (config) => {
   const scheme = Array.isArray(config.scheme) 
     ? config.scheme[0] 
     : config.scheme || DEFAULT_SCHEME
   
-  config = withAndroidManifest(config, config => {
+  config = withAndroidManifest(config, configWithManifest => {
     const mainApplication = AndroidConfig.Manifest.getMainApplicationOrThrow(
-      config.modResults
+      configWithManifest.modResults
     )
     
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
-      'expo.modules.scheme',
+      EXPO_MODULE_SCHEME_KEY,
       scheme
     )
     
-    return config
+    return configWithManifest
   })
   
   return config

@@ -55,7 +55,7 @@ Request variables:
 The handler will receive a `NotificationStateChangeEvent` object, which contains:
 
 - `notificationId` – the ID of the notification.
-- `action` – the type of change, which can be `'dismissed'`, `'updated'`, or `'clicked'`.
+- `action` – the type of change, which can be `'started'`, `'updated'`, `'stopped'`, `'dismissed'` or `'clicked'`.
 - `timestamp` – the time when the change occurred, in milliseconds.
 
 Example usage in a React component:
@@ -115,6 +115,7 @@ plugins: [
 - Allow to start/update/stop live update using FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
+- Handle deepLinks by FCM 
 - Handle progress bar
 - Support more Live Updates features
 

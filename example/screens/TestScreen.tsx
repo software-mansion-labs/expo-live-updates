@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button } from 'react-native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import type { RootStackParamList } from '../App'
 
-type TestScreenProps = NativeStackScreenProps<RootStackParamList, 'test'>
+type TestScreenProps = NativeStackScreenProps<RootStackParamList, 'Test'>
 
 export default function TestScreen({ navigation }: TestScreenProps) {
   return (
