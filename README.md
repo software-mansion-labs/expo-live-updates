@@ -19,28 +19,28 @@ To run example app:
 
 # Send Firebase Message
 
-To create/update live update via FCM you need to send data message:
+Live updates can be started, updated and stopped using FCM. To manage live update via FCM you need to send data message:
 
 ```
 POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
 Host: fcm.googleapis.com
 Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 399
+Content-Length: 349
 {
-   "message":{
+  "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
-        "notificationId":"1",
-        "title":"Firebase message",
-        "body":"This is a message sent via Firebase",
-        "progress":"20",
-        "progressPointOne":"40",
-        "progressPointTwo":"80"
+          "event":"update",
+          "notificationId":"1", // passing notificationId is prohibited when data event is "start"
+          "title":"Firebase message",
+          "subtitle":"This is a message sent via Firebase"
       }
    }
 }
 ```
+
+Passing `notificationId` when event is set to `start` will result in error - ids are generated on live update start.
 
 Request variables:
 
@@ -110,9 +110,7 @@ plugins: [
 # TODO
 
 - Make short critical text customizable
-- Support multiple live updates at once
 - Handle notification ID after live update start triggered by FCM
-- Allow to start/update/stop live update using FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
 - Handle deepLinks by FCM 
