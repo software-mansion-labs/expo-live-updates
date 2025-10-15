@@ -19,8 +19,6 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record
 
-const val NOTIFICATION_ID = 1
-
 class ExpoLiveUpdatesModule : Module() {
   private lateinit var liveUpdatesManager: LiveUpdatesManager
 

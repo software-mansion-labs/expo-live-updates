@@ -18,13 +18,13 @@ import java.io.File
 private const val TAG = "LiveUpdatesManager"
 
 class LiveUpdatesManager(private val context: Context) {
-  val notificationManager = NotificationManagerCompat.from(context)
   private val channelId = getChannelId(context)
+  private val notificationManager = NotificationManagerCompat.from(context)
+  private val idGenerator = IdGenerator(context)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
-    // TODO: notificationId should be unique value for each live update
-    val notificationId = NOTIFICATION_ID
+    val notificationId = idGenerator.generateNextId()
 
     if (notificationExists(notificationId)) {
       Log.w(
@@ -62,6 +62,14 @@ class LiveUpdatesManager(private val context: Context) {
   }
 
   fun stopNotification(notificationId: Int) {
+    if (!notificationExists(notificationId)) {
+      Log.w(
+        TAG,
+        "failed to stop notification - notification with id $notificationId does not exists",
+      )
+      return
+    }
+
     notificationManager.cancel(notificationId)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
