@@ -70,8 +70,6 @@ class ExpoLiveUpdatesModule : Module() {
 
       liveUpdatesManager = LiveUpdatesManager(context, CHANNEL_ID)
       NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
-
-      setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
     }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
@@ -83,6 +81,8 @@ class ExpoLiveUpdatesModule : Module() {
     Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
     }
+
+    OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
 
     OnNewIntent { intent -> emitNotificationClickedEventIf(intent) }
   }
