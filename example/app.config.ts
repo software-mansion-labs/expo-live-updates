@@ -37,7 +37,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     'expo-asset',
-    '../plugin/withLiveUpdatesService',
     '../plugin/withNotificationDismissedReceiver',
     '../plugin/withFirebaseService',
   ],
