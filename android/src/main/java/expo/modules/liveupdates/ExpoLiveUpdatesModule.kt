@@ -1,6 +1,7 @@
 package expo.modules.liveupdates
 
 import android.app.NotificationChannel
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
@@ -84,6 +85,25 @@ class ExpoLiveUpdatesModule : Module() {
     Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
     }
+
+    OnNewIntent { intent -> emitNotificationClickedEventIf(intent) }
+  }
+
+  private fun emitNotificationClickedEventIf(intent: Intent) {
+    val action: NotificationAction? =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        intent.getSerializableExtra("notificationAction", NotificationAction::class.java)
+      } else {
+        @Suppress("DEPRECATION")
+        intent.getSerializableExtra("notificationAction") as? NotificationAction
+      }
+    val notificationId = intent.getIntExtra("notificationId", -1)
+
+    notificationId
+      .takeIf { it != -1 && action == NotificationAction.CLICKED }
+      ?.let { id ->
+        NotificationStateEventEmitter.emitNotificationStateChange(id, NotificationAction.CLICKED)
+      }
   }
 
   private val context

@@ -165,6 +165,8 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
         val scheme = getScheme(context)
         data = Uri.parse("$scheme://${deepLink.removePrefix("/")}")
       }
+      putExtra("notificationAction", NotificationAction.CLICKED)
+      putExtra("notificationId", notificationId)
     }
 
     val clickPendingIntent =
