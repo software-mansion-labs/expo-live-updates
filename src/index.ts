@@ -18,14 +18,6 @@ function assertAndroid(name: string) {
   return isAndroid
 }
 
-/**
- * @param {string} channelId The state for the live live update.
- * @param {string} channelName Live live update config object.
- */
-export function init(channelId: string, channelName: string) {
-  if (assertAndroid('init'))
-    return ExpoLiveUpdatesModule.init(channelId, channelName)
-}
 
 /**
  * @param {LiveUpdateState} state The state for the live live update.

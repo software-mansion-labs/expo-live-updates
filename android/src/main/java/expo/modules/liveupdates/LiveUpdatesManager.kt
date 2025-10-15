@@ -17,7 +17,8 @@ import java.io.File
 
 private const val TAG = "LiveUpdatesManager"
 
-class LiveUpdatesManager(private val context: Context, private val channelId: String) {
+class LiveUpdatesManager(private val context: Context) {
+  private val channelId = getChannelId(context)
   private val notificationManager = NotificationManagerCompat.from(context)
   private val idGenerator = IdGenerator(context)
 
@@ -33,7 +34,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return null
     }
 
-    val notification = createNotification(channelId, state, notificationId)
+    val notification = createNotification(state, notificationId)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -52,7 +53,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return
     }
 
-    val notification = createNotification(channelId, state, notificationId)
+    val notification = createNotification(state, notificationId)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -81,7 +82,6 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   private fun createNotification(
-    channelId: String,
     state: LiveUpdateState,
     notificationId: Int,
     config: LiveUpdateConfig? = null,
