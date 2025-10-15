@@ -42,5 +42,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     '../plugin/withNotificationDismissedReceiver',
     '../plugin/withFirebaseService',
     '../plugin/withAppScheme',
+    [
+      '../plugin/withChannelConfig',
+      {
+        channelId: 'LiveUpdatesServiceChannelId',
+        channelName: 'Live Updates Service Channel Name',
+      },
+    ],
   ],
 })

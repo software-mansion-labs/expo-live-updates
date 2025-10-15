@@ -20,7 +20,8 @@ import java.io.File
 private const val TAG = "LiveUpdatesManager"
 private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 
-class LiveUpdatesManager(private val context: Context, private val channelId: String) {
+class LiveUpdatesManager(private val context: Context) {
+  private val channelId = getChannelId(context)
   private val notificationManager = NotificationManagerCompat.from(context)
   private val idGenerator = IdGenerator(context)
 
@@ -36,7 +37,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return null
     }
 
-    val notification = createNotification(channelId, state, notificationId, config)
+    val notification = createNotification(state, notificationId, config)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -55,7 +56,7 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
       return
     }
 
-    val notification = createNotification(channelId, state, notificationId)
+    val notification = createNotification(state, notificationId)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -84,7 +85,6 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
   }
 
   private fun createNotification(
-    channelId: String,
     state: LiveUpdateState,
     notificationId: Int,
     config: LiveUpdateConfig? = null,
@@ -191,6 +191,6 @@ class LiveUpdatesManager(private val context: Context, private val channelId: St
     val applicationInfo =
       context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
     return applicationInfo.metaData?.getString(EXPO_MODULE_SCHEME_KEY)
-      ?: throw IllegalStateException("${EXPO_MODULE_SCHEME_KEY} not found in AndroidManifest.xml")
+      ?: throw IllegalStateException("$EXPO_MODULE_SCHEME_KEY not found in AndroidManifest.xml")
   }
 }

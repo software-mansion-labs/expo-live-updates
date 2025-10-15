@@ -1,5 +1,3 @@
-import { init } from 'expo-live-updates'
-import { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as Linking from 'expo-linking'
@@ -12,17 +10,10 @@ export type RootStackParamList = {
   Test: undefined
 }
 
-const CHANNEL_ID = 'LiveUpdatesServiceChannelId'
-const CHANNEL_NAME = 'Live Updates Service Channel Name'
-
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const prefix = Linking.createURL('/')
 
 export default function App() {
-  useEffect(() => {
-    init(CHANNEL_ID, CHANNEL_NAME)
-  }, [])
-
   const linking = {
     prefixes: [prefix],
   }
