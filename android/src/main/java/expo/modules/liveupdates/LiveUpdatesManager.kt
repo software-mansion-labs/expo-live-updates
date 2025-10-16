@@ -111,6 +111,14 @@ class LiveUpdatesManager(private val context: Context) {
       }
     }
 
+    state.progress?.let { progress ->
+      if (progress.indeterminate == true) {
+        notificationBuilder.setProgress(0, 0, true)
+      } else if (progress.progress != null) {
+        notificationBuilder.setProgress(progress.max ?: 100, progress.progress, false)
+      }
+    }
+
     // TODO: save config by id to apply it when updating notification
     config?.backgroundColor?.let { backgroundColor ->
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {

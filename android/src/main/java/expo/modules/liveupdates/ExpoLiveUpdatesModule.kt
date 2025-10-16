@@ -10,11 +10,18 @@ import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.TokenChangeHandler.Companion.setHandlerSendEvent
 
+data class LiveUpdateProgress(
+  @Field val max: Int?,
+  @Field val progress: Int?,
+  @Field val indeterminate: Boolean?,
+) : Record
+
 data class LiveUpdateState(
   @Field val title: String,
   @Field val subtitle: String? = null,
   @Field val imageName: String? = null,
   @Field val smallImageName: String? = null,
+  @Field val progress: LiveUpdateProgress? = null,
 ) : Record
 
 data class LiveUpdateConfig(@Field val backgroundColor: String? = null) : Record

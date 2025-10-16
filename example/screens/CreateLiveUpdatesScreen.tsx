@@ -1,4 +1,3 @@
-import { Asset } from 'expo-asset'
 import {
   startLiveUpdate,
   stopLiveUpdate,
@@ -25,6 +24,7 @@ import {
   View,
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const toggle = (previousState: boolean) => !previousState
 
@@ -42,6 +42,10 @@ export default function CreateLiveUpdatesScreen() {
   const [notificationEvents, setNotificationEvents] = useState<
     NotificationStateChangeEvent[]
   >([])
+  const [passProgress, setPassProgress] = useState(false)
+  const [progressMax, setProgressMax] = useState('100')
+  const [progressValue, setProgressProgress] = useState('50')
+  const [progressIndeterminate, setProgressIndeterminate] = useState(false)
 
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -80,6 +84,13 @@ export default function CreateLiveUpdatesScreen() {
     subtitle: passSubtitle ? subtitle : undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
+    progress: passProgress
+      ? {
+          max: parseInt(progressMax) || 100,
+          progress: parseInt(progressValue) || 0,
+          indeterminate: progressIndeterminate,
+        }
+      : undefined,
   })
 
   const handleStartLiveUpdate = () => {
@@ -145,126 +156,179 @@ export default function CreateLiveUpdatesScreen() {
   }, [setToken])
 
   return (
-    <View style={styles.screenContainer}>
-      <View style={styles.sectionContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Set Live Update title:</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeTitle}
-            placeholder="Live Update title"
-            value={title}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Set Live Update subtitle:</Text>
-            <Switch
-              onValueChange={() => setPassSubtitle(toggle)}
-              value={passSubtitle}
-            />
-          </View>
-          <TextInput
-            style={[styles.input, !passSubtitle && styles.disabledInput]}
-            onChangeText={onChangeSubtitle}
-            placeholder="Live Update subtitle"
-            value={subtitle}
-            editable={passSubtitle}
-          />
-        </View>
-
-        <View style={styles.labelWithSwitch}>
-          <Text style={styles.label}>Set Live Update image:</Text>
-          <Switch
-            onValueChange={() => setPassImage(toggle)}
-            value={passImage}
-          />
-        </View>
-
-        <View style={styles.labelWithSwitch}>
-          <Text style={styles.label}>Set Live Update icon image:</Text>
-          <Switch
-            onValueChange={() => setPassIconImage(toggle)}
-            value={passIconImage}
-          />
-        </View>
-
-        {!isBaklava() && (
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={styles.screenContainer}>
+        <View style={styles.sectionContainer}>
           <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>
-                Set Live Update background color (hex) (for SDK &lt; 16
-                Baklava):
-              </Text>
-            </View>
+            <Text style={styles.label}>Title</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setBackgroundColor}
-              autoCapitalize="none"
-              placeholder="Live Update background color"
-              value={backgroundColor}
+              onChangeText={onChangeTitle}
+              placeholder="Title"
+              value={title}
             />
           </View>
-        )}
 
-        <View
-          style={[styles.sectionContainer, styles.verticalButtonsContainer]}>
-          <Button
-            title="Start"
-            onPress={handleStartLiveUpdate}
-            disabled={title === ''}
-          />
-          <Button title="Copy Push Token" onPress={handleCopyPushToken} />
-        </View>
-      </View>
-
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Manage existing Live Update</Text>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Set Live Update ID:</Text>
-          <View style={styles.manageUpdatesContainer}>
+          <View style={styles.inputContainer}>
+            <View style={styles.labelWithSwitch}>
+              <Text style={styles.label}>Subtitle</Text>
+              <Switch
+                onValueChange={() => setPassSubtitle(toggle)}
+                value={passSubtitle}
+              />
+            </View>
             <TextInput
-              style={[styles.input, styles.manageUpdatesInput]}
-              placeholder="Live Update ID"
-              onChangeText={setNotificationIdString}
-              value={notificationIdString}
-              keyboardType="numeric"
-            />
-            <Button
-              title="Update"
-              onPress={handleUpdateLiveUpdate}
-              disabled={notificationId === undefined}
-            />
-            <Button
-              title="Stop"
-              onPress={handleStopLiveUpdate}
-              disabled={notificationId === undefined}
+              style={[styles.input, !passSubtitle && styles.disabledInput]}
+              onChangeText={onChangeSubtitle}
+              placeholder="Subtitle"
+              value={subtitle}
+              editable={passSubtitle}
             />
           </View>
-        </View>
-      </View>
 
-      <View style={styles.eventsContainer}>
-        <Text style={styles.eventsTitle}>Notification Events:</Text>
+          <View style={styles.labelWithSwitch}>
+            <Text style={styles.label}>Image</Text>
+            <Switch
+              onValueChange={() => setPassImage(toggle)}
+              value={passImage}
+            />
+          </View>
 
-        <ScrollView
-          ref={scrollViewRef}
-          onContentSizeChange={() => scrollViewRef.current?.scrollToEnd()}>
-          {notificationEvents.length === 0 ? (
-            <Text style={styles.noEventsText}>No events yet</Text>
-          ) : (
-            notificationEvents.map((event, index) => (
-              <Text key={index} style={styles.eventText}>
-                {event.action} (ID: {event.notificationId}) -{' '}
-                {new Date(event.timestamp).toLocaleTimeString()}
-              </Text>
-            ))
+          <View style={styles.labelWithSwitch}>
+            <Text style={styles.label}>Icon image</Text>
+            <Switch
+              onValueChange={() => setPassIconImage(toggle)}
+              value={passIconImage}
+            />
+          </View>
+
+          <View style={styles.labelWithSwitch}>
+            <Text style={styles.label}>Progress</Text>
+            <Switch
+              onValueChange={() => setPassProgress(toggle)}
+              value={passProgress}
+            />
+          </View>
+
+          {passProgress && (
+            <>
+              <View style={styles.inputsRow}>
+                <View style={styles.inputInRowContainer}>
+                  <Text style={styles.label}>Progress value</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      progressIndeterminate && styles.disabledInput,
+                    ]}
+                    onChangeText={setProgressProgress}
+                    value={progressValue}
+                    placeholder="50"
+                    editable={!progressIndeterminate}
+                    keyboardType="numeric"
+                  />
+                </View>
+
+                <View style={styles.inputInRowContainer}>
+                  <Text style={styles.label}>Progress max</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      progressIndeterminate && styles.disabledInput,
+                    ]}
+                    onChangeText={setProgressMax}
+                    value={progressMax}
+                    placeholder="100"
+                    editable={!progressIndeterminate}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.labelWithSwitch}>
+                <Text style={styles.label}>Indeterminate progress</Text>
+                <Switch
+                  onValueChange={() => setProgressIndeterminate(toggle)}
+                  value={progressIndeterminate}
+                />
+              </View>
+            </>
           )}
-        </ScrollView>
-      </View>
-    </View>
+
+          {!isBaklava() && (
+            <View style={styles.inputContainer}>
+              <View style={styles.labelWithSwitch}>
+                <Text style={styles.label}>
+                  Background color (hex) (for SDK &lt; 16 Baklava):
+                </Text>
+              </View>
+              <TextInput
+                style={styles.input}
+                onChangeText={setBackgroundColor}
+                autoCapitalize="none"
+                placeholder="Background color"
+                value={backgroundColor}
+              />
+            </View>
+          )}
+
+          <View
+            style={[styles.sectionContainer, styles.verticalButtonsContainer]}>
+            <Button
+              title="Start"
+              onPress={handleStartLiveUpdate}
+              disabled={title === ''}
+            />
+            <Button title="Copy Push Token" onPress={handleCopyPushToken} />
+          </View>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Manage existing Live Update</Text>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Live Update ID</Text>
+            <View style={styles.manageUpdatesContainer}>
+              <TextInput
+                style={[styles.input, styles.manageUpdatesInput]}
+                placeholder="Live Update ID"
+                onChangeText={setNotificationIdString}
+                value={notificationIdString}
+                keyboardType="numeric"
+              />
+              <Button
+                title="Update"
+                onPress={handleUpdateLiveUpdate}
+                disabled={notificationId === undefined}
+              />
+              <Button
+                title="Stop"
+                onPress={handleStopLiveUpdate}
+                disabled={notificationId === undefined}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.eventsContainer}>
+          <Text style={styles.eventsTitle}>Notification Events</Text>
+
+          <ScrollView
+            ref={scrollViewRef}
+            onContentSizeChange={() => scrollViewRef.current?.scrollToEnd()}>
+            {notificationEvents.length === 0 ? (
+              <Text style={styles.noEventsText}>No events yet</Text>
+            ) : (
+              notificationEvents.map((event, index) => (
+                <Text key={index} style={styles.eventText}>
+                  {event.action} (ID: {event.notificationId}) -{' '}
+                  {new Date(event.timestamp).toLocaleTimeString()}
+                </Text>
+              ))
+            )}
+          </ScrollView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -340,6 +404,14 @@ const styles = StyleSheet.create({
     gap: 6,
     width: '100%',
   },
+  inputInRowContainer: {
+    gap: 6,
+    width: '50%',
+  },
+  inputsRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
   label: {
     fontSize: 16,
   },
@@ -348,13 +420,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  manageUpdatesInput: {
-    flex: 1,
-  },
   manageUpdatesContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
+  },
+  manageUpdatesInput: {
+    flex: 1,
   },
   noEventsText: {
     color: '#666',
@@ -362,9 +434,7 @@ const styles = StyleSheet.create({
   },
   screenContainer: {
     display: 'flex',
-    flex: 1,
     gap: 42,
-    justifyContent: 'center',
     padding: 24,
   },
   sectionContainer: {

@@ -21,6 +21,9 @@ data object FirebaseMessageProps {
   const val EVENT = "event"
   const val TITLE = "title"
   const val SUBTITLE = "subtitle"
+  const val PROGRESS_MAX = "progressMax"
+  const val PROGRESS_VALUE = "progressValue"
+  const val PROGRESS_INDETERMINATE = "progressIndeterminate"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -82,10 +85,23 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
     val title = message.data[FirebaseMessageProps.TITLE]
+    
+    val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
+    val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
+    val progressIndeterminate = message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
+    
+    val progress = if (progressValue != null || progressIndeterminate == true) {
+      LiveUpdateProgress(
+        max = progressMax,
+        progress = progressValue,
+        indeterminate = progressIndeterminate
+      )
+    } else null
 
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
+      progress = progress,
     )
   }
 

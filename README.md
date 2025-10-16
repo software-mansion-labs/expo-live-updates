@@ -34,7 +34,10 @@ Content-Length: 349
           "event":"update",
           "notificationId":"1", // passing notificationId is prohibited when data event is "start"
           "title":"Firebase message",
-          "subtitle":"This is a message sent via Firebase"
+          "subtitle":"This is a message sent via Firebase", // optional
+          "progressMax":"100", // optional: maximum progress value, if no provided = 100
+          "progressValue":"50", // optional: current progress value
+          "progressIndeterminate":"false" // optional: whether progress is indeterminate
       }
    }
 }
@@ -75,6 +78,14 @@ useEffect(() => {
   }
 }, [])
 ```
+
+## Progress Field
+
+The live update notifications support an optional progress indicator. 
+When `progressIndeterminate` is `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value.
+
+All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
+
 
 # TODO
 
