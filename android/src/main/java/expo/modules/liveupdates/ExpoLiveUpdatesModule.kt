@@ -8,12 +8,6 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.liveupdates.TokenChangeHandler.Companion.setHandlerSendEvent
 
-const val NOTIFICATION_ID = 1
-
-// TODO: delete CHANNEL_ID and CHANNEL_NAME - make notification channel id and name configurable
-const val CHANNEL_ID = "Notifications channel"
-const val CHANNEL_NAME = "Channel to handle notifications for Live Updates"
-
 class ExpoLiveUpdatesModule : Module() {
   private lateinit var liveUpdatesManager: LiveUpdatesManager
 
@@ -31,35 +25,9 @@ class ExpoLiveUpdatesModule : Module() {
 
     Events(LiveUpdatesEvents.ON_NOTIFICATION_STATE_CHANGE, LiveUpdatesEvents.ON_TOKEN_CHANGE)
 
-    AsyncFunction("init") { channelId: String, channelName: String ->
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val serviceChannel =
-          NotificationChannel(
-            CHANNEL_ID,
-            CHANNEL_NAME,
-            android.app.NotificationManager.IMPORTANCE_DEFAULT,
-          )
+    OnCreate { initializeModule() }
 
-        val androidNotificationManager =
-          getSystemService(context, android.app.NotificationManager::class.java)
-        androidNotificationManager?.createNotificationChannel(serviceChannel)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-          val canPostLiveUpdates = androidNotificationManager?.canPostPromotedNotifications()
-
-          if (canPostLiveUpdates == true) {
-            Log.i("ExpoLiveUpdatesModule", "✅ can post live updates")
-          } else {
-            Log.i("ExpoLiveUpdatesModule", "❌ cannot post live updates")
-          }
-        }
-      }
-
-      liveUpdatesManager = LiveUpdatesManager(context, CHANNEL_ID)
-      NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
-
-      setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
-    }
+    OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
       liveUpdatesManager.startLiveUpdateNotification(state, config)
@@ -77,4 +45,32 @@ class ExpoLiveUpdatesModule : Module() {
 
   private val context
     get() = requireNotNull(appContext.reactContext)
+
+  private fun initializeModule() {
+    val channelId: String = getChannelId(context)
+    val channelName: String = getChannelName(context)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val serviceChannel =
+        NotificationChannel(
+          channelId,
+          channelName,
+          android.app.NotificationManager.IMPORTANCE_DEFAULT,
+        )
+
+      val androidNotificationManager =
+        getSystemService(context, android.app.NotificationManager::class.java)
+      androidNotificationManager?.createNotificationChannel(serviceChannel)
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+        val status =
+          if (androidNotificationManager?.canPostPromotedNotifications() == true) "✅ can"
+          else "❌ cannot"
+        Log.i("ExpoLiveUpdatesModule", "$status post live updates")
+      }
+    }
+
+    liveUpdatesManager = LiveUpdatesManager(context)
+    NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
+  }
 }
