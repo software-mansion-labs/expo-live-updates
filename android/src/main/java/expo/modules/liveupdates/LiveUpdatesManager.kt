@@ -97,7 +97,7 @@ class LiveUpdatesManager(private val context: Context) {
         .setContentText(state.subtitle)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-      notificationBuilder.setShortCriticalText(config?.shortCriticalText)
+      notificationBuilder.setShortCriticalText(state.shortCriticalText)
       notificationBuilder.setOngoing(true)
       notificationBuilder.setRequestPromotedOngoing(true)
     }

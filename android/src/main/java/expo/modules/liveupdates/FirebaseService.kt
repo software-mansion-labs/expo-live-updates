@@ -21,6 +21,7 @@ data object FirebaseMessageProps {
   const val EVENT = "event"
   const val TITLE = "title"
   const val SUBTITLE = "subtitle"
+  const val SHORT_CRITICAL_TEXT = "shortCriticalText"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -86,6 +87,7 @@ class FirebaseService : FirebaseMessagingService() {
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
+      shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT]
     )
   }
 
