@@ -1,7 +1,7 @@
 export type LiveUpdateProgress = {
-  max: number
-  progress: number
-  indeterminate: boolean
+  max?: number
+  progress?: number
+  indeterminate?: boolean
 }
 
 export type LiveUpdateState = {

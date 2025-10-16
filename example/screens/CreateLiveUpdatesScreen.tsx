@@ -86,8 +86,8 @@ export default function CreateLiveUpdatesScreen() {
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
     progress: passProgress
       ? {
-          max: parseInt(progressMax) || 100,
-          progress: parseInt(progressValue) || 0,
+          max: parseInt(progressMax),
+          progress: parseInt(progressValue),
           indeterminate: progressIndeterminate,
         }
       : undefined,
