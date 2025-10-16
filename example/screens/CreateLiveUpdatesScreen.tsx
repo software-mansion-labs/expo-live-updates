@@ -31,6 +31,7 @@ const toggle = (previousState: boolean) => !previousState
 export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
+  const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [backgroundColor, setBackgroundColor] = useState('red')
@@ -39,6 +40,7 @@ export default function CreateLiveUpdatesScreen() {
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+  const [passDeepLink, setPassDeepLink] = useState(true)
   const [passShortCriticalText, setPassShortCriticalText] = useState(true)
 
   const [notificationIdString, setNotificationIdString] = useState<string>('')
@@ -95,7 +97,11 @@ export default function CreateLiveUpdatesScreen() {
     Keyboard.dismiss()
 
     try {
-      const id = startLiveUpdate(getState(), getConfig())
+      const liveUpdateConfig: LiveUpdateConfig = {
+        backgroundColor,
+        deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
+      }
+      const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
         console.log('Notification started with id: ', id)
       } else {
@@ -216,6 +222,22 @@ export default function CreateLiveUpdatesScreen() {
           />
         </View>
 
+        <View style={styles.labelWithSwitch}>
+          <Text style={styles.label}>Live Update deep link URL:</Text>
+          <Switch
+            onValueChange={() => setPassDeepLink(toggle)}
+            value={passDeepLink}
+          />
+        </View>
+        <TextInput
+          style={passDeepLink ? styles.input : styles.disabledInput}
+          onChangeText={setDeepLinkUrl}
+          placeholder="Deep link URL (e.g., /Test)"
+          value={deepLinkUrl}
+          editable={passDeepLink}
+          autoCapitalize="none"
+        />
+
         {!isBaklava() && (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>
@@ -231,8 +253,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
         )}
 
-        <View
-          style={[styles.sectionContainer, styles.verticalButtonsContainer]}>
+        <View style={styles.verticalButtonsContainer}>
           <Button
             title="Start"
             onPress={handleStartLiveUpdate}
@@ -379,6 +400,9 @@ const styles = StyleSheet.create({
   manageUpdatesInput: {
     flex: 1,
   },
+  manageUpdatesInput: {
+    flex: 1,
+  },
   noEventsText: {
     color: '#666',
     fontStyle: 'italic',
@@ -398,6 +422,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   verticalButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
     marginTop: 16,
     paddingHorizontal: '20%',
   },

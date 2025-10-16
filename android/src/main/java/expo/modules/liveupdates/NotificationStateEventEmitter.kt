@@ -8,6 +8,7 @@ enum class NotificationAction {
   UPDATED,
   STARTED,
   STOPPED,
+  CLICKED,
 }
 
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {

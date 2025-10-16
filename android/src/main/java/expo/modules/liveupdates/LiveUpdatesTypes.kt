@@ -13,6 +13,7 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(
   @Field val backgroundColor: String? = null,
+  @Field val deepLinkUrl: String? = null,
 ) : Record
 
 object LiveUpdatesModuleEvents {

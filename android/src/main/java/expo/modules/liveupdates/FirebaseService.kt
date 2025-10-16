@@ -23,7 +23,6 @@ data object FirebaseMessageProps {
   const val SUBTITLE = "subtitle"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
-
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -90,14 +89,12 @@ class FirebaseService : FirebaseMessagingService() {
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
-      shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT]
+      shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
     )
   }
 
   private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
-    return LiveUpdateConfig(
-      backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR]
-    )
+    return LiveUpdateConfig(backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR])
   }
 
   private fun getMissingOrInvalidErrorMessage(propName: String): String {
