@@ -73,7 +73,7 @@ class ExpoLiveUpdatesModule : Module() {
     intent.action == Intent.ACTION_VIEW && intent.`package` == context.packageName
 
   private fun emitNotificationClickedEvent(intent: Intent) {
-    val (action, notificationId) = getNotificationClickIntentExtras(intent)
+    val (action, notificationId) = getNotificationClickIntentExtra(intent)
 
     notificationId
       .takeIf { it != -1 && action == NotificationAction.CLICKED }
@@ -114,7 +114,7 @@ class ExpoLiveUpdatesModule : Module() {
   }
 }
 
-private fun getNotificationClickIntentExtras(intent: Intent): Pair<NotificationAction?, Int> {
+private fun getNotificationClickIntentExtra(intent: Intent): Pair<NotificationAction?, Int> {
   val action =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       intent.getSerializableExtra(
