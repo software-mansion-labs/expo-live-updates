@@ -13,11 +13,7 @@ data class LiveUpdateState(
 
 data class LiveUpdateConfig(
   @Field val backgroundColor: String? = null,
-) : Record {
-  data object Props {
-    const val BACKGROUND_COLOR = "backgroundColor"
-  }
-}
+) : Record
 
 object LiveUpdatesModuleEvents {
   const val ON_TOKEN_CHANGE = "onTokenChange"

@@ -205,10 +205,14 @@ export default function CreateLiveUpdatesScreen() {
             />
           </View>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              !passShortCriticalText && styles.disabledInput,
+            ]}
             onChangeText={setShortCriticalText}
             placeholder="Live Update short critical text"
             value={shortCriticalText}
+            editable={passShortCriticalText}
           />
         </View>
 
