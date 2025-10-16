@@ -12,9 +12,13 @@ type ExpoLiveUpdatesModuleEvents = {
   onTokenChange: (event: TokenChangeEvent) => void
 }
 declare class ExpoLiveUpdatesModule extends NativeModule<ExpoLiveUpdatesModuleEvents> {
-  startLiveUpdate: (state: LiveUpdateState, config: LiveUpdateConfig) => number
+  startLiveUpdate: (state: LiveUpdateState, config?: LiveUpdateConfig) => number
   stopLiveUpdate: (notificationId: number) => void
-  updateLiveUpdate: (notificationId: number, state: LiveUpdateState) => void
+  updateLiveUpdate: (
+    notificationId: number,
+    state: LiveUpdateState,
+    config?: LiveUpdateConfig,
+  ) => void
   addNotificationStateChangeListener: () => EventSubscription | undefined
   addTokenChangeListener: () => EventSubscription | undefined
 }

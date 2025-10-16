@@ -26,27 +26,32 @@ POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
 Host: fcm.googleapis.com
 Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 349
+Content-Length: 481
 {
   "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
           "event":"update",
-          "notificationId":"1", // passing notificationId is prohibited when data event is "start"
+          "notificationId":"1", // shouldn't be passed when event is set to 'start'
           "title":"Firebase message",
-          "subtitle":"This is a message sent via Firebase"
+          "subtitle":"This is a message sent via Firebase",
+          "backgroundColor":"red",
+          "shortCriticalText":"text" // shouldn't be longer than 7 characters
       }
    }
 }
 ```
-
-Passing `notificationId` when event is set to `start` will result in error - ids are generated on live update start.
 
 Request variables:
 
 - `<YOUR_PROJECT_ID>` - can be found in `google-service.json`
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
+
+There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
+
+- `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
+- `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 
 # Notification state updates
 
@@ -83,6 +88,7 @@ The `LiveUpdateConfig` supports a `deepLinkUrl` property that allows you to spec
 ## Setup
 
 1. Define a scheme in your `app.config.ts`:
+
 ```ts
 export default {
   scheme: 'myapp', // Your custom scheme
@@ -91,6 +97,7 @@ export default {
 ```
 
 2. Use the `withAppScheme` plugin in your config:
+
 ```ts
 plugins: [
   '../plugin/withAppScheme',
@@ -99,6 +106,7 @@ plugins: [
 ```
 
 3. Handle deep links, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
+
 ```ts
   const linking = {
     prefixes: [prefix],
@@ -113,7 +121,7 @@ plugins: [
 - Handle notification ID after live update start triggered by FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
-- Handle deepLinks by FCM 
+- Handle deepLinks by FCM
 - Handle progress bar
 - Support more Live Updates features
 

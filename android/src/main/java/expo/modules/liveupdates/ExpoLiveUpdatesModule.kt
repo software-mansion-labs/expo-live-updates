@@ -4,25 +4,10 @@ import android.app.NotificationChannel
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import expo.modules.kotlin.records.Field
-import expo.modules.kotlin.records.Record
 import expo.modules.liveupdates.TokenChangeHandler.Companion.setHandlerSendEvent
-
-data class LiveUpdateState(
-  @Field val title: String,
-  @Field val subtitle: String? = null,
-  @Field val imageName: String? = null,
-  @Field val smallImageName: String? = null,
-) : Record
-
-data class LiveUpdateConfig(
-  @Field val backgroundColor: String? = null,
-  @Field val deepLinkUrl: String? = null,
-) : Record
 
 const val MODULE_TAG = "ExpoLiveUpdatesModule"
 
@@ -32,7 +17,6 @@ class ExpoLiveUpdatesModule : Module() {
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
-  @RequiresApi(Build.VERSION_CODES.DONUT)
   override fun definition() = ModuleDefinition {
     // Sets the name of the module that JavaScript code will use to refer to the module. Takes a
     // string as an argument.
@@ -42,29 +26,33 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
-    Events(LiveUpdatesEvents.onNotificationStateChange, LiveUpdatesEvents.onTokenChange)
+    Events(
+      LiveUpdatesModuleEvents.ON_NOTIFICATION_STATE_CHANGE,
+      LiveUpdatesModuleEvents.ON_TOKEN_CHANGE,
+    )
 
     OnCreate { initializeModule() }
 
-    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
+    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
     Function("stopLiveUpdate") { notificationId: Int ->
       liveUpdatesManager.stopNotification(notificationId)
     }
-    Function("updateLiveUpdate") { notificationId: Int, state: LiveUpdateState ->
-      liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
+    Function("updateLiveUpdate") {
+      notificationId: Int,
+      state: LiveUpdateState,
+      config: LiveUpdateConfig? ->
+      liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
 
     OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
 
     OnNewIntent { intent ->
-      intent?.let {
-        if (isIntentSafe(it)) {
-          emitNotificationClickedEvent(it)
-        } else {
-          Log.w(MODULE_TAG, "Rejected unsafe intent")
-        }
+      if (isIntentSafe(intent)) {
+        emitNotificationClickedEvent(intent)
+      } else {
+        Log.w(MODULE_TAG, "Rejected unsafe intent")
       }
     }
   }

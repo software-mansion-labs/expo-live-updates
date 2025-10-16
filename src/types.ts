@@ -3,6 +3,7 @@ export type LiveUpdateState = {
   subtitle?: string
   imageName?: string
   dynamicIslandImageName?: string
+  shortCriticalText?: string
 }
 
 export type LiveUpdateConfig = {
