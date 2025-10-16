@@ -91,17 +91,14 @@ export default function CreateLiveUpdatesScreen() {
 
   const getConfig = (): LiveUpdateConfig => ({
     backgroundColor,
+    deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
   })
 
   const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
 
     try {
-      const liveUpdateConfig: LiveUpdateConfig = {
-        backgroundColor,
-        deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
-      }
-      const id = startLiveUpdate(getState(), liveUpdateConfig)
+      const id = startLiveUpdate(getState(), getConfig())
       if (id) {
         console.log('Notification started with id: ', id)
       } else {
@@ -396,9 +393,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
-  },
-  manageUpdatesInput: {
-    flex: 1,
   },
   manageUpdatesInput: {
     flex: 1,

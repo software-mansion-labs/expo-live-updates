@@ -42,16 +42,16 @@ Content-Length: 481
 }
 ```
 
-There are some restrictions and recommendations connected to message data that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
-
-- `notificationId` with event `'start'` is prohibited and will result in error. Ids are generated on Live Update start and cannot be customized.
-- `shortCriticalText` is suggested to not be longer than 7 characters. There is no guarantee how much text will be displayed if this limit is exceeded based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
-
 Request variables:
 
 - `<YOUR_PROJECT_ID>` - can be found in `google-service.json`
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
+
+There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
+
+- `notificationId` with event `'start'` is prohibited and will result in error. Notification ids are generated on Live Update start and cannot be customized.
+- `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 
 # Notification state updates
 
