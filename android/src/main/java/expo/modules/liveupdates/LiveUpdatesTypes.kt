@@ -19,7 +19,7 @@ data class LiveUpdateConfig(
   }
 }
 
-object LiveUpdatesEvents {
+object LiveUpdatesModuleEvents {
   const val ON_TOKEN_CHANGE = "onTokenChange"
   const val ON_NOTIFICATION_STATE_CHANGE = "onNotificationStateChange"
 }

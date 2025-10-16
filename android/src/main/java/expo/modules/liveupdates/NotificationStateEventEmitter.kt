@@ -30,7 +30,7 @@ class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> U
         action = action.name.lowercase(),
         timestamp = System.currentTimeMillis(),
       )
-    sendEvent(LiveUpdatesEvents.ON_NOTIFICATION_STATE_CHANGE, event.toBundle())
+    sendEvent(LiveUpdatesModuleEvents.ON_NOTIFICATION_STATE_CHANGE, event.toBundle())
   }
 }
 

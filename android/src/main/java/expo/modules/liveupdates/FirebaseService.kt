@@ -22,6 +22,8 @@ data object FirebaseMessageProps {
   const val TITLE = "title"
   const val SUBTITLE = "subtitle"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
+  const val BACKGROUND_COLOR = "backgroundColor"
+
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -43,6 +45,7 @@ class FirebaseService : FirebaseMessagingService() {
     try {
       val event = getFirebaseMessageEvent(message)
       val notificationId = message.data[FirebaseMessageProps.NOTIFICATION_ID]?.toIntOrNull()
+      val config = getLiveUpdateConfig(message)
 
       when (event) {
         FirebaseMessageEvent.START -> {
@@ -51,7 +54,7 @@ class FirebaseService : FirebaseMessagingService() {
           }
 
           val state = getLiveUpdateState(message)
-          liveUpdatesManager.startLiveUpdateNotification(state)
+          liveUpdatesManager.startLiveUpdateNotification(state, config)
         }
         FirebaseMessageEvent.UPDATE,
         FirebaseMessageEvent.STOP -> {
@@ -61,7 +64,7 @@ class FirebaseService : FirebaseMessagingService() {
 
           if (event == FirebaseMessageEvent.UPDATE) {
             val state = getLiveUpdateState(message)
-            liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, null) // TODO
+            liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
           } else {
             liveUpdatesManager.stopNotification(notificationId)
           }
@@ -88,6 +91,12 @@ class FirebaseService : FirebaseMessagingService() {
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT]
+    )
+  }
+
+  private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
+    return LiveUpdateConfig(
+      backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR]
     )
   }
 

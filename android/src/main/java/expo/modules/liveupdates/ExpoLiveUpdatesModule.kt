@@ -23,7 +23,7 @@ class ExpoLiveUpdatesModule : Module() {
     // JavaScript.
     Name("ExpoLiveUpdatesModule")
 
-    Events(LiveUpdatesEvents.ON_NOTIFICATION_STATE_CHANGE, LiveUpdatesEvents.ON_TOKEN_CHANGE)
+    Events(LiveUpdatesModuleEvents.ON_NOTIFICATION_STATE_CHANGE, LiveUpdatesModuleEvents.ON_TOKEN_CHANGE)
 
     OnCreate { initializeModule() }
 

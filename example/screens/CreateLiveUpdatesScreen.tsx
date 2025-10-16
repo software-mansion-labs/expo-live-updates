@@ -84,11 +84,11 @@ export default function CreateLiveUpdatesScreen() {
     subtitle: passSubtitle ? subtitle : undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
+    shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
   })
 
   const getConfig = (): LiveUpdateConfig => ({
     backgroundColor,
-    shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
   })
 
   const handleStartLiveUpdate = () => {
@@ -207,7 +207,6 @@ export default function CreateLiveUpdatesScreen() {
           <TextInput
             style={styles.input}
             onChangeText={setShortCriticalText}
-            autoCapitalize="none"
             placeholder="Live Update short critical text"
             value={shortCriticalText}
           />
@@ -215,12 +214,9 @@ export default function CreateLiveUpdatesScreen() {
 
         {!isBaklava() && (
           <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>
-                Set Live Update background color (hex) (for SDK &lt; 16
-                Baklava):
-              </Text>
-            </View>
+            <Text style={styles.label}>
+              Live Update background color (hex) (for SDK &lt; 16 Baklava):
+            </Text>
             <TextInput
               style={styles.input}
               onChangeText={setBackgroundColor}
@@ -371,13 +367,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  manageUpdatesInput: {
-    flex: 1,
-  },
   manageUpdatesContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
+  },
+  manageUpdatesInput: {
+    flex: 1,
   },
   noEventsText: {
     color: '#666',

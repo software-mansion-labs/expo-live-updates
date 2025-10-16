@@ -3,11 +3,11 @@ export type LiveUpdateState = {
   subtitle?: string
   imageName?: string
   dynamicIslandImageName?: string
+  shortCriticalText?: string
 }
 
 export type LiveUpdateConfig = {
   backgroundColor?: string // only SDK < 16
-  shortCriticalText?: string
 }
 
 export type TokenChangeEvent = {
