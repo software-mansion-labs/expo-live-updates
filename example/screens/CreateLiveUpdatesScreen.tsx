@@ -32,11 +32,13 @@ export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
+  const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+  const [passDeepLink, setPassDeepLink] = useState(true)
   const [notificationIdString, setNotificationIdString] = useState<string>('')
   const [token, setToken] = useState<string | undefined>(undefined)
   const [notificationEvents, setNotificationEvents] = useState<
@@ -88,6 +90,7 @@ export default function CreateLiveUpdatesScreen() {
     try {
       const liveUpdateConfig: LiveUpdateConfig = {
         backgroundColor,
+        deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
       }
       const id = startLiveUpdate(getState(), liveUpdateConfig)
       if (id) {
@@ -190,6 +193,22 @@ export default function CreateLiveUpdatesScreen() {
           />
         </View>
 
+        <View style={styles.labelWithSwitch}>
+          <Text style={styles.label}>Live Update deep link URL:</Text>
+          <Switch
+            onValueChange={() => setPassDeepLink(toggle)}
+            value={passDeepLink}
+          />
+        </View>
+        <TextInput
+          style={passDeepLink ? styles.input : styles.disabledInput}
+          onChangeText={setDeepLinkUrl}
+          placeholder="Deep link URL (e.g., /Test)"
+          value={deepLinkUrl}
+          editable={passDeepLink}
+          autoCapitalize="none"
+        />
+
         {!isBaklava() && (
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
@@ -208,8 +227,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
         )}
 
-        <View
-          style={[styles.sectionContainer, styles.verticalButtonsContainer]}>
+        <View style={styles.verticalButtonsContainer}>
           <Button
             title="Start"
             onPress={handleStartLiveUpdate}
@@ -348,13 +366,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  manageUpdatesInput: {
-    flex: 1,
-  },
   manageUpdatesContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
+  },
+  manageUpdatesInput: {
+    flex: 1,
   },
   noEventsText: {
     color: '#666',
@@ -375,6 +393,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   verticalButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
     marginTop: 16,
     paddingHorizontal: '20%',
   },

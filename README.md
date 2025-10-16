@@ -55,7 +55,7 @@ Request variables:
 The handler will receive a `NotificationStateChangeEvent` object, which contains:
 
 - `notificationId` – the ID of the notification.
-- `action` – the type of change, which can be `'dismissed'`, or `'updated'`.
+- `action` – the type of change, which can be `'started'`, `'updated'`, `'stopped'`, `'dismissed'` or `'clicked'`.
 - `timestamp` – the time when the change occurred, in milliseconds.
 
 Example usage in a React component:
@@ -76,13 +76,44 @@ useEffect(() => {
 }, [])
 ```
 
+# Deep Linking
+
+The `LiveUpdateConfig` supports a `deepLinkUrl` property that allows you to specify an in-app route to navigate to when the notification is clicked. If no `deepLinkUrl` is provided, the default behavior is to open the app.
+
+## Setup
+
+1. Define a scheme in your `app.config.ts`:
+```ts
+export default {
+  scheme: 'myapp', // Your custom scheme
+  // ... other config
+}
+```
+
+2. Use the `withAppScheme` plugin in your config:
+```ts
+plugins: [
+  '../plugin/withAppScheme',
+  // ... other plugins
+]
+```
+
+3. Handle deep links, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
+```ts
+  const linking = {
+    prefixes: [prefix],
+  };
+
+  return <Navigation linking={linking} />;
+```
+
 # TODO
 
-- Handle click with deeplink functionality
 - Make short critical text customizable
 - Handle notification ID after live update start triggered by FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
+- Handle deepLinks by FCM 
 - Handle progress bar
 - Support more Live Updates features
 
