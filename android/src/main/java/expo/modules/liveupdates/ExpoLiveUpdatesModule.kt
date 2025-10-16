@@ -60,12 +60,16 @@ class ExpoLiveUpdatesModule : Module() {
   private fun emitNotificationClickedEventIf(intent: Intent) {
     val action: NotificationAction? =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        intent.getSerializableExtra("notificationAction", NotificationAction::class.java)
+        intent.getSerializableExtra(
+          NotificationActionExtra.NOTIFICATION_ACTION,
+          NotificationAction::class.java,
+        )
       } else {
         @Suppress("DEPRECATION")
-        intent.getSerializableExtra("notificationAction") as? NotificationAction
+        intent.getSerializableExtra(NotificationActionExtra.NOTIFICATION_ACTION)
+          as? NotificationAction
       }
-    val notificationId = intent.getIntExtra("notificationId", -1)
+    val notificationId = intent.getIntExtra(NotificationActionExtra.NOTIFICATION_ID, -1)
 
     notificationId
       .takeIf { it != -1 && action == NotificationAction.CLICKED }

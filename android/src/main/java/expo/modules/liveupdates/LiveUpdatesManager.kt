@@ -20,6 +20,11 @@ import java.io.File
 private const val TAG = "LiveUpdatesManager"
 private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 
+object NotificationActionExtra {
+  const val NOTIFICATION_ACTION = "notificationAction"
+  const val NOTIFICATION_ID = "notificationId"
+}
+
 class LiveUpdatesManager(private val context: Context) {
   private val channelId = getChannelId(context)
   private val notificationManager = NotificationManagerCompat.from(context)
@@ -149,7 +154,7 @@ class LiveUpdatesManager(private val context: Context) {
     notificationBuilder: NotificationCompat.Builder,
   ) {
     val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
-    deleteIntent.putExtra("notificationId", notificationId)
+    deleteIntent.putExtra(NotificationActionExtra.NOTIFICATION_ID, notificationId)
     val deletePendingIntent =
       PendingIntent.getBroadcast(
         context,
@@ -173,8 +178,8 @@ class LiveUpdatesManager(private val context: Context) {
         val scheme = getScheme(context)
         data = "$scheme://${deepLink.removePrefix("/")}".toUri()
       }
-      putExtra("notificationAction", NotificationAction.CLICKED)
-      putExtra("notificationId", notificationId)
+      putExtra(NotificationActionExtra.NOTIFICATION_ACTION, NotificationAction.CLICKED)
+      putExtra(NotificationActionExtra.NOTIFICATION_ID, notificationId)
     }
 
     val clickPendingIntent =
