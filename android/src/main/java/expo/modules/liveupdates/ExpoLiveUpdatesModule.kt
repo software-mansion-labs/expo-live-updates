@@ -24,6 +24,8 @@ data class LiveUpdateConfig(
   @Field val deepLinkUrl: String? = null,
 ) : Record
 
+const val MODULE_TAG = "ExpoLiveUpdatesModule"
+
 class ExpoLiveUpdatesModule : Module() {
   private lateinit var liveUpdatesManager: LiveUpdatesManager
 
@@ -56,14 +58,12 @@ class ExpoLiveUpdatesModule : Module() {
 
     OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
 
-    //    OnNewIntent { intent -> emitNotificationClickedEvent(intent) }
-
     OnNewIntent { intent ->
       intent?.let {
         if (isIntentSafe(it)) {
           emitNotificationClickedEvent(it)
         } else {
-          Log.w("SecureActivity", "Rejected unsafe intent")
+          Log.w(MODULE_TAG, "Rejected unsafe intent")
         }
       }
     }
@@ -76,7 +76,7 @@ class ExpoLiveUpdatesModule : Module() {
     val (action, notificationId) = getNotificationClickIntentExtra(intent)
 
     notificationId
-      .takeIf { it != -1 && action == NotificationAction.CLICKED }
+      .takeIf { action == NotificationAction.CLICKED }
       ?.let { id ->
         NotificationStateEventEmitter.emitNotificationStateChange(id, NotificationAction.CLICKED)
       }
@@ -114,7 +114,7 @@ class ExpoLiveUpdatesModule : Module() {
   }
 }
 
-private fun getNotificationClickIntentExtra(intent: Intent): Pair<NotificationAction?, Int> {
+private fun getNotificationClickIntentExtra(intent: Intent): Pair<NotificationAction?, Int?> {
   val action =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       intent.getSerializableExtra(
@@ -127,7 +127,8 @@ private fun getNotificationClickIntentExtra(intent: Intent): Pair<NotificationAc
         as? NotificationAction
     }
 
-  val notificationId = intent.getIntExtra(NotificationActionExtra.NOTIFICATION_ID, -1)
+  val notificationId =
+    intent.getIntExtra(NotificationActionExtra.NOTIFICATION_ID, -1).takeIf { it != -1 }
 
   return action to notificationId
 }
