@@ -32,17 +32,20 @@ Content-Length: 481
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
           "event":"update",
-          "notificationId":"1", // passing notificationId is prohibited when data event is "start"
+          "notificationId":"1", // shouldn't be passed when event is set to 'start'
           "title":"Firebase message",
           "subtitle":"This is a message sent via Firebase",
           "backgroundColor":"red",
-          "shortCriticalText":"text"
+          "shortCriticalText":"text" // shouldn't be longer than 7 characters
       }
    }
 }
 ```
 
-Passing `notificationId` when event is set to `start` will result in error - ids are generated on live update start.
+There are some restrictions and recommendations connected to message data that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
+
+- `notificationId` with event `'start'` is prohibited and will result in error. Ids are generated on Live Update start and cannot be customized.
+- `shortCriticalText` longer than 7 characters is not recommended by [Android documentation](https://developer.android.com/develop/ui/views/notifications/live-update#status-chip). There is no guarantee how much text will be displayed if this limit is exceeded.
 
 Request variables:
 
