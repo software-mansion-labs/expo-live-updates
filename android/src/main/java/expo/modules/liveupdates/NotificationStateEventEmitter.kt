@@ -8,6 +8,7 @@ enum class NotificationAction {
   UPDATED,
   STARTED,
   STOPPED,
+  CLICKED,
 }
 
 class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
@@ -30,7 +31,7 @@ class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> U
         action = action.name.lowercase(),
         timestamp = System.currentTimeMillis(),
       )
-    sendEvent(LiveUpdatesEvents.onNotificationStateChange, event.toBundle())
+    sendEvent(LiveUpdatesModuleEvents.ON_NOTIFICATION_STATE_CHANGE, event.toBundle())
   }
 }
 

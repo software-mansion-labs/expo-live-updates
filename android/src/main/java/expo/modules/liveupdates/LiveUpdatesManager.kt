@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
@@ -13,9 +14,16 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import java.io.File
 
 private const val TAG = "LiveUpdatesManager"
+private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
+
+object NotificationActionExtra {
+  const val NOTIFICATION_ACTION = "notificationAction"
+  const val NOTIFICATION_ID = "notificationId"
+}
 
 class LiveUpdatesManager(private val context: Context) {
   private val channelId = getChannelId(context)
@@ -34,7 +42,7 @@ class LiveUpdatesManager(private val context: Context) {
       return null
     }
 
-    val notification = createNotification(state, notificationId)
+    val notification = createNotification(state, notificationId, config)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -44,7 +52,11 @@ class LiveUpdatesManager(private val context: Context) {
   }
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  fun updateLiveUpdateNotification(notificationId: Int, state: LiveUpdateState) {
+  fun updateLiveUpdateNotification(
+    notificationId: Int,
+    state: LiveUpdateState,
+    config: LiveUpdateConfig?,
+  ) {
     if (!notificationExists(notificationId)) {
       Log.w(
         TAG,
@@ -53,7 +65,7 @@ class LiveUpdatesManager(private val context: Context) {
       return
     }
 
-    val notification = createNotification(state, notificationId)
+    val notification = createNotification(state, notificationId, config)
     notificationManager.notify(notificationId, notification)
     NotificationStateEventEmitter.emitNotificationStateChange(
       notificationId,
@@ -93,7 +105,7 @@ class LiveUpdatesManager(private val context: Context) {
         .setContentText(state.subtitle)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-      notificationBuilder.setShortCriticalText("SWM")
+      notificationBuilder.setShortCriticalText(state.shortCriticalText)
       notificationBuilder.setOngoing(true)
       notificationBuilder.setRequestPromotedOngoing(true)
     }
@@ -132,6 +144,7 @@ class LiveUpdatesManager(private val context: Context) {
     }
 
     setNotificationDeleteIntent(notificationId, notificationBuilder)
+    setNotificationClickIntent(notificationId, config, notificationBuilder)
 
     return notificationBuilder.build()
   }
@@ -153,7 +166,7 @@ class LiveUpdatesManager(private val context: Context) {
     notificationBuilder: NotificationCompat.Builder,
   ) {
     val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
-    deleteIntent.putExtra("notificationId", notificationId)
+    deleteIntent.putExtra(NotificationActionExtra.NOTIFICATION_ID, notificationId)
     val deletePendingIntent =
       PendingIntent.getBroadcast(
         context,
@@ -162,5 +175,39 @@ class LiveUpdatesManager(private val context: Context) {
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
       )
     notificationBuilder.setDeleteIntent(deletePendingIntent)
+  }
+
+  private fun setNotificationClickIntent(
+    notificationId: Int,
+    config: LiveUpdateConfig?,
+    notificationBuilder: NotificationCompat.Builder,
+  ) {
+    val clickIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+
+    clickIntent?.apply {
+      action = Intent.ACTION_VIEW
+      config?.deepLinkUrl?.let { deepLink ->
+        val scheme = getScheme(context)
+        data = "$scheme://${deepLink.removePrefix("/")}".toUri()
+      }
+      putExtra(NotificationActionExtra.NOTIFICATION_ACTION, NotificationAction.CLICKED)
+      putExtra(NotificationActionExtra.NOTIFICATION_ID, notificationId)
+    }
+
+    val clickPendingIntent =
+      PendingIntent.getActivity(
+        context,
+        notificationId,
+        clickIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+      )
+    notificationBuilder.setContentIntent(clickPendingIntent)
+  }
+
+  fun getScheme(context: Context): String {
+    val applicationInfo =
+      context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+    return applicationInfo.metaData?.getString(EXPO_MODULE_SCHEME_KEY)
+      ?: throw IllegalStateException("$EXPO_MODULE_SCHEME_KEY not found in AndroidManifest.xml")
   }
 }

@@ -24,6 +24,8 @@ data object FirebaseMessageProps {
   const val PROGRESS_MAX = "progressMax"
   const val PROGRESS_VALUE = "progressValue"
   const val PROGRESS_INDETERMINATE = "progressIndeterminate"
+  const val SHORT_CRITICAL_TEXT = "shortCriticalText"
+  const val BACKGROUND_COLOR = "backgroundColor"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -52,8 +54,8 @@ class FirebaseService : FirebaseMessagingService() {
             "Passing ${FirebaseMessageProps.NOTIFICATION_ID} to start Live Update is prohibited - it will be generated automatically."
           }
 
-          val state = getLiveUpdateState(message)
-          liveUpdatesManager.startLiveUpdateNotification(state)
+          val (state, config) = getLiveUpdatesNotificationData(message)
+          liveUpdatesManager.startLiveUpdateNotification(state, config)
         }
         FirebaseMessageEvent.UPDATE,
         FirebaseMessageEvent.STOP -> {
@@ -62,8 +64,8 @@ class FirebaseService : FirebaseMessagingService() {
           }
 
           if (event == FirebaseMessageEvent.UPDATE) {
-            val state = getLiveUpdateState(message)
-            liveUpdatesManager.updateLiveUpdateNotification(notificationId, state)
+            val (state, config) = getLiveUpdatesNotificationData(message)
+            liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
           } else {
             liveUpdatesManager.stopNotification(notificationId)
           }
@@ -81,6 +83,12 @@ class FirebaseService : FirebaseMessagingService() {
       }
 
     return requireNotNull(event) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.EVENT) }
+  }
+
+  private fun getLiveUpdatesNotificationData(
+    message: RemoteMessage
+  ): Pair<LiveUpdateState, LiveUpdateConfig> {
+    return getLiveUpdateState(message) to getLiveUpdateConfig(message)
   }
 
   private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
@@ -104,7 +112,12 @@ class FirebaseService : FirebaseMessagingService() {
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
       progress = progress,
+      shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
     )
+  }
+
+  private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
+    return LiveUpdateConfig(backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR])
   }
 
   private fun getMissingOrInvalidErrorMessage(propName: String): String {

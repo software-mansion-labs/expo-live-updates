@@ -10,10 +10,12 @@ export type LiveUpdateState = {
   imageName?: string
   dynamicIslandImageName?: string
   progress?: LiveUpdateProgress
+  shortCriticalText?: string
 }
 
 export type LiveUpdateConfig = {
   backgroundColor?: string // only SDK < 16
+  deepLinkUrl?: string
 }
 
 export type TokenChangeEvent = {
@@ -22,7 +24,7 @@ export type TokenChangeEvent = {
 
 export type NotificationStateChangeEvent = {
   notificationId: number
-  action: 'dismissed' | 'updated' | 'started' | 'stopped'
+  action: 'dismissed' | 'updated' | 'started' | 'stopped' | 'clicked'
   timestamp: number
 }
 

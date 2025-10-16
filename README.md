@@ -26,30 +26,36 @@ POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
 Host: fcm.googleapis.com
 Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 349
+Content-Length: 481
 {
   "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
       "data":{
           "event":"update",
-          "notificationId":"1", // passing notificationId is prohibited when data event is "start"
+          "notificationId":"1", // shouldn't be passed when event is set to 'start'
           "title":"Firebase message",
           "subtitle":"This is a message sent via Firebase", // optional
           "progressMax":"100", // optional: maximum progress value, if no provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false" // optional: whether progress is indeterminate
+          "backgroundColor":"red", // optional, works only on SDK < Baklava
+          "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
       }
    }
 }
 ```
-
-Passing `notificationId` when event is set to `start` will result in error - ids are generated on live update start.
 
 Request variables:
 
 - `<YOUR_PROJECT_ID>` - can be found in `google-service.json`
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
+
+There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
+
+- `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
+- `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
+- When `progressIndeterminate` is `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
 
 # Notification state updates
 
@@ -58,7 +64,7 @@ Request variables:
 The handler will receive a `NotificationStateChangeEvent` object, which contains:
 
 - `notificationId` – the ID of the notification.
-- `action` – the type of change, which can be `'dismissed'`, or `'updated'`.
+- `action` – the type of change, which can be `'started'`, `'updated'`, `'stopped'`, `'dismissed'` or `'clicked'`.
 - `timestamp` – the time when the change occurred, in milliseconds.
 
 Example usage in a React component:
@@ -79,21 +85,47 @@ useEffect(() => {
 }, [])
 ```
 
-## Progress Field
+# Deep Linking
 
-The live update notifications support an optional progress indicator. 
-When `progressIndeterminate` is `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value.
+The `LiveUpdateConfig` supports a `deepLinkUrl` property that allows you to specify an in-app route to navigate to when the notification is clicked. If no `deepLinkUrl` is provided, the default behavior is to open the app.
 
-All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
+## Setup
 
+1. Define a scheme in your `app.config.ts`:
+
+```ts
+export default {
+  scheme: 'myapp', // Your custom scheme
+  // ... other config
+}
+```
+
+2. Use the `withAppScheme` plugin in your config:
+
+```ts
+plugins: [
+  '../plugin/withAppScheme',
+  // ... other plugins
+]
+```
+
+3. Handle deep links, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
+
+```ts
+  const linking = {
+    prefixes: [prefix],
+  };
+
+  return <Navigation linking={linking} />;
+```
 
 # TODO
 
-- Handle click with deeplink functionality
 - Make short critical text customizable
 - Handle notification ID after live update start triggered by FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
+- Handle deepLinks by FCM
 - Handle progress bar
 - Support more Live Updates features
 

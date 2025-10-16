@@ -30,13 +30,19 @@ const toggle = (previousState: boolean) => !previousState
 
 export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
-  const [backgroundColor, setBackgroundColor] = useState('red')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
+  const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
+  const [backgroundColor, setBackgroundColor] = useState('red')
+  const [shortCriticalText, setShortCriticalText] = useState('SWM')
+
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
+  const [passDeepLink, setPassDeepLink] = useState(true)
+  const [passShortCriticalText, setPassShortCriticalText] = useState(true)
+
   const [notificationIdString, setNotificationIdString] = useState<string>('')
   const [token, setToken] = useState<string | undefined>(undefined)
   const [notificationEvents, setNotificationEvents] = useState<
@@ -91,16 +97,19 @@ export default function CreateLiveUpdatesScreen() {
           indeterminate: progressIndeterminate,
         }
       : undefined,
+    shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
+  })
+
+  const getConfig = (): LiveUpdateConfig => ({
+    backgroundColor,
+    deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
   })
 
   const handleStartLiveUpdate = () => {
     Keyboard.dismiss()
 
     try {
-      const liveUpdateConfig: LiveUpdateConfig = {
-        backgroundColor,
-      }
-      const id = startLiveUpdate(getState(), liveUpdateConfig)
+      const id = startLiveUpdate(getState(), getConfig())
       if (id) {
         console.log('Notification started with id: ', id)
       } else {
@@ -126,7 +135,7 @@ export default function CreateLiveUpdatesScreen() {
   const handleUpdateLiveUpdate = () => {
     try {
       if (notificationId) {
-        updateLiveUpdate(notificationId, getState())
+        updateLiveUpdate(notificationId, getState(), getConfig())
       } else {
         throw Error('notificationId is undefined')
       }
@@ -164,14 +173,14 @@ export default function CreateLiveUpdatesScreen() {
             <TextInput
               style={styles.input}
               onChangeText={onChangeTitle}
-              placeholder="Title"
+              placeholder="Live Update title"
               value={title}
             />
           </View>
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Subtitle</Text>
+              <Text style={styles.label}>Subtitle:</Text>
               <Switch
                 onValueChange={() => setPassSubtitle(toggle)}
                 value={passSubtitle}
@@ -187,7 +196,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Image</Text>
+            <Text style={styles.label}>Image:</Text>
             <Switch
               onValueChange={() => setPassImage(toggle)}
               value={passImage}
@@ -195,84 +204,120 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Icon image</Text>
+            <Text style={styles.label}>Icon image:</Text>
             <Switch
               onValueChange={() => setPassIconImage(toggle)}
               value={passIconImage}
             />
           </View>
 
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Progress</Text>
-            <Switch
-              onValueChange={() => setPassProgress(toggle)}
-              value={passProgress}
+          <View style={styles.inputContainer}>
+            <View style={styles.labelWithSwitch}>
+              <Text style={styles.label}>Short critical text:</Text>
+              <Switch
+                onValueChange={() => setPassShortCriticalText(toggle)}
+                value={passShortCriticalText}
+              />
+            </View>
+            <TextInput
+              style={[
+                styles.input,
+                !passShortCriticalText && styles.disabledInput,
+              ]}
+              onChangeText={setShortCriticalText}
+              placeholder="Live Update short critical text"
+              value={shortCriticalText}
+              editable={passShortCriticalText}
             />
           </View>
 
-          {passProgress && (
-            <>
-              <View style={styles.inputsRow}>
-                <View style={styles.inputInRowContainer}>
-                  <Text style={styles.label}>Progress value</Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      progressIndeterminate && styles.disabledInput,
-                    ]}
-                    onChangeText={setProgressProgress}
-                    value={progressValue}
-                    placeholder="50"
-                    editable={!progressIndeterminate}
-                    keyboardType="numeric"
-                  />
-                </View>
+          <View style={styles.labelWithSwitch}>
+            <Text style={styles.label}>Deep link URL:</Text>
+            <Switch
+              onValueChange={() => setPassDeepLink(toggle)}
+              value={passDeepLink}
+            />
+          </View>
+          <TextInput
+            style={[styles.input, !passDeepLink && styles.disabledInput]}
+            onChangeText={setDeepLinkUrl}
+            placeholder="Deep link URL (e.g., /Test)"
+            value={deepLinkUrl}
+            editable={passDeepLink}
+            autoCapitalize="none"
+          />
 
-                <View style={styles.inputInRowContainer}>
-                  <Text style={styles.label}>Progress max</Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      progressIndeterminate && styles.disabledInput,
-                    ]}
-                    onChangeText={setProgressMax}
-                    value={progressMax}
-                    placeholder="100"
-                    editable={!progressIndeterminate}
-                    keyboardType="numeric"
-                  />
-                </View>
-              </View>
-
-              <View style={styles.labelWithSwitch}>
-                <Text style={styles.label}>Indeterminate progress</Text>
-                <Switch
-                  onValueChange={() => setProgressIndeterminate(toggle)}
-                  value={progressIndeterminate}
-                />
-              </View>
-            </>
-          )}
-
-          {!isBaklava() && (
-            <View style={styles.inputContainer}>
-              <View style={styles.labelWithSwitch}>
-                <Text style={styles.label}>
-                  Background color (hex) (for SDK &lt; 16 Baklava):
-                </Text>
-              </View>
-              <TextInput
-                style={styles.input}
-                onChangeText={setBackgroundColor}
-                autoCapitalize="none"
-                placeholder="Background color"
-                value={backgroundColor}
+          <View style={styles.inputContainer}>
+            <View style={styles.labelWithSwitch}>
+              <Text style={styles.label}>Progress</Text>
+              <Switch
+                onValueChange={() => setPassProgress(toggle)}
+                value={passProgress}
               />
             </View>
-          )}
 
-          <View
-            style={[styles.sectionContainer, styles.verticalButtonsContainer]}>
+            {passProgress && (
+              <>
+                <View style={styles.inputsRow}>
+                  <View style={styles.inputInRowContainer}>
+                    <Text style={styles.label}>Progress value</Text>
+                    <TextInput
+                      style={[
+                        styles.input,
+                        progressIndeterminate && styles.disabledInput,
+                      ]}
+                      onChangeText={setProgressProgress}
+                      value={progressValue}
+                      placeholder="50"
+                      editable={!progressIndeterminate}
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  <View style={styles.inputInRowContainer}>
+                    <Text style={styles.label}>Progress max</Text>
+                    <TextInput
+                      style={[
+                        styles.input,
+                        progressIndeterminate && styles.disabledInput,
+                      ]}
+                      onChangeText={setProgressMax}
+                      value={progressMax}
+                      placeholder="100"
+                      editable={!progressIndeterminate}
+                      keyboardType="numeric"
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label}>Indeterminate progress</Text>
+                  <Switch
+                    onValueChange={() => setProgressIndeterminate(toggle)}
+                    value={progressIndeterminate}
+                  />
+                </View>
+              </>
+            )}
+
+            {!isBaklava() && (
+              <View style={styles.inputContainer}>
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label}>
+                    Background color (hex) (for SDK &lt; 16 Baklava):
+                  </Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setBackgroundColor}
+                  autoCapitalize="none"
+                  placeholder="Background color"
+                  value={backgroundColor}
+                />
+              </View>
+            )}
+          </View>
+          <View style={styles.verticalButtonsContainer}>
             <Button
               title="Start"
               onPress={handleStartLiveUpdate}
@@ -445,6 +490,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   verticalButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
     marginTop: 16,
     paddingHorizontal: '20%',
   },
