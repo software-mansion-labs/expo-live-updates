@@ -85,18 +85,20 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
     val title = message.data[FirebaseMessageProps.TITLE]
-    
+
     val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
     val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
-    val progressIndeterminate = message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
-    
-    val progress = if (progressValue != null || progressIndeterminate == true) {
-      LiveUpdateProgress(
-        max = progressMax,
-        progress = progressValue,
-        indeterminate = progressIndeterminate
-      )
-    } else null
+    val progressIndeterminate =
+      message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
+
+    val progress =
+      if (progressValue != null || progressIndeterminate == true) {
+        LiveUpdateProgress(
+          max = progressMax,
+          progress = progressValue,
+          indeterminate = progressIndeterminate,
+        )
+      } else null
 
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
