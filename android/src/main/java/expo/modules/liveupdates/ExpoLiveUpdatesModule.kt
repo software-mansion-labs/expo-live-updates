@@ -33,7 +33,7 @@ class ExpoLiveUpdatesModule : Module() {
 
     OnCreate { initializeModule() }
 
-    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig ->
+    Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
     Function("stopLiveUpdate") { notificationId: Int ->

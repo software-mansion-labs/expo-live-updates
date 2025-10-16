@@ -45,7 +45,7 @@ Content-Length: 481
 There are some restrictions and recommendations connected to message data that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
 
 - `notificationId` with event `'start'` is prohibited and will result in error. Ids are generated on Live Update start and cannot be customized.
-- `shortCriticalText` longer than 7 characters is not recommended by [Android documentation](https://developer.android.com/develop/ui/views/notifications/live-update#status-chip). There is no guarantee how much text will be displayed if this limit is exceeded.
+- `shortCriticalText` is suggested to not be longer than 7 characters. There is no guarantee how much text will be displayed if this limit is exceeded based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 
 Request variables:
 
@@ -88,6 +88,7 @@ The `LiveUpdateConfig` supports a `deepLinkUrl` property that allows you to spec
 ## Setup
 
 1. Define a scheme in your `app.config.ts`:
+
 ```ts
 export default {
   scheme: 'myapp', // Your custom scheme
@@ -96,6 +97,7 @@ export default {
 ```
 
 2. Use the `withAppScheme` plugin in your config:
+
 ```ts
 plugins: [
   '../plugin/withAppScheme',
@@ -104,6 +106,7 @@ plugins: [
 ```
 
 3. Handle deep links, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
+
 ```ts
   const linking = {
     prefixes: [prefix],
@@ -118,7 +121,7 @@ plugins: [
 - Handle notification ID after live update start triggered by FCM
 - Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
 - Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
-- Handle deepLinks by FCM 
+- Handle deepLinks by FCM
 - Handle progress bar
 - Support more Live Updates features
 

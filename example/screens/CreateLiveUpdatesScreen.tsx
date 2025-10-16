@@ -230,7 +230,7 @@ export default function CreateLiveUpdatesScreen() {
           />
         </View>
         <TextInput
-          style={passDeepLink ? styles.input : styles.disabledInput}
+          style={[styles.input, !passDeepLink && styles.disabledInput]}
           onChangeText={setDeepLinkUrl}
           placeholder="Deep link URL (e.g., /Test)"
           value={deepLinkUrl}
