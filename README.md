@@ -11,6 +11,27 @@ To run example app:
 3. Go to `example/` directory and run `npm i` & `npm run android`.
 4. Run `npm run android` (or `npx expo run:android --device` to select proper emulator) in `example/` directory again.
 
+# Installation
+
+Use the `expo-live-updates` plugin in your app config:
+
+```ts
+plugins: [
+  "expo-live-updates",
+  {
+    "channelId": "LiveUpdatesServiceChannelId", // Notifications Channel Id
+    "channelName": "Live Updates Service Channel Name" // Notifications Channel Id
+  }
+  // ... other plugins
+]
+```
+
+Then prebuild your app with:
+
+```sh
+npx expo prebuild --clean
+```
+
 # How to add Firebase Cloud Messaging
 
 1. Create project at [Firebase](https://firebase.google.com/).
@@ -96,16 +117,7 @@ export default {
 }
 ```
 
-2. Use the `withAppScheme` plugin in your config:
-
-```ts
-plugins: [
-  '../plugin/withAppScheme',
-  // ... other plugins
-]
-```
-
-3. Handle deep links, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
+2. Handle deep links in React Native, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
 
 ```ts
   const linking = {
