@@ -15,10 +15,10 @@ To run example app:
 
 ## 1. Install the module
 
-Since this package is not yet available on npm, you can install it from the repository:
+You can install this package from the repository:
 
 ```sh
-npm install git+https://github.com/your-username/expo-live-updates.git
+npm install git+https://github.com/software-mansion-labs/expo-live-updates.git
 ```
 
 Or if you have access to this repository locally:
@@ -32,8 +32,6 @@ After installation, you can import the functions directly:
 ```ts
 import { startLiveUpdate, stopLiveUpdate, updateLiveUpdate } from 'expo-live-updates'
 ```
-
-**Note**: If you're installing from git, make sure the package is built. The compiled files should be in the `build/` directory. If they're not present, you may need to run `npm run build` in the package directory.
 
 ## 2. Configure the plugin
 
