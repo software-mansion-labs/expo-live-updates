@@ -13,6 +13,16 @@ To run example app:
 
 # Installation
 
+## 1. Install the module
+
+You can install it from the repository:
+
+```sh
+npm install git+https://github.com/your-username/expo-live-updates.git
+```
+
+## 2. Configure the plugin
+
 Use the `expo-live-updates` plugin in your app config:
 
 ```ts
@@ -25,6 +35,8 @@ plugins: [
   // ... other plugins
 ]
 ```
+
+## 3. Prebuild your app
 
 Then prebuild your app with:
 
