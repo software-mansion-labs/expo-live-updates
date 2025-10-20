@@ -27,12 +27,6 @@ Or if you have access to this repository locally:
 npm install /path/to/expo-live-updates
 ```
 
-After installation, you can import the functions directly:
-
-```ts
-import { startLiveUpdate, stopLiveUpdate, updateLiveUpdate } from 'expo-live-updates'
-```
-
 ## 2. Configure the plugin
 
 Use the `expo-live-updates` plugin in your app config:
@@ -65,6 +59,12 @@ Then prebuild your app with:
 
 ```sh
 npx expo prebuild --clean
+```
+
+Now you can test Live Updates:
+
+```ts
+startLiveUpdate({title: "Test notifications"})
 ```
 
 
