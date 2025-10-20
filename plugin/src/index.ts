@@ -116,7 +116,7 @@ const withLiveUpdates: ConfigPlugin<LiveUpdatesPluginProps> = (
 
   if (!scheme) {
     console.warn(
-      'Scheme is not configured, deeplinks will not work in ExpoLiveUpdatesModule.',
+      '⚠️ withLiveUpdates: scheme is not configured, deeplinks will not work in ExpoLiveUpdatesModule.',
     )
   }
 
