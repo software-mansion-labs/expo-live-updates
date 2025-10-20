@@ -40,6 +40,7 @@ Content-Length: 481
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
           "backgroundColor":"red", // optional, works only on SDK < Baklava
           "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
+          "deepLinkUrl":"text" // optional: default it will just open the app
       }
    }
 }
