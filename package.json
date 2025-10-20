@@ -34,7 +34,8 @@
   "homepage": "https://github.com/software-mansion-labs/expo-live-updates#readme",
   "dependencies": {
     "babel-plugin-module-resolver": "^5.0.2",
-    "react": "19.1.0"
+    "react": "19.1.0",
+    "react-native-safe-area-context": "^5.6.1"
   },
   "devDependencies": {
     "@types/react": "~19.1.10",

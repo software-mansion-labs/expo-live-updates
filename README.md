@@ -93,9 +93,12 @@ Content-Length: 481
           "event":"update",
           "notificationId":"1", // shouldn't be passed when event is set to 'start'
           "title":"Firebase message",
-          "subtitle":"This is a message sent via Firebase",
-          "backgroundColor":"red",
-          "shortCriticalText":"text" // shouldn't be longer than 7 characters
+          "subtitle":"This is a message sent via Firebase", // optional
+          "progressMax":"100", // optional: maximum progress value, if no provided = 100
+          "progressValue":"50", // optional: current progress value
+          "progressIndeterminate":"false", // optional: whether progress is indeterminate
+          "backgroundColor":"red", // optional, works only on SDK < Baklava
+          "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
       }
    }
 }
@@ -111,6 +114,7 @@ There are some restrictions that should be followed while managing Live Updates 
 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
+- `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
 
 # Notification state updates
 
