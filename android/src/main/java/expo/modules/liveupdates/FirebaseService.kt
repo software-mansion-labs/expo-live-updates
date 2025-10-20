@@ -21,6 +21,9 @@ data object FirebaseMessageProps {
   const val EVENT = "event"
   const val TITLE = "title"
   const val SUBTITLE = "subtitle"
+  const val PROGRESS_MAX = "progressMax"
+  const val PROGRESS_VALUE = "progressValue"
+  const val PROGRESS_INDETERMINATE = "progressIndeterminate"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
 }
@@ -91,9 +94,17 @@ class FirebaseService : FirebaseMessagingService() {
   private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
     val title = message.data[FirebaseMessageProps.TITLE]
 
+    val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
+    val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
+    val progressIndeterminate =
+      message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
+
+    val progress = getProgress(progressValue, progressIndeterminate, progressMax)
+
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
+      progress = progress,
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
     )
   }
@@ -106,3 +117,16 @@ class FirebaseService : FirebaseMessagingService() {
     return "Property $propName is missing or invalid."
   }
 }
+
+private fun getProgress(
+  progressValue: Int?,
+  progressIndeterminate: Boolean?,
+  progressMax: Int?,
+): LiveUpdateProgress? =
+  if (progressValue != null || progressIndeterminate == true) {
+    LiveUpdateProgress(
+      max = progressMax,
+      progress = progressValue,
+      indeterminate = progressIndeterminate,
+    )
+  } else null
