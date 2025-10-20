@@ -21,7 +21,6 @@ private const val TAG = "LiveUpdatesManager"
 private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 private const val DEFAULT_MAX_PROGRESS = 100
 
-
 object NotificationActionExtra {
   const val NOTIFICATION_ACTION = "notificationAction"
   const val NOTIFICATION_ID = "notificationId"
@@ -129,7 +128,11 @@ class LiveUpdatesManager(private val context: Context) {
       if (progress.indeterminate == true) {
         notificationBuilder.setProgress(0, 0, true)
       } else if (progress.progress != null) {
-        notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, progress.progress, false)
+        notificationBuilder.setProgress(
+          progress.max ?: DEFAULT_MAX_PROGRESS,
+          progress.progress,
+          false,
+        )
       }
     }
 

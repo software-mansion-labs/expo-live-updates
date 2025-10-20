@@ -99,14 +99,7 @@ class FirebaseService : FirebaseMessagingService() {
     val progressIndeterminate =
       message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
 
-    val progress =
-      if (progressValue != null || progressIndeterminate == true) {
-        LiveUpdateProgress(
-          max = progressMax,
-          progress = progressValue,
-          indeterminate = progressIndeterminate,
-        )
-      } else null
+    val progress = getProgress(progressValue, progressIndeterminate, progressMax)
 
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
@@ -124,3 +117,16 @@ class FirebaseService : FirebaseMessagingService() {
     return "Property $propName is missing or invalid."
   }
 }
+
+private fun getProgress(
+  progressValue: Int?,
+  progressIndeterminate: Boolean?,
+  progressMax: Int?,
+): LiveUpdateProgress? =
+  if (progressValue != null || progressIndeterminate == true) {
+    LiveUpdateProgress(
+      max = progressMax,
+      progress = progressValue,
+      indeterminate = progressIndeterminate,
+    )
+  } else null
