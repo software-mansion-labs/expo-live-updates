@@ -165,16 +165,6 @@ export default {
   return <Navigation linking={linking} />;
 ```
 
-# TODO
-
-- Make short critical text customizable
-- Handle notification ID after live update start triggered by FCM
-- Save config passed to `startLiveUpdate` by id to apply it when updating notification until `stopLiveUpdate` invoked
-- Delete `CHANNEL_ID` and `CHANNEL_NAME` - make notification channel id and name configurable, use `channelId` and `channelName` props
-- Handle deepLinks by FCM
-- Handle progress bar
-- Support more Live Updates features
-
 # API documentation
 
 - [Documentation for the latest stable release](https://docs.expo.dev/versions/latest/sdk/live-updates/)
