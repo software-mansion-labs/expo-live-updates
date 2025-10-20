@@ -8,18 +8,26 @@ import {
 export interface LiveUpdatesPluginProps {
   channelId: string
   channelName: string
-  scheme?: string
 }
 
-const DEFAULT_SCHEME = 'myapp'
 const EXPO_MODULE_SCHEME_KEY = 'expo.modules.scheme'
 const CHANNEL_ID_KEY = 'expo.modules.liveupdates.channelId'
 const CHANNEL_NAME_KEY = 'expo.modules.liveupdates.channelName'
 const SERVICE_NAME = 'expo.modules.liveupdates.FirebaseService'
 const RECEIVER_NAME = 'expo.modules.liveupdates.NotificationDismissedReceiver'
+const LOG_PREFIX = 'withLiveUpdates: '
 
 const isFirebaseConfigured = (config: ExpoConfig): boolean => {
   return !!config.android?.googleServicesFile
+}
+
+const log = (message: string) => console.log(LOG_PREFIX + message)
+const checkConfigProperty = (property: string, propertyName: string) => {
+  if (!property)
+    throw new Error(
+      LOG_PREFIX +
+        `${propertyName} is required. Please provide ${propertyName} in plugin configuration.`,
+    )
 }
 
 const ensureService = (
@@ -27,9 +35,7 @@ const ensureService = (
   androidManifest: AndroidConfig.Manifest.AndroidManifest,
 ) => {
   if (!isFirebaseConfigured(config)) {
-    console.log(
-      'Firebase not configured - skipping Firebase service registration',
-    )
+    log('Firebase not configured - skipping Firebase service registration')
     return
   }
 
@@ -100,25 +106,10 @@ const withLiveUpdates: ConfigPlugin<LiveUpdatesPluginProps> = (
 ) => {
   const { channelId, channelName } = props
 
-  if (!channelId) {
-    throw new Error(
-      'withLiveUpdates: channelId is required. Please provide channelId in plugin configuration.',
-    )
-  }
-
-  if (!channelName) {
-    throw new Error(
-      'withLiveUpdates: channelName is required. Please provide channelName in plugin configuration.',
-    )
-  }
+  checkConfigProperty(channelId, 'channelId')
+  checkConfigProperty(channelName, 'channelName')
 
   const scheme = Array.isArray(config.scheme) ? config.scheme[0] : config.scheme
-
-  if (!scheme) {
-    console.warn(
-      '⚠️ withLiveUpdates: scheme is not configured, deeplinks will not work in ExpoLiveUpdatesModule.',
-    )
-  }
 
   return withAndroidManifest(config, configWithManifest => {
     const mainApplication = AndroidConfig.Manifest.getMainApplicationOrThrow(
@@ -131,6 +122,10 @@ const withLiveUpdates: ConfigPlugin<LiveUpdatesPluginProps> = (
         mainApplication,
         EXPO_MODULE_SCHEME_KEY,
         scheme,
+      )
+    } else {
+      log(
+        '⚠️ scheme is not configured, deeplinks will not work in ExpoLiveUpdatesModule.',
       )
     }
 
