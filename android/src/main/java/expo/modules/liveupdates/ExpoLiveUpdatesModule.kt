@@ -46,7 +46,11 @@ class ExpoLiveUpdatesModule : Module() {
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
 
-    OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
+    OnStartObserving {
+      if (FirebaseService.isFirebaseAvailable()) {
+        setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
+      }
+    }
 
     OnNewIntent { intent ->
       if (isIntentSafe(intent)) {

@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -104,5 +105,14 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun getMissingOrInvalidErrorMessage(propName: String): String {
     return "Property $propName is missing or invalid."
+  }
+
+  companion object {
+    fun isFirebaseAvailable(): Boolean =
+      runCatching { FirebaseApp.getInstance() != null }
+        .getOrElse {
+          Log.w(FIREBASE_TAG, "Firebase is not initialized: ${it.message}")
+          false
+        }
   }
 }

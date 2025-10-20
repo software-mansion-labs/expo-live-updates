@@ -1,7 +1,7 @@
 import type { ExpoConfig } from 'expo/config'
 import {
   AndroidConfig,
-  ConfigPlugin,
+  type ConfigPlugin,
   withAndroidManifest,
 } from 'expo/config-plugins'
 
@@ -18,9 +18,21 @@ const CHANNEL_NAME_KEY = 'expo.modules.liveupdates.channelName'
 const SERVICE_NAME = 'expo.modules.liveupdates.FirebaseService'
 const RECEIVER_NAME = 'expo.modules.liveupdates.NotificationDismissedReceiver'
 
+const isFirebaseConfigured = (config: ExpoConfig): boolean => {
+  return !!config.android?.googleServicesFile
+}
+
 const ensureService = (
+  config: ExpoConfig,
   androidManifest: AndroidConfig.Manifest.AndroidManifest,
 ) => {
+  if (!isFirebaseConfigured(config)) {
+    console.log(
+      'Firebase not configured - skipping Firebase service registration',
+    )
+    return
+  }
+
   const mainApplication =
     AndroidConfig.Manifest.getMainApplicationOrThrow(androidManifest)
 
@@ -84,49 +96,59 @@ const ensureReceiver = (
 
 const withLiveUpdates: ConfigPlugin<LiveUpdatesPluginProps> = (
   config: ExpoConfig,
-  props: LiveUpdatesPluginProps
+  props: LiveUpdatesPluginProps,
 ) => {
-  if (!props.channelId) {
-    throw new Error('withLiveUpdates: channelId is required. Please provide channelId in plugin configuration.')
-  }
-  
-  if (!props.channelName) {
-    throw new Error('withLiveUpdates: channelName is required. Please provide channelName in plugin configuration.')
+  const { channelId, channelName } = props
+
+  if (!channelId) {
+    throw new Error(
+      'withLiveUpdates: channelId is required. Please provide channelId in plugin configuration.',
+    )
   }
 
-  const { channelId, channelName } = props
-  
-  const scheme = Array.isArray(config.scheme) 
-    ? config.scheme[0] 
-    : config.scheme || DEFAULT_SCHEME
+  if (!channelName) {
+    throw new Error(
+      'withLiveUpdates: channelName is required. Please provide channelName in plugin configuration.',
+    )
+  }
+
+  const scheme = Array.isArray(config.scheme) ? config.scheme[0] : config.scheme
+
+  if (!scheme) {
+    console.warn(
+      'Scheme is not configured, deeplinks will not work in ExpoLiveUpdatesModule.',
+    )
+  }
 
   return withAndroidManifest(config, configWithManifest => {
     const mainApplication = AndroidConfig.Manifest.getMainApplicationOrThrow(
-      configWithManifest.modResults
+      configWithManifest.modResults,
     )
 
     // Add app scheme metadata
-    AndroidConfig.Manifest.addMetaDataItemToMainApplication(
-      mainApplication,
-      EXPO_MODULE_SCHEME_KEY,
-      scheme
-    )
+    if (scheme) {
+      AndroidConfig.Manifest.addMetaDataItemToMainApplication(
+        mainApplication,
+        EXPO_MODULE_SCHEME_KEY,
+        scheme,
+      )
+    }
 
     // Add channel configuration metadata
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
       CHANNEL_ID_KEY,
-      channelId
+      channelId,
     )
 
     AndroidConfig.Manifest.addMetaDataItemToMainApplication(
       mainApplication,
       CHANNEL_NAME_KEY,
-      channelName
+      channelName,
     )
 
     // Ensure Firebase service is configured
-    ensureService(configWithManifest.modResults)
+    ensureService(config, configWithManifest.modResults)
 
     // Ensure notification dismissed receiver is configured
     ensureReceiver(configWithManifest.modResults)
