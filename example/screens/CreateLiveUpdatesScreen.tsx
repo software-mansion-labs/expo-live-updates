@@ -50,7 +50,7 @@ export default function CreateLiveUpdatesScreen() {
   >([])
   const [passProgress, setPassProgress] = useState(false)
   const [progressMax, setProgressMax] = useState('100')
-  const [progressValue, setProgressProgress] = useState('50')
+  const [progressValue, setProgressValue] = useState('50')
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
 
   const scrollViewRef = useRef<ScrollView>(null)
@@ -266,9 +266,9 @@ export default function CreateLiveUpdatesScreen() {
                         styles.input,
                         progressIndeterminate && styles.disabledInput,
                       ]}
-                      onChangeText={setProgressProgress}
+                      onChangeText={setProgressValue}
                       value={progressValue}
-                      placeholder="50"
+                      placeholder="Value, e.g. 50"
                       editable={!progressIndeterminate}
                       keyboardType="numeric"
                     />
@@ -283,7 +283,7 @@ export default function CreateLiveUpdatesScreen() {
                       ]}
                       onChangeText={setProgressMax}
                       value={progressMax}
-                      placeholder="100"
+                      placeholder="Maximum, default 100"
                       editable={!progressIndeterminate}
                       keyboardType="numeric"
                     />
