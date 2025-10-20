@@ -41,20 +41,32 @@ Use the `expo-live-updates` plugin in your app config:
 plugins: [
   "expo-live-updates",
   {
-    "channelId": "LiveUpdatesServiceChannelId", // Notifications Channel Id
-    "channelName": "Live Updates Service Channel Name" // Notifications Channel Id
+    "channelId": "NotificationsChannelId", 
+    "channelName": "Notifications Channel Name"
   }
   // ... other plugins
 ]
 ```
 
-## 3. Prebuild your app
+## 3. Handle permissions
+
+Expo-live-updates require 2 Android permissions to work. Add them to `android.permissions` in app config and remember to request for them in React Native app.
+
+```ts
+permissions: [
+  'android.permission.POST_NOTIFICATIONS',
+  'android.permission.POST_PROMOTED_NOTIFICATIONS',
+],
+```
+
+## 4. Prebuild your app
 
 Then prebuild your app with:
 
 ```sh
 npx expo prebuild --clean
 ```
+
 
 # How to add Firebase Cloud Messaging
 
