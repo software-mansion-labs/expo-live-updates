@@ -5,9 +5,9 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.firebase.provider.FirebaseInitProvider
 
 const val FIREBASE_TAG = "FirebaseService"
 
@@ -108,11 +108,6 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   companion object {
-    fun isFirebaseAvailable(): Boolean =
-      runCatching { FirebaseApp.getInstance() != null }
-        .getOrElse {
-          Log.w(FIREBASE_TAG, "Firebase is not initialized: ${it.message}")
-          false
-        }
+    fun isFirebaseAvailable(): Boolean = FirebaseInitProvider.getStartupTime() != null
   }
 }
