@@ -59,8 +59,10 @@ npx expo prebuild --clean
 # How to add Firebase Cloud Messaging
 
 1. Create project at [Firebase](https://firebase.google.com/).
-2. Add android app to created project. To work with example app set package name to `com.test.test` and download `google-service.json`. Skip other steps of Firebase instructions.
-3. Place `google-service.json` in `/example` folder.
+2. Add android app to created project and download `google-service.json`. To work with example app set package name to `expo.modules.liveupdates.example` and skip other steps of Firebase instructions.
+3. Place `google-service.json` in `/example` app or your app folder.
+4. Set `android.googleServicesFile` in app config to the path of `google-services.json` file (like in `example/app.config.ts`). This will inform module to init Firebase service.
+5. Prebuild app with `npx expo prebuild --clean`
 
 # Send Firebase Message
 
