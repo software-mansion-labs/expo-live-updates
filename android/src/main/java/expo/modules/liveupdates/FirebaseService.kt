@@ -27,6 +27,7 @@ data object FirebaseMessageProps {
   const val PROGRESS_INDETERMINATE = "progressIndeterminate"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
+  const val DEEP_LINK_URL = "deepLinkUrl"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -111,7 +112,10 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
-    return LiveUpdateConfig(backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR])
+    return LiveUpdateConfig(
+      backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR],
+      deepLinkUrl = message.data[FirebaseMessageProps.DEEP_LINK_URL],
+    )
   }
 
   private fun getMissingOrInvalidErrorMessage(propName: String): String {
