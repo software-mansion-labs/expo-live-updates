@@ -22,11 +22,9 @@ To run example app:
 Live updates can be started, updated and stopped using FCM. To manage live update via FCM you need to send data message:
 
 ```
-POST /v1/projects/<YOUR_PROJECT_ID>/messages:send HTTP/1.1
+POST /v1/projects/<YOUR_PROJECT_ID>/messages:send
 Host: fcm.googleapis.com
-Content-Type: application/json
 Authorization: Bearer <YOUR_BEARER_TOKEN>
-Content-Length: 481
 {
   "message":{
       "token":"<DEVICE_PUSH_TOKEN>",
@@ -40,7 +38,7 @@ Content-Length: 481
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
           "backgroundColor":"red", // optional, works only on SDK < Baklava
           "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
-          "deepLinkUrl":"text" // optional: default it will just open the app
+          "deepLinkUrl":"/Test" // optional: default it will just open the app
       }
    }
 }
