@@ -79,7 +79,7 @@ class ExpoLiveUpdatesModule : Module() {
 
   private fun initializeModule() {
     val channelId: String = getChannelId(context)
-    val channelName: String = getChannelName(context)
+    val channelName:  String = getChannelName(context)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val serviceChannel =
