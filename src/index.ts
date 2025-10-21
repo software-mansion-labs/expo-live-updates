@@ -18,7 +18,6 @@ function assertAndroid(name: string) {
   return isAndroid
 }
 
-
 /**
  * @param {LiveUpdateState} state The state for the live live update.
  * @param {LiveUpdateConfig} config Live live update config object.

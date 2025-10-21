@@ -20,7 +20,8 @@
     "open:ios": "xed example/ios",
     "open:android": "open -a \"Android Studio\" example/android",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --check -w ."
+    "format:fix": "prettier --check -w .",
+    "typecheck": "tsc"
   },
   "repository": {
     "type": "git",

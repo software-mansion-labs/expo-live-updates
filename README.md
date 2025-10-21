@@ -33,11 +33,11 @@ Use the `expo-live-updates` plugin in your app config:
 
 ```ts
 plugins: [
-  "expo-live-updates",
+  'expo-live-updates',
   {
-    "channelId": "NotificationsChannelId", 
-    "channelName": "Notifications Channel Name"
-  }
+    channelId: 'NotificationsChannelId',
+    channelName: 'Notifications Channel Name',
+  },
   // ... other plugins
 ]
 ```
@@ -64,9 +64,8 @@ npx expo prebuild --clean
 Now you can test Live Updates:
 
 ```ts
-startLiveUpdate({title: "Test notifications"})
+startLiveUpdate({ title: 'Test notifications' })
 ```
-
 
 # How to add Firebase Cloud Messaging
 
@@ -162,11 +161,11 @@ export default {
 2. Handle deep links in React Native, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
 
 ```ts
-  const linking = {
-    prefixes: [prefix],
-  };
+const linking = {
+  prefixes: [prefix],
+}
 
-  return <Navigation linking={linking} />;
+return <Navigation linking={linking} />
 ```
 
 # API documentation

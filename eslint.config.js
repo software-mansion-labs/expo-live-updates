@@ -72,6 +72,6 @@ module.exports = [
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
     },
-    ignores: ["./build/*"],
+    ignores: ['./build/*'],
   },
 ]
