@@ -15,7 +15,7 @@ const CHANNEL_ID_KEY = 'expo.modules.liveupdates.channelId'
 const CHANNEL_NAME_KEY = 'expo.modules.liveupdates.channelName'
 const SERVICE_NAME = 'expo.modules.liveupdates.FirebaseService'
 const RECEIVER_NAME = 'expo.modules.liveupdates.NotificationDismissedReceiver'
-const LOG_PREFIX = 'ExpoLiveUpdatesModule: '
+const LOG_PREFIX = 'ExpoLiveUpdatesModule:'
 
 let warnedMissingScheme = false
 
@@ -23,8 +23,8 @@ const isFirebaseConfigured = (config: ExpoConfig): boolean => {
   return !!config.android?.googleServicesFile
 }
 
-const log = (message: string, icon: string = 'ℹ️') =>
-  console.log(`${icon} ${LOG_PREFIX} ${message}`)
+const log = (message: string) => console.log(`${LOG_PREFIX} ${message}`)
+
 const checkConfigProperty = (property: string, propertyName: string) => {
   if (!property)
     throw new Error(
@@ -127,7 +127,7 @@ const withLiveUpdates: ConfigPlugin<LiveUpdatesPluginProps> = (
         scheme,
       )
     } else if (!warnedMissingScheme) {
-      log('scheme is not configured, deeplinks will not work.', '⚠️')
+      log('scheme is not configured, deeplinks will not work.')
       warnedMissingScheme = true
     }
 
