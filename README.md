@@ -9,7 +9,7 @@ Expo module that enables Android Live Updates functionality, allowing you to dis
 
 - **Live Notifications**: Display persistent, ongoing notifications that stay visible until dismissed
 - **Progress Tracking**: Show determinate or indeterminate progress bars in notifications
-- **Firebase Cloud Messaging integration**: Manage live updates remotely via FCM push notifications
+- **Firebase Cloud Messaging integration**: Manage Live Updates remotely via FCM push notifications
 - **Deep Linking**: Navigate to specific app screens when users tap notifications
 - **Event Listeners**: Track notification state changes (started, updated, stopped, dismissed, clicked)
 
@@ -47,11 +47,13 @@ Use the `expo-live-updates` plugin in your app config:
 
 ```ts
 plugins: [
-  "expo-live-updates",
-  {
-    "channelId": "NotificationsChannelId", 
-    "channelName": "Notifications Channel Name"
-  }
+  [
+    "expo-live-updates",
+    {
+      "channelId": "NotificationsChannelId", 
+      "channelName": "Notifications Channel Name"
+    }
+  ]
   // ... other plugins
 ]
 ```
@@ -84,14 +86,14 @@ startLiveUpdate({title: "Test notifications"})
 ## API
 
 ### Managing Live Updates
-- `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined` Creates and displays a new live update notification. Returns notification ID or undefined if failed.
-- `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void` Updates an existing live update notification.
+- `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined` Creates and displays a new Live Update notification. Returns notification ID or undefined if failed.
+- `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void` Updates an existing Live Update notification.
 
-- `stopLiveUpdate(notificationId: number): void` Stops an existing live update notification.
+- `stopLiveUpdate(notificationId: number): void` Stops an existing Live Update notification.
 
 
 ### Handling Push Notification Tokens
-- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined` Subscribes to FCM token changes. Call .remove() to unsubscribe.
+- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined` Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
 
 
 ### Handling Notification Events Listener
@@ -100,7 +102,7 @@ startLiveUpdate({title: "Test notifications"})
 
 ### LiveUpdateState Object Structure
 
-Defines the visual content and progress information for a live update notification:
+Defines the visual content and progress information for a Live Update notification:
 
 ```ts
 type LiveUpdateState = {
@@ -121,7 +123,7 @@ type LiveUpdateProgress = {
 
 ### LiveUpdateConfig Object Structure
 
-Configuration options for the live update notification. Separated from state to allow in the future updating only state without passing config every time:
+Configuration options for the Live Update notification. Separated from state to allow in the future updating only state without passing config every time:
 
 ```ts
 type LiveUpdateConfig = {
@@ -158,14 +160,14 @@ export default {
 ## Firebase Cloud Messaging integration
 
 1. Create project at [Firebase](https://firebase.google.com/).
-2. Add android app to created project and download `google-service.json`. To work with example app set package name to `expo.modules.liveupdates.example` and skip other steps of Firebase instructions.
-3. Place `google-service.json` in `/example` app or your app folder.
+2. Add android app to created project and download `google-services.json`. To work with example app set package name to `expo.modules.liveupdates.example` and skip other steps of Firebase instructions.
+3. Place `google-services.json` in `/example` app or your app folder.
 4. Set `android.googleServicesFile` in app config to the path of `google-services.json` file (like in `example/app.config.ts`). This will inform module to init Firebase service.
 5. Prebuild app with `npx expo prebuild --clean`
 
 ### Send Firebase Message
 
-Live updates can be started, updated and stopped using FCM. To manage live update via FCM you need to send data message:
+Live Updates can be started, updated and stopped using FCM. To manage Live Update via FCM you need to send data message:
 
 ```
 POST /v1/projects/<YOUR_PROJECT_ID>/messages:send
@@ -192,7 +194,7 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
 
 Request variables:
 
-- `<YOUR_PROJECT_ID>` - can be found in `google-service.json`
+- `<YOUR_PROJECT_ID>` - can be found in `google-services.json`
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
 

@@ -131,7 +131,7 @@ export default function CreateLiveUpdatesScreen() {
         throw Error('notificationId is undefined')
       }
     } catch (e) {
-      console.error('Stopping live update failed! ' + e)
+      console.error('Stopping Live Update failed! ' + e)
     }
   }
 
@@ -143,7 +143,7 @@ export default function CreateLiveUpdatesScreen() {
         throw Error('notificationId is undefined')
       }
     } catch (e) {
-      console.error('Updating live update failed! ' + e)
+      console.error('Updating Live Update failed! ' + e)
     }
   }
 

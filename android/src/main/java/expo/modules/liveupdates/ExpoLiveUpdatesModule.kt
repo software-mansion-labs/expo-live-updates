@@ -97,7 +97,7 @@ class ExpoLiveUpdatesModule : Module() {
         val status =
           if (androidNotificationManager?.canPostPromotedNotifications() == true) "✅ can"
           else "❌ cannot"
-        Log.i("ExpoLiveUpdatesModule", "$status post live updates")
+        Log.i("ExpoLiveUpdatesModule", "$status post Live Updates")
       }
     }
 
