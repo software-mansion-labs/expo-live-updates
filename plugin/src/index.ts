@@ -127,7 +127,7 @@ const withLiveUpdates: ConfigPlugin<LiveUpdatesPluginProps> = (
         scheme,
       )
     } else if (!warnedMissingScheme) {
-      log('scheme is not configured, deeplinks will not work.')
+      log('scheme is not configured, deeplinks will not work')
       warnedMissingScheme = true
     }
 
