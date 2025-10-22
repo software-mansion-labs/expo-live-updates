@@ -1,13 +1,14 @@
 package expo.modules.liveupdates
 
 import android.Manifest
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.provider.FirebaseInitProvider
 
 const val FIREBASE_TAG = "FirebaseService"
 
@@ -123,7 +124,14 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   companion object {
-    fun isFirebaseAvailable(): Boolean = FirebaseInitProvider.getStartupTime() != null
+    fun isFirebaseAvailable(context: Context): Boolean {
+      return try {
+        FirebaseApp.getApps(context).isNotEmpty()
+      } catch (e: Exception) {
+        Log.w(FIREBASE_TAG, "Error checking Firebase availability: ${e.message}")
+        false
+      }
+    }
   }
 }
 

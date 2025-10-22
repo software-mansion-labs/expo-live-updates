@@ -47,7 +47,7 @@ class ExpoLiveUpdatesModule : Module() {
     }
 
     OnStartObserving {
-      if (FirebaseService.isFirebaseAvailable()) {
+      if (FirebaseService.isFirebaseAvailable(context)) {
         setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
       }
     }
