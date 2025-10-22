@@ -27,9 +27,9 @@ function assertAndroid(name: string): boolean {
 }
 
 /**
- * @param {LiveUpdateState} state The state for the live live update.
- * @param {LiveUpdateConfig} config Live live update config object.
- * @returns {number} The identifier of the started live update or undefined if creating live live update failed.
+ * @param {LiveUpdateState} state The state for the Live Update.
+ * @param {LiveUpdateConfig} config Optional configuration for the Live Update.
+ * @returns {number} The identifier of the started Live Update or undefined if failed.
  */
 export function startLiveUpdate(
   state: LiveUpdateState,
@@ -41,7 +41,7 @@ export function startLiveUpdate(
 }
 
 /**
- * @param {number} notificationId The identifier of the live update to stop.
+ * @param {number} notificationId The identifier of the Live Update to stop.
  */
 export function stopLiveUpdate(notificationId: number) {
   if (assertAndroid('stopLiveUpdate')) {
@@ -50,8 +50,9 @@ export function stopLiveUpdate(notificationId: number) {
 }
 
 /**
- * @param {number} notificationId The identifier of the live update to update.
- * @param {LiveUpdateState} state The updated state for the live live update.
+ * @param {number} notificationId The identifier of the Live Update to update.
+ * @param {LiveUpdateState} state The updated state for the Live Update.
+ * @param {LiveUpdateConfig} config Optional configuration for the Live Update.
  */
 export function updateLiveUpdate(
   notificationId: number,
@@ -67,6 +68,11 @@ export function updateLiveUpdate(
   }
 }
 
+/**
+ * Add a listener for Firebase Cloud Messaging token changes.
+ * @param {function} listener The listener function to be called when the token changes.
+ * @returns {EventSubscription} The subscription object or undefined if not supported.
+ */
 export function addTokenChangeListener(
   listener: (event: TokenChangeEvent) => void,
 ): Voidable<EventSubscription> {
@@ -76,8 +82,9 @@ export function addTokenChangeListener(
 }
 
 /**
- * Add a notification state change listener using Expo's event system.
+ * Add a listener for Live Update notification state changes.
  * @param {function} listener The listener function to be called when notification state changes.
+ * @returns {EventSubscription} The subscription object or undefined if not supported.
  */
 export function addNotificationStateChangeListener(
   listener: (event: NotificationStateChangeEvent) => void,
