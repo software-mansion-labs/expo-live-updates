@@ -1,8 +1,5 @@
 {
-  "platforms": ["apple", "android", "web"],
-  "apple": {
-    "modules": ["ExpoLiveUpdatesModule"]
-  },
+  "platforms": ["android"],
   "android": {
     "modules": ["expo.modules.liveupdates.ExpoLiveUpdatesModule"]
   }

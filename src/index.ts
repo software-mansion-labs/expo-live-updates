@@ -18,7 +18,6 @@ function assertAndroid(name: string) {
   return isAndroid
 }
 
-
 /**
  * @param {LiveUpdateState} state The state for the live live update.
  * @param {LiveUpdateConfig} config Live live update config object.
@@ -28,7 +27,7 @@ export function startLiveUpdate(
   state: LiveUpdateState,
   config?: LiveUpdateConfig,
 ): Voidable<number> {
-  if (assertAndroid('startLiveUpdate')) {
+  if (assertAndroid('startLiveUpdate') && ExpoLiveUpdatesModule) {
     return ExpoLiveUpdatesModule.startLiveUpdate(state, config)
   }
 }
@@ -37,8 +36,9 @@ export function startLiveUpdate(
  * @param {number} notificationId The identifier of the live update to stop.
  */
 export function stopLiveUpdate(notificationId: number) {
-  if (assertAndroid('stopLiveUpdate'))
+  if (assertAndroid('stopLiveUpdate') && ExpoLiveUpdatesModule) {
     return ExpoLiveUpdatesModule.stopLiveUpdate(notificationId)
+  }
 }
 
 /**
@@ -50,15 +50,17 @@ export function updateLiveUpdate(
   state: LiveUpdateState,
   config?: LiveUpdateConfig,
 ) {
-  if (assertAndroid('updateLiveUpdate'))
+  if (assertAndroid('updateLiveUpdate') && ExpoLiveUpdatesModule) {
     return ExpoLiveUpdatesModule.updateLiveUpdate(notificationId, state, config)
+  }
 }
 
 export function addTokenChangeListener(
   listener: (event: TokenChangeEvent) => void,
 ): Voidable<EventSubscription> {
-  if (assertAndroid('addTokenChangeListener'))
+  if (assertAndroid('addTokenChangeListener') && ExpoLiveUpdatesModule) {
     return ExpoLiveUpdatesModule.addListener('onTokenChange', listener)
+  }
 }
 
 /**
@@ -68,7 +70,10 @@ export function addTokenChangeListener(
 export function addNotificationStateChangeListener(
   listener: (event: NotificationStateChangeEvent) => void,
 ): Voidable<EventSubscription> {
-  if (assertAndroid('addNotificationStateChangeListener')) {
+  if (
+    assertAndroid('addNotificationStateChangeListener') &&
+    ExpoLiveUpdatesModule
+  ) {
     return ExpoLiveUpdatesModule.addListener(
       'onNotificationStateChange',
       listener,
