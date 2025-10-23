@@ -9,6 +9,17 @@ jobs:
       - name: Check out
         uses: actions/checkout@v5
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd example
+          npm ci
+
       - name: setup Java
         uses: actions/setup-java@v5
         with:
@@ -18,4 +29,17 @@ jobs:
       - name: Check Kotlin formatting
         run: |
           curl -sSL -o ktfmt.jar https://github.com/facebook/ktfmt/releases/download/v0.58/ktfmt-0.58-with-dependencies.jar
-          java -jar ktfmt.jar --dry-run --google-style --set-exit-if-changed .
+          java -jar ktfmt.jar --dry-run --google-style --set-exit-if-changed ./android/src/main/java/expo/modules/liveupdates
+
+      - name: Run Prettier 💅
+        run: npm run format:check
+
+      - name: Run ESLint 👮
+        run: npm run lint
+
+      - name: Check types 🚓
+        run: npm run typecheck
+
+      - name: Check types (example app) 🚓
+        run: npm run typecheck
+        working-directory: example

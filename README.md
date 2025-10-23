@@ -2,7 +2,7 @@
 
 Expo module that enables Android Live Updates functionality, allowing you to display real-time, ongoing notifications with progress tracking and dynamic content updates directly from your React Native app or Firebase Cloud.
 
-> ⚠️ __WARNING__  
+> ⚠️ **WARNING**  
 > This library is in early development stage; breaking changes can be introduced in minor version upgrades.
 
 ## Features
@@ -21,7 +21,7 @@ Expo module that enables Android Live Updates functionality, allowing you to dis
 
 ## How to run example app
 
-1. Prepare Android emulator with `Android Baklava Preview` SDK. 
+1. Prepare Android emulator with `Android Baklava Preview` SDK.
 2. Run `npm i` in root & `/example` directories.
 3. Run `npm run android` (or `npx expo run:android --device` to select proper emulator) in `example/` directory.
 
@@ -48,12 +48,12 @@ Use the `expo-live-updates` plugin in your app config:
 ```ts
 plugins: [
   [
-    "expo-live-updates",
+    'expo-live-updates',
     {
-      "channelId": "NotificationsChannelId", 
-      "channelName": "Notifications Channel Name"
-    }
-  ]
+      channelId: 'NotificationsChannelId',
+      channelName: 'Notifications Channel Name',
+    },
+  ],
   // ... other plugins
 ]
 ```
@@ -80,21 +80,21 @@ npx expo prebuild --clean
 Now you can test Live Updates:
 
 ```ts
-startLiveUpdate({title: "Test notifications"})
+startLiveUpdate({ title: 'Test notifications' })
 ```
 
 ## API
 
 ### Managing Live Updates
+
 - `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined` Creates and displays a new Live Update notification. Returns notification ID or undefined if failed.
 - `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void` Updates an existing Live Update notification.
 
 - `stopLiveUpdate(notificationId: number): void` Stops an existing Live Update notification.
 
-
 ### Handling Push Notification Tokens
-- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined` Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
 
+- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined` Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
 
 ### Handling Notification Events Listener
 
@@ -106,18 +106,18 @@ Defines the visual content and progress information for a Live Update notificati
 
 ```ts
 type LiveUpdateState = {
-  title: string                      // Main title text
-  subtitle?: string                  // Additional descriptive text
-  imageName?: string                 // Name of image resource
-  dynamicIslandImageName?: string    // Custom image for dynamic notification area
-  progress?: LiveUpdateProgress      // Progress bar configuration
-  shortCriticalText?: string         // Critical text (max 7 chars recommended)
+  title: string // Main title text
+  subtitle?: string // Additional descriptive text
+  imageName?: string // Name of image resource
+  dynamicIslandImageName?: string // Custom image for dynamic notification area
+  progress?: LiveUpdateProgress // Progress bar configuration
+  shortCriticalText?: string // Critical text (max 7 chars recommended)
 }
 
 type LiveUpdateProgress = {
-  max?: number                       // Maximum progress value (default: 100)
-  progress?: number                  // Current progress value
-  indeterminate?: boolean            // Whether to show indeterminate progress bar
+  max?: number // Maximum progress value (default: 100)
+  progress?: number // Current progress value
+  indeterminate?: boolean // Whether to show indeterminate progress bar
 }
 ```
 
@@ -127,8 +127,8 @@ Configuration options for the Live Update notification. Separated from state to 
 
 ```ts
 type LiveUpdateConfig = {
-  backgroundColor?: string  // Background color (only SDK < 16)
-  deepLinkUrl?: string      // Deep link URL to navigate when tapped
+  backgroundColor?: string // Background color (only SDK < 16)
+  deepLinkUrl?: string // Deep link URL to navigate when tapped
 }
 ```
 
@@ -150,11 +150,11 @@ export default {
 2. Handle deep links in React Native, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
 
 ```ts
-  const linking = {
-    prefixes: [prefix],
-  };
+const linking = {
+  prefixes: [prefix],
+}
 
-  return <Navigation linking={linking} />;
+return <Navigation linking={linking} />
 ```
 
 ## Firebase Cloud Messaging integration
