@@ -9,7 +9,6 @@ import androidx.annotation.RequiresPermission
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.provider.FirebaseInitProvider
 
 const val FIREBASE_TAG = "FirebaseService"
 
