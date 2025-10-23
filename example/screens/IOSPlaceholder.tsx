@@ -1,11 +1,12 @@
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+const LIVE_ACTIVITY_URL =
+  'https://github.com/software-mansion-labs/expo-live-activity'
+
 export default function IOSPlaceholder() {
   const handleOpenLink = () => {
-    Linking.openURL(
-      'https://github.com/software-mansion-labs/expo-live-activity',
-    )
+    Linking.openURL(LIVE_ACTIVITY_URL)
   }
 
   return (

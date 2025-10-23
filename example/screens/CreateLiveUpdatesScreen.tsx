@@ -26,14 +26,10 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
-import IOSPlaceholder from './IOSPlaceholder'
 
 const toggle = (previousState: boolean) => !previousState
 
 export default function CreateLiveUpdatesScreen() {
-  if (Platform.OS === 'ios') {
-    return <IOSPlaceholder />
-  }
   const [title, onChangeTitle] = useState('This is a title')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
