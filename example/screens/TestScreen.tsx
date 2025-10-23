@@ -17,7 +17,7 @@ export default function TestScreen({ navigation }: TestScreenProps) {
         onPress={() =>
           navigation.canGoBack()
             ? navigation.goBack()
-            : navigation.navigate('CreateLiveUpdates')
+            : navigation.navigate('LiveUpdates')
         }
       />
     </View>

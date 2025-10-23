@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const LIVE_ACTIVITY_URL =
   'https://github.com/software-mansion-labs/expo-live-activity'
 
-export default function IOSPlaceholder() {
+export default function LiveUpdatesScreen() {
   const handleOpenLink = () => {
     Linking.openURL(LIVE_ACTIVITY_URL)
   }
