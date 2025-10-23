@@ -27,6 +27,7 @@ import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
 import IOSPlaceholder from './IOSPlaceholder'
+import { Asset } from 'expo-asset'
 
 const toggle = (previousState: boolean) => !previousState
 
@@ -135,7 +136,7 @@ export default function CreateLiveUpdatesScreen() {
         throw Error('notificationId is undefined')
       }
     } catch (e) {
-      console.error('Stopping live update failed! ' + e)
+      console.error('Stopping Live Update failed! ' + e)
     }
   }
 
@@ -147,7 +148,7 @@ export default function CreateLiveUpdatesScreen() {
         throw Error('notificationId is undefined')
       }
     } catch (e) {
-      console.error('Updating live update failed! ' + e)
+      console.error('Updating Live Update failed! ' + e)
     }
   }
 
@@ -324,13 +325,17 @@ export default function CreateLiveUpdatesScreen() {
               </View>
             )}
           </View>
-          <View style={styles.verticalButtonsContainer}>
+          <View style={styles.buttonsContainer}>
             <Button
               title="Start"
               onPress={handleStartLiveUpdate}
               disabled={title === ''}
             />
-            <Button title="Copy Push Token" onPress={handleCopyPushToken} />
+            <Button
+              title={token ? 'Copy Push Token' : 'FCM not configured'}
+              disabled={token === undefined}
+              onPress={handleCopyPushToken}
+            />
           </View>
         </View>
 
@@ -425,6 +430,13 @@ const requestNotificationsPermission = async () => {
 }
 
 const styles = StyleSheet.create({
+  buttonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'center',
+    marginTop: 16,
+    paddingHorizontal: '20%',
+  },
   disabledInput: {
     backgroundColor: '#ECECEC',
     borderColor: '#DEDEDE',
@@ -495,11 +507,5 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  verticalButtonsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 16,
-    paddingHorizontal: '20%',
   },
 })

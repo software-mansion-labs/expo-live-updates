@@ -28,8 +28,8 @@ function assertAndroid(name: string): boolean {
 
 /**
  * @param {LiveUpdateState} state The state for the Live Update.
- * @param {LiveUpdateConfig} config Optional configuration for the Live Update.
- * @returns {number} The identifier of the started Live Update or undefined if failed.
+ * @param {LiveUpdateConfig} config Live Update config object.
+ * @returns {number} The identifier of the started Live Update or undefined if creating Live Update failed.
  */
 export function startLiveUpdate(
   state: LiveUpdateState,

@@ -1,10 +1,12 @@
 package expo.modules.liveupdates
 
 import android.Manifest
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -119,6 +121,17 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun getMissingOrInvalidErrorMessage(propName: String): String {
     return "Property $propName is missing or invalid."
+  }
+
+  companion object {
+    fun isFirebaseAvailable(context: Context): Boolean {
+      return try {
+        FirebaseApp.getApps(context).isNotEmpty()
+      } catch (e: Exception) {
+        Log.w(FIREBASE_TAG, "Error checking Firebase availability: ${e.message}")
+        false
+      }
+    }
   }
 }
 

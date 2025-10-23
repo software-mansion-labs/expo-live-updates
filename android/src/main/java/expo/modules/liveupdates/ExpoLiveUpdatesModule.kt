@@ -46,7 +46,11 @@ class ExpoLiveUpdatesModule : Module() {
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
 
-    OnStartObserving { setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent) }
+    OnStartObserving {
+      if (FirebaseService.isFirebaseAvailable(context)) {
+        setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
+      }
+    }
 
     OnNewIntent { intent ->
       if (isIntentSafe(intent)) {
@@ -93,7 +97,7 @@ class ExpoLiveUpdatesModule : Module() {
         val status =
           if (androidNotificationManager?.canPostPromotedNotifications() == true) "✅ can"
           else "❌ cannot"
-        Log.i("ExpoLiveUpdatesModule", "$status post live updates")
+        Log.i("ExpoLiveUpdatesModule", "$status post Live Updates")
       }
     }
 
