@@ -27,7 +27,6 @@ import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
 import IOSPlaceholder from './IOSPlaceholder'
-import { Asset } from 'expo-asset'
 
 const toggle = (previousState: boolean) => !previousState
 
