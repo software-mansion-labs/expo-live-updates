@@ -53,7 +53,9 @@ class FirebaseService : FirebaseMessagingService() {
 
       when (event) {
         FirebaseMessageEvent.START -> {
-          require(notificationId == null) { "Passing ${FirebaseMessageProps.NOTIFICATION_ID} to start Live Update is prohibited - it will be generated automatically." }
+          require(notificationId == null) {
+            "Passing ${FirebaseMessageProps.NOTIFICATION_ID} to start Live Update is prohibited - it will be generated automatically."
+          }
 
           val (state, config) = getLiveUpdatesNotificationData(message)
           liveUpdatesManager.startLiveUpdateNotification(state, config)
