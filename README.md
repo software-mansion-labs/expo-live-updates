@@ -150,11 +150,11 @@ export default {
 2. Handle deep links in React Native, f.e. with [React Navigation](https://reactnavigation.org/docs/deep-linking/?config=static#setup-with-expo-projects):
 
 ```ts
-  const linking = {
-    prefixes: [prefix],
-  };
+const linking = {
+  prefixes: [prefix],
+}
 
-  return <Navigation linking={linking} />;
+return <Navigation linking={linking} />
 ```
 
 ## Firebase Cloud Messaging integration
