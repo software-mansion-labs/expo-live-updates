@@ -1,10 +1,12 @@
 package expo.modules.liveupdates
 
 import android.Manifest
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.provider.FirebaseInitProvider
@@ -27,6 +29,7 @@ data object FirebaseMessageProps {
   const val PROGRESS_INDETERMINATE = "progressIndeterminate"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
+  const val DEEP_LINK_URL = "deepLinkUrl"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -111,7 +114,10 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
-    return LiveUpdateConfig(backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR])
+    return LiveUpdateConfig(
+      backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR],
+      deepLinkUrl = message.data[FirebaseMessageProps.DEEP_LINK_URL],
+    )
   }
 
   private fun getMissingOrInvalidErrorMessage(propName: String): String {
@@ -119,7 +125,14 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   companion object {
-    fun isFirebaseAvailable(): Boolean = FirebaseInitProvider.getStartupTime() != null
+    fun isFirebaseAvailable(context: Context): Boolean {
+      return try {
+        FirebaseApp.getApps(context).isNotEmpty()
+      } catch (e: Exception) {
+        Log.w(FIREBASE_TAG, "Error checking Firebase availability: ${e.message}")
+        false
+      }
+    }
   }
 }
 

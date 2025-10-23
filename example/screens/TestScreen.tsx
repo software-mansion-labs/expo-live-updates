@@ -10,9 +10,16 @@ export default function TestScreen({ navigation }: TestScreenProps) {
     <View style={styles.container}>
       <Text style={styles.title}>Test Subpage</Text>
       <Text style={styles.description}>
-        This is the test page that can be accessed via deep link /test
+        This is the test page that can be accessed via deep link /Test
       </Text>
-      <Button title="Go Back" onPress={() => navigation.goBack()} />
+      <Button
+        title="Go Back"
+        onPress={() =>
+          navigation.canGoBack()
+            ? navigation.goBack()
+            : navigation.navigate('CreateLiveUpdates')
+        }
+      />
     </View>
   )
 }
