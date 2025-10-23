@@ -19,9 +19,9 @@ function assertAndroid(name: string) {
 }
 
 /**
- * @param {LiveUpdateState} state The state for the live Live Update.
+ * @param {LiveUpdateState} state The state for the Live Update.
  * @param {LiveUpdateConfig} config Live Update config object.
- * @returns {number} The identifier of the started Live Update or undefined if creating live Live Update failed.
+ * @returns {number} The identifier of the started Live Update or undefined if creating Live Update failed.
  */
 export function startLiveUpdate(
   state: LiveUpdateState,
@@ -42,7 +42,7 @@ export function stopLiveUpdate(notificationId: number) {
 
 /**
  * @param {number} notificationId The identifier of the Live Update to update.
- * @param {LiveUpdateState} state The updated state for the live Live Update.
+ * @param {LiveUpdateState} state The updated state for the Live Update.
  */
 export function updateLiveUpdate(
   notificationId: number,
