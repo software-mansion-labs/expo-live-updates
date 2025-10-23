@@ -14,7 +14,11 @@ export default function TestScreen({ navigation }: TestScreenProps) {
       </Text>
       <Button
         title="Go Back"
-        onPress={() => navigation.navigate('CreateLiveUpdates')}
+        onPress={() =>
+          navigation.canGoBack()
+            ? navigation.goBack()
+            : navigation.navigate('CreateLiveUpdates')
+        }
       />
     </View>
   )

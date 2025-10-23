@@ -26,7 +26,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     edgeToEdgeEnabled: true,
-    package: 'com.test.test',
+    package: 'expo.modules.liveupdates.example',
     permissions: [
       'android.permission.POST_NOTIFICATIONS',
       'android.permission.POST_PROMOTED_NOTIFICATIONS',
@@ -38,11 +38,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     'expo-asset',
-    '../plugin/withNotificationDismissedReceiver',
-    '../plugin/withFirebaseService',
-    '../plugin/withAppScheme',
     [
-      '../plugin/withChannelConfig',
+      '../app.plugin.js',
       {
         channelId: 'LiveUpdatesServiceChannelId',
         channelName: 'Live Updates Service Channel Name',
