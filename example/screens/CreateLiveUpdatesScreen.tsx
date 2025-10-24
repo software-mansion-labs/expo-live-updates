@@ -38,11 +38,16 @@ export default function CreateLiveUpdatesScreen() {
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
 
+  const [minutes, setMinutes] = useState('')
+  const [hours, setHours] = useState('')
+  const [isPast, setIsPast] = useState(false)
+
   const [passSubtitle, setPassSubtitle] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
   const [passDeepLink, setPassDeepLink] = useState(true)
   const [passShortCriticalText, setPassShortCriticalText] = useState(true)
+  const [passTime, setPassTime] = useState(false)
 
   const [notificationIdString, setNotificationIdString] = useState<string>('')
   const [token, setToken] = useState<string | undefined>(undefined)
@@ -101,7 +106,21 @@ export default function CreateLiveUpdatesScreen() {
         }
       : undefined,
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
+    time: passTime ? getTimestamp() : undefined,
   })
+
+  const getTimestamp = () => {
+    const parsedHours = parseInt(hours)
+    const parsedMinutes = parseInt(minutes)
+
+    const hrs = isNaN(parsedHours) ? 0 : parsedHours
+    const mins = isNaN(parsedMinutes) ? 0 : parsedMinutes
+
+    const diffInMs = (hrs * 60 + mins) * 60 * 1000
+
+    const nowTimestamp = new Date().valueOf()
+    return isPast ? nowTimestamp - diffInMs : nowTimestamp + diffInMs
+  }
 
   const getConfig = (): LiveUpdateConfig => ({
     backgroundColor,
@@ -212,6 +231,51 @@ export default function CreateLiveUpdatesScreen() {
               onValueChange={() => setPassIconImage(toggle)}
               value={passIconImage}
             />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <View style={styles.labelWithSwitch}>
+              <Text style={styles.label}>Time:</Text>
+              <Switch
+                onValueChange={() => setPassTime(toggle)}
+                value={passTime}
+              />
+            </View>
+            {passTime && (
+              <>
+                <View style={styles.inputsRow}>
+                  <View style={styles.inputInRowContainer}>
+                    <Text style={styles.label}>Minutes:</Text>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={setMinutes}
+                      value={minutes}
+                      placeholder="10"
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  <View style={styles.inputInRowContainer}>
+                    <Text style={styles.label}>Hours:</Text>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={setHours}
+                      value={hours}
+                      placeholder="0"
+                      keyboardType="numeric"
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label}>Past notification</Text>
+                  <Switch
+                    onValueChange={() => setIsPast(toggle)}
+                    value={isPast}
+                  />
+                </View>
+              </>
+            )}
           </View>
 
           <View style={styles.inputContainer}>

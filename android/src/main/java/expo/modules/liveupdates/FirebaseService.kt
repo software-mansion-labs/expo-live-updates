@@ -29,6 +29,8 @@ data object FirebaseMessageProps {
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
   const val DEEP_LINK_URL = "deepLinkUrl"
+  const val SHOW_TIME = "showTime"
+  const val TIME = "time"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -109,6 +111,8 @@ class FirebaseService : FirebaseMessagingService() {
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
       progress = progress,
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
+      showTime = message.data[FirebaseMessageProps.SHOW_TIME]?.toBooleanStrictOrNull(),
+      time = message.data[FirebaseMessageProps.TIME]?.toLongOrNull()
     )
   }
 
