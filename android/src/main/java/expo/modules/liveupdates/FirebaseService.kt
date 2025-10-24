@@ -108,13 +108,11 @@ class FirebaseService : FirebaseMessagingService() {
       progress = progress,
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
       showTime = message.data[FirebaseMessageProps.SHOW_TIME]?.toBooleanStrictOrNull(),
-      time = message.data[FirebaseMessageProps.TIME]?.toLongOrNull()
+      time = message.data[FirebaseMessageProps.TIME]?.toLongOrNull(),
     )
   }
 
-  private fun getProgress(
-    message: RemoteMessage
-  ): LiveUpdateProgress? {
+  private fun getProgress(message: RemoteMessage): LiveUpdateProgress? {
     val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
     val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
     val progressIndeterminate =

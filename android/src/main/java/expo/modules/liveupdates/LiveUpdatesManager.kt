@@ -136,12 +136,10 @@ class LiveUpdatesManager(private val context: Context) {
       }
     }
 
-    if (state.showTime == false){
+    if (state.showTime == false) {
       notificationBuilder.setShowWhen(false)
     } else {
-      state.time?.let { time ->
-        notificationBuilder.setWhen(time)
-      }
+      state.time?.let { time -> notificationBuilder.setWhen(time) }
     }
 
     // TODO: save config by id to apply it when updating notification
