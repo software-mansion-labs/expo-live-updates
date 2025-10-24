@@ -243,51 +243,50 @@ export default function CreateLiveUpdatesScreen() {
             />
           </View>
 
-          <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Time</Text>
-              <Switch
-                onValueChange={() => setPassTime(toggle)}
-                value={passTime}
-              />
-            </View>
+          {showTime && (
+            <View style={styles.inputContainer}>
+              <View style={styles.labelWithSwitch}>
+                <Text style={styles.label}>Time</Text>
+                <Switch
+                  onValueChange={() => setPassTime(toggle)}
+                  value={passTime}
+                />
+              </View>
 
-            {passTime && (
-              <>
-                <View style={styles.inputsRow}>
-                  <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Hours:</Text>
-                    <TextInput
-                      style={[styles.input, isPast && styles.disabledInput]}
-                      onChangeText={setHours}
-                      value={hours}
-                      keyboardType="numeric"
-                      editable={!isPast}
-                    />
-                  </View>
-
-                  <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Minutes:</Text>
-                    <TextInput
-                      style={[styles.input, isPast && styles.disabledInput]}
-                      onChangeText={setMinutes}
-                      value={minutes}
-                      keyboardType="numeric"
-                      editable={!isPast}
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.labelWithSwitch}>
-                  <Text style={styles.label}>Past</Text>
-                  <Switch
-                    onValueChange={() => setIsPast(toggle)}
-                    value={isPast}
+              <View style={styles.inputsRow}>
+                <View style={styles.inputInRowContainer}>
+                  <Text style={styles.label}>Hours:</Text>
+                  <TextInput
+                    style={[styles.input, !passTime && styles.disabledInput]}
+                    onChangeText={setHours}
+                    value={hours}
+                    keyboardType="numeric"
+                    editable={passTime}
                   />
                 </View>
-              </>
-            )}
-          </View>
+
+                <View style={styles.inputInRowContainer}>
+                  <Text style={styles.label}>Minutes:</Text>
+                  <TextInput
+                    style={[styles.input, !passTime && styles.disabledInput]}
+                    onChangeText={setMinutes}
+                    value={minutes}
+                    keyboardType="numeric"
+                    editable={passTime}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.labelWithSwitch}>
+                <Text style={styles.label}>Past</Text>
+                <Switch
+                  onValueChange={() => setIsPast(toggle)}
+                  value={isPast}
+                  disabled={!passTime}
+                />
+              </View>
+            </View>
+          )}
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
