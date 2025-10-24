@@ -136,8 +136,6 @@ class LiveUpdatesManager(private val context: Context) {
       }
     }
 
-    Log.i(TAG, "time: ${state.showTime} ${state.time}")
-
     if (state.showTime == false){
       notificationBuilder.setShowWhen(false)
     } else {

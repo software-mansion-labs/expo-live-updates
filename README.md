@@ -188,7 +188,7 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test" // optional: default it will just open the app
           "showTime":"true": // optional: whether time is shown, if not provided = true
-          "time":"1761313668279" // optional: timestamp of notification time
+          "time":"1761313668279" // optional: time as timestamp
       }
    }
 }
@@ -205,7 +205,7 @@ There are some restrictions that should be followed while managing Live Updates 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 - `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
-- `'showTime'` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp by `'time'` property. All time fields are optional. By default, the notification time is displayed with current device time.
+- `'showTime'` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp by `'time'` property. All time fields are optional. By default, the notification time is displayed with the time of its creation.
 
 ## expo-live-updates is created by Software Mansion
 

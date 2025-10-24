@@ -38,8 +38,8 @@ export default function CreateLiveUpdatesScreen() {
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
 
-  const [minutes, setMinutes] = useState('')
-  const [hours, setHours] = useState('')
+  const [hours, setHours] = useState('0')
+  const [minutes, setMinutes] = useState('10')
   const [isPast, setIsPast] = useState(false)
 
   const [passSubtitle, setPassSubtitle] = useState(true)
@@ -106,10 +106,10 @@ export default function CreateLiveUpdatesScreen() {
         }
       : undefined,
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
-    time: passTime ? getTimestamp() : undefined,
+    time: passTime ? getTimeTimestamp() : undefined,
   })
 
-  const getTimestamp = () => {
+  const getTimeTimestamp = () => {
     const parsedHours = parseInt(hours)
     const parsedMinutes = parseInt(minutes)
 
@@ -202,7 +202,7 @@ export default function CreateLiveUpdatesScreen() {
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Subtitle:</Text>
+              <Text style={styles.label}>Subtitle</Text>
               <Switch
                 onValueChange={() => setPassSubtitle(toggle)}
                 value={passSubtitle}
@@ -218,7 +218,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Image:</Text>
+            <Text style={styles.label}>Image</Text>
             <Switch
               onValueChange={() => setPassImage(toggle)}
               value={passImage}
@@ -226,7 +226,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Icon image:</Text>
+            <Text style={styles.label}>Icon image</Text>
             <Switch
               onValueChange={() => setPassIconImage(toggle)}
               value={passIconImage}
@@ -235,7 +235,7 @@ export default function CreateLiveUpdatesScreen() {
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Time:</Text>
+              <Text style={styles.label}>Time</Text>
               <Switch
                 onValueChange={() => setPassTime(toggle)}
                 value={passTime}
@@ -245,30 +245,28 @@ export default function CreateLiveUpdatesScreen() {
               <>
                 <View style={styles.inputsRow}>
                   <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Minutes:</Text>
+                    <Text style={styles.label}>Hours</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={setMinutes}
-                      value={minutes}
-                      placeholder="10"
+                      onChangeText={setHours}
+                      value={hours}
                       keyboardType="numeric"
                     />
                   </View>
 
                   <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Hours:</Text>
+                    <Text style={styles.label}>Minutes</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={setHours}
-                      value={hours}
-                      placeholder="0"
+                      onChangeText={setMinutes}
+                      value={minutes}
                       keyboardType="numeric"
                     />
                   </View>
                 </View>
 
                 <View style={styles.labelWithSwitch}>
-                  <Text style={styles.label}>Past notification</Text>
+                  <Text style={styles.label}>Past</Text>
                   <Switch
                     onValueChange={() => setIsPast(toggle)}
                     value={isPast}
@@ -280,7 +278,7 @@ export default function CreateLiveUpdatesScreen() {
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Short critical text:</Text>
+              <Text style={styles.label}>Short critical text</Text>
               <Switch
                 onValueChange={() => setPassShortCriticalText(toggle)}
                 value={passShortCriticalText}
@@ -299,7 +297,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Deep link URL:</Text>
+            <Text style={styles.label}>Deep link URL</Text>
             <Switch
               onValueChange={() => setPassDeepLink(toggle)}
               value={passDeepLink}
@@ -371,7 +369,7 @@ export default function CreateLiveUpdatesScreen() {
               <View style={styles.inputContainer}>
                 <View style={styles.labelWithSwitch}>
                   <Text style={styles.label}>
-                    Background color (hex) (for SDK &lt; 16 Baklava):
+                    Background color (hex) (for SDK &lt; 16 Baklava)
                   </Text>
                 </View>
                 <TextInput
