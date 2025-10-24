@@ -381,7 +381,7 @@ export default function CreateLiveUpdatesScreen() {
               <View style={styles.inputContainer}>
                 <View style={styles.labelWithSwitch}>
                   <Text style={styles.label}>
-                    Background color (hex) (for SDK &lt; 16 Baklava)
+                    Background color (hex) (for SDK &lt; 16 Baklava):
                   </Text>
                 </View>
                 <TextInput
