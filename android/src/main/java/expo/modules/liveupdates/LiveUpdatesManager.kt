@@ -126,6 +126,9 @@ class LiveUpdatesManager(private val context: Context) {
 
     state.progress?.let { progress ->
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+        val style = createProgressStyle(progress)
+        notificationBuilder.setStyle(style)
+      } else {
         if (progress.indeterminate == true) {
           notificationBuilder.setProgress(0, 0, true)
         } else {
@@ -133,9 +136,6 @@ class LiveUpdatesManager(private val context: Context) {
             notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, it, false)
           }
         }
-      } else {
-        val style = createProgressStyle(progress)
-        notificationBuilder.setStyle(style)
       }
     }
 

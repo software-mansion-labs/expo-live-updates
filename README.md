@@ -118,11 +118,11 @@ type LiveUpdateProgress = {
   max?: number // Maximum progress value (default: 100)
   progress?: number // Current progress value
   indeterminate?: boolean // Whether to show indeterminate progress bar
-  segments?: ProgressSegment[] // Segments for dividing the progress bar
+  segments?: LiveUpdateProgressSegment[] // Segments for dividing the progress bar
 }
 
-type ProgressSegment = {
-  value: number // Segment's length
+type LiveUpdateProgressSegment = {
+  length: number // Segment's length
   color?: string // Segment's color
 }
 ```
