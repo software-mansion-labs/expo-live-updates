@@ -53,6 +53,7 @@ export default function CreateLiveUpdatesScreen() {
   const [progressMax, setProgressMax] = useState('100')
   const [progressValue, setProgressValue] = useState('50')
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
+  const [passSegments, setPassSegments] = useState(false)
 
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -98,10 +99,12 @@ export default function CreateLiveUpdatesScreen() {
             ? 0
             : parseInt(progressValue),
           indeterminate: progressIndeterminate,
-          segments: [
-            { value: 10, color: 'red' },
-            { value: 10, color: 'blue' },
-          ],
+          segments: passSegments
+            ? [
+                { value: 30, color: 'red' },
+                { value: 70, color: 'blue' },
+              ]
+            : undefined,
         }
       : undefined,
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
@@ -286,12 +289,13 @@ export default function CreateLiveUpdatesScreen() {
                     <TextInput
                       style={[
                         styles.input,
-                        progressIndeterminate && styles.disabledInput,
+                        (progressIndeterminate || passSegments) &&
+                          styles.disabledInput,
                       ]}
                       onChangeText={setProgressMax}
                       value={progressMax}
                       placeholder="Maximum, default 100"
-                      editable={!progressIndeterminate}
+                      editable={!(progressIndeterminate || passSegments)}
                       keyboardType="numeric"
                     />
                   </View>
@@ -302,6 +306,14 @@ export default function CreateLiveUpdatesScreen() {
                   <Switch
                     onValueChange={() => setProgressIndeterminate(toggle)}
                     value={progressIndeterminate}
+                  />
+                </View>
+
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label}>Segments</Text>
+                  <Switch
+                    onValueChange={() => setPassSegments(toggle)}
+                    value={passSegments}
                   />
                 </View>
               </>

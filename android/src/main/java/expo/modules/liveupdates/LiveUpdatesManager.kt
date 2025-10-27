@@ -124,7 +124,20 @@ class LiveUpdatesManager(private val context: Context) {
       }
     }
 
-    state.progress?.let { progress -> setUpProgress(progress, notificationBuilder) }
+    state.progress?.let { progress ->
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+        if (progress.indeterminate == true) {
+          notificationBuilder.setProgress(0, 0, true)
+        } else {
+          progress.progress.let {
+            notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, it, false)
+          }
+        }
+      } else {
+        val style = createProgressStyle(progress)
+        notificationBuilder.setStyle(style)
+      }
+    }
 
     // TODO: save config by id to apply it when updating notification
     config?.backgroundColor?.let { backgroundColor ->
@@ -144,32 +157,20 @@ class LiveUpdatesManager(private val context: Context) {
     return notificationBuilder.build()
   }
 
-  private fun setUpProgress(
-    progress: LiveUpdateProgress,
-    notificationBuilder: NotificationCompat.Builder,
-  ) {
-    val progressValue = progress.progress
-
-    if (progress.indeterminate == true) {
-      notificationBuilder.setProgress(0, 0, true)
-    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA || progress.segments == null) {
-      progressValue?.let {
-        notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, it, false)
+  private fun createProgressStyle(progress: LiveUpdateProgress): NotificationCompat.ProgressStyle {
+    val segments =
+      progress.segments?.map { progress ->
+        val segment = NotificationCompat.ProgressStyle.Segment(progress.value)
+        progress.color?.let { color -> segment.setColor(color.toColorInt()) }
+        segment
       }
-    } else {
-      val segments =
-        progress.segments.map { progress ->
-          val segment = NotificationCompat.ProgressStyle.Segment(progress.value)
-          progress.color?.let { color -> segment.setColor(color.toColorInt()) }
-          segment
-        }
 
-      val style = NotificationCompat.ProgressStyle().setProgressSegments(segments)
+    val style = NotificationCompat.ProgressStyle()
 
-      progressValue?.let { style.setProgress(it) }
+    segments?.let { style.setProgressSegments(it) }
+    progress.progress?.let { style.setProgress(it) }
 
-      notificationBuilder.setStyle(style)
-    }
+    return style
   }
 
   private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
