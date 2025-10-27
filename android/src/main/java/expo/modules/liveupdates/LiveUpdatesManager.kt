@@ -158,15 +158,25 @@ class LiveUpdatesManager(private val context: Context) {
   }
 
   private fun createProgressStyle(progress: LiveUpdateProgress): NotificationCompat.ProgressStyle {
+    val points =
+      progress.points?.map {
+        val (position, color) = it
+        val point = NotificationCompat.ProgressStyle.Point(position)
+        color?.let { color -> point.setColor(color.toColorInt()) }
+        point
+      }
+
     val segments =
-      progress.segments?.map { progress ->
-        val segment = NotificationCompat.ProgressStyle.Segment(progress.length)
-        progress.color?.let { color -> segment.setColor(color.toColorInt()) }
+      progress.segments?.map {
+        val (length, color) = it
+        val segment = NotificationCompat.ProgressStyle.Segment(length)
+        color?.let { color -> segment.setColor(color.toColorInt()) }
         segment
       } ?: listOf(NotificationCompat.ProgressStyle.Segment(progress.max ?: DEFAULT_MAX_PROGRESS))
 
     val style = NotificationCompat.ProgressStyle().setProgressSegments(segments)
 
+    points?.let { style.setProgressPoints(it) }
     progress.progress?.let { style.setProgress(it) }
 
     return style

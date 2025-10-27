@@ -3,6 +3,9 @@ package expo.modules.liveupdates
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 
+data class LiveUpdateProgressPoint(@Field val position: Int, @Field val color: String? = null) :
+  Record
+
 data class LiveUpdateProgressSegment(@Field val length: Int, @Field val color: String? = null) :
   Record
 
@@ -10,6 +13,7 @@ data class LiveUpdateProgress(
   @Field val max: Int?,
   @Field val progress: Int?,
   @Field val indeterminate: Boolean?,
+  @Field val points: ArrayList<LiveUpdateProgressPoint>? = null,
   @Field val segments: ArrayList<LiveUpdateProgressSegment>? = null,
 ) : Record
 

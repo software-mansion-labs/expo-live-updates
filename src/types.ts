@@ -1,3 +1,8 @@
+export type LiveUpdateProgressPoint = {
+  position: number
+  color?: string
+}
+
 export type LiveUpdateProgressSegment = {
   length: number
   color?: string
@@ -7,6 +12,7 @@ export type LiveUpdateProgress = {
   max?: number
   progress?: number
   indeterminate?: boolean
+  points?: LiveUpdateProgressPoint[]
   segments?: LiveUpdateProgressSegment[]
 }
 
