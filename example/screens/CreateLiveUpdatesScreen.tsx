@@ -32,7 +32,7 @@ const toggle = (previousState: boolean) => !previousState
 export default function CreateLiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [text, onChangeText] = useState('This is a text')
-  const [subText, onChangeSubText] = useState('This is a subText')
+  const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
