@@ -103,7 +103,8 @@ class LiveUpdatesManager(private val context: Context) {
       NotificationCompat.Builder(context, channelId)
         .setContentTitle(state.title)
         .setSmallIcon(android.R.drawable.star_on)
-        .setContentText(state.subtitle)
+        .setContentText(state.text)
+        .setSubText(state.subText)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
       notificationBuilder.setShortCriticalText(state.shortCriticalText)
