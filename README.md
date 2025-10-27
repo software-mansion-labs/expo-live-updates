@@ -108,7 +108,7 @@ Defines the visual content and progress information for a Live Update notificati
 type LiveUpdateState = {
   title: string // Main title text
   text?: string // Additional descriptive text
-  subText?: string // Subtext
+  subText?: string // Subtext text
   imageName?: string // Name of image resource
   dynamicIslandImageName?: string // Custom image for dynamic notification area
   progress?: LiveUpdateProgress // Progress bar configuration
