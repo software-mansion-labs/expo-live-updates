@@ -101,8 +101,8 @@ export default function CreateLiveUpdatesScreen() {
           indeterminate: progressIndeterminate,
           segments: passSegments
             ? [
-                { value: 30, color: 'red' },
-                { value: 70, color: 'blue' },
+                { length: 30, color: 'red' },
+                { length: 70, color: 'blue' },
               ]
             : undefined,
         }
