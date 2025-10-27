@@ -108,7 +108,7 @@ Defines the visual content and progress information for a Live Update notificati
 type LiveUpdateState = {
   title: string // Main title text
   text?: string // Additional descriptive text
-  subText?: string // Additional short text
+  subText?: string // Subtext
   imageName?: string // Name of image resource
   dynamicIslandImageName?: string // Custom image for dynamic notification area
   progress?: LiveUpdateProgress // Progress bar configuration
@@ -182,7 +182,7 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "notificationId":"1", // shouldn't be passed when event is set to 'start'
           "title":"Firebase message",
           "text":"This is a message sent via Firebase", // optional
-          "subText":"Firebase", // optional: subText value
+          "subText":"Firebase", // optional
           "progressMax":"100", // optional: maximum progress value, if no provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
@@ -205,7 +205,7 @@ There are some restrictions that should be followed while managing Live Updates 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 - `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
-- `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in notification header.
+- `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
 
 ## expo-live-updates is created by Software Mansion
 
