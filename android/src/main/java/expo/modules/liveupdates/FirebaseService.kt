@@ -22,8 +22,8 @@ data object FirebaseMessageProps {
   const val NOTIFICATION_ID = "notificationId"
   const val EVENT = "event"
   const val TITLE = "title"
-  const val SUB_TEXT = "subText"
   const val TEXT = "text"
+  const val SUB_TEXT = "subText"
   const val PROGRESS_MAX = "progressMax"
   const val PROGRESS_VALUE = "progressValue"
   const val PROGRESS_INDETERMINATE = "progressIndeterminate"
@@ -107,8 +107,8 @@ class FirebaseService : FirebaseMessagingService() {
 
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
-      subText = message.data[FirebaseMessageProps.SUB_TEXT],
       text = message.data[FirebaseMessageProps.TEXT],
+      subText = message.data[FirebaseMessageProps.SUB_TEXT],
       progress = progress,
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
     )
