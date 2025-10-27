@@ -187,7 +187,7 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
           "backgroundColor":"red", // optional, works only on SDK < Baklava
-          "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
+          "shortCriticalText":"text", // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test" // optional: default it will just open the app
       }
    }
