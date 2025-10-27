@@ -118,6 +118,12 @@ type LiveUpdateProgress = {
   max?: number // Maximum progress value (default: 100)
   progress?: number // Current progress value
   indeterminate?: boolean // Whether to show indeterminate progress bar
+  segments?: ProgressSegment[] // Segments for dividing the progress bar
+}
+
+type ProgressSegment = {
+  value: number // Segment's length
+  color?: string // Segment's color
 }
 ```
 
@@ -203,6 +209,7 @@ There are some restrictions that should be followed while managing Live Updates 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 - `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
+- `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
 
 ## expo-live-updates is created by Software Mansion
 

@@ -1,5 +1,5 @@
-export type ProgressSegment = {
-  value: number
+export type LiveUpdateProgressSegment = {
+  length: number
   color?: string
 }
 
@@ -7,7 +7,7 @@ export type LiveUpdateProgress = {
   max?: number
   progress?: number
   indeterminate?: boolean
-  segments?: ProgressSegment[]
+  segments?: LiveUpdateProgressSegment[]
 }
 
 export type LiveUpdateState = {

@@ -129,7 +129,7 @@ class LiveUpdatesManager(private val context: Context) {
         if (progress.indeterminate == true) {
           notificationBuilder.setProgress(0, 0, true)
         } else {
-          progress.progress.let {
+          progress.progress?.let {
             notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, it, false)
           }
         }
@@ -160,7 +160,7 @@ class LiveUpdatesManager(private val context: Context) {
   private fun createProgressStyle(progress: LiveUpdateProgress): NotificationCompat.ProgressStyle {
     val segments =
       progress.segments?.map { progress ->
-        val segment = NotificationCompat.ProgressStyle.Segment(progress.value)
+        val segment = NotificationCompat.ProgressStyle.Segment(progress.length)
         progress.color?.let { color -> segment.setColor(color.toColorInt()) }
         segment
       }
