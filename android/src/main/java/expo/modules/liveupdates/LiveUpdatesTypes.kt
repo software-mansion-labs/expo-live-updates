@@ -3,10 +3,13 @@ package expo.modules.liveupdates
 import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 
+data class ProgressSegment(@Field val value: Int, @Field val color: String? = null) : Record
+
 data class LiveUpdateProgress(
   @Field val max: Int?,
   @Field val progress: Int?,
   @Field val indeterminate: Boolean?,
+  @Field val segments: ArrayList<ProgressSegment>? = null,
 ) : Record
 
 data class LiveUpdateState(

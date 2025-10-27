@@ -98,6 +98,10 @@ export default function CreateLiveUpdatesScreen() {
             ? 0
             : parseInt(progressValue),
           indeterminate: progressIndeterminate,
+          segments: [
+            { value: 10, color: 'red' },
+            { value: 10, color: 'blue' },
+          ],
         }
       : undefined,
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
