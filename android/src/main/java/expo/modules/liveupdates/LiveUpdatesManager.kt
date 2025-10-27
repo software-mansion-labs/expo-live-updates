@@ -125,12 +125,12 @@ class LiveUpdatesManager(private val context: Context) {
     }
 
     state.progress?.let { progress ->
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-        val style = createProgressStyle(progress)
-        notificationBuilder.setStyle(style)
+      if (progress.indeterminate == true) {
+        notificationBuilder.setProgress(0, 0, true)
       } else {
-        if (progress.indeterminate == true) {
-          notificationBuilder.setProgress(0, 0, true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+          val style = createProgressStyle(progress)
+          notificationBuilder.setStyle(style)
         } else {
           progress.progress?.let {
             notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, it, false)
@@ -163,11 +163,10 @@ class LiveUpdatesManager(private val context: Context) {
         val segment = NotificationCompat.ProgressStyle.Segment(progress.length)
         progress.color?.let { color -> segment.setColor(color.toColorInt()) }
         segment
-      }
+      } ?: listOf(NotificationCompat.ProgressStyle.Segment(progress.max ?: DEFAULT_MAX_PROGRESS))
 
-    val style = NotificationCompat.ProgressStyle()
+    val style = NotificationCompat.ProgressStyle().setProgressSegments(segments)
 
-    segments?.let { style.setProgressSegments(it) }
     progress.progress?.let { style.setProgress(it) }
 
     return style
