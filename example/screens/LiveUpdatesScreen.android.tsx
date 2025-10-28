@@ -31,23 +31,25 @@ const toggle = (previousState: boolean) => !previousState
 
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
-  const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
+  const [text, onChangeText] = useState('This is a text')
+  const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
   const [imageUri, setImageUri] = useState<string>()
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
-  const [showTime, setShowTime] = useState(true)
+  const [showTime, setShowTime] = useState(false)
 
   const [hours, setHours] = useState('0')
   const [minutes, setMinutes] = useState('10')
   const [isPast, setIsPast] = useState(false)
 
-  const [passSubtitle, setPassSubtitle] = useState(true)
+  const [passText, setPassText] = useState(true)
   const [passImage, setPassImage] = useState(true)
   const [passIconImage, setPassIconImage] = useState(true)
   const [passDeepLink, setPassDeepLink] = useState(true)
   const [passShortCriticalText, setPassShortCriticalText] = useState(true)
+  const [passSubText, setPassSubText] = useState(true)
   const [passTime, setPassTime] = useState(false)
 
   const [notificationIdString, setNotificationIdString] = useState<string>('')
@@ -94,7 +96,8 @@ export default function LiveUpdatesScreen() {
 
   const getState = (): LiveUpdateState => ({
     title,
-    subtitle: passSubtitle ? subtitle : undefined,
+    text: passText ? text : undefined,
+    subText: passSubText ? subText : undefined,
     imageName: passImage ? imageUri : undefined,
     dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
     progress: passProgress
@@ -204,18 +207,35 @@ export default function LiveUpdatesScreen() {
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Subtitle:</Text>
+              <Text style={styles.label}>Text:</Text>
               <Switch
-                onValueChange={() => setPassSubtitle(toggle)}
-                value={passSubtitle}
+                onValueChange={() => setPassText(toggle)}
+                value={passText}
               />
             </View>
             <TextInput
-              style={[styles.input, !passSubtitle && styles.disabledInput]}
-              onChangeText={onChangeSubtitle}
-              placeholder="Subtitle"
-              value={subtitle}
-              editable={passSubtitle}
+              style={[styles.input, !passText && styles.disabledInput]}
+              onChangeText={onChangeText}
+              placeholder="Text"
+              value={text}
+              editable={passText}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <View style={styles.labelWithSwitch}>
+              <Text style={styles.label}>SubText:</Text>
+              <Switch
+                onValueChange={() => setPassSubText(toggle)}
+                value={passSubText}
+              />
+            </View>
+            <TextInput
+              style={[styles.input, !passSubText && styles.disabledInput]}
+              onChangeText={onChangeSubText}
+              placeholder="SubText"
+              value={subText}
+              editable={passSubText}
             />
           </View>
 
