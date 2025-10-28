@@ -181,12 +181,14 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "notificationId":"1", // shouldn't be passed when event is set to 'start'
           "title":"Firebase message",
           "subtitle":"This is a message sent via Firebase", // optional
-          "progressMax":"100", // optional: maximum progress value, if no provided = 100
+          "progressMax":"100", // optional: maximum progress value, if not provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
           "backgroundColor":"red", // optional, works only on SDK < Baklava
           "shortCriticalText":"text" // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test" // optional: default it will just open the app
+          "showTime":"true": // optional: whether time is shown, if not provided = true
+          "time":"1761313668279" // optional: time as timestamp
       }
    }
 }
@@ -203,6 +205,8 @@ There are some restrictions that should be followed while managing Live Updates 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 - `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
+- `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
+- `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
 
 ## expo-live-updates is created by Software Mansion
 

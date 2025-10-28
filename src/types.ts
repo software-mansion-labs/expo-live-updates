@@ -11,6 +11,8 @@ export type LiveUpdateState = {
   dynamicIslandImageName?: string
   progress?: LiveUpdateProgress
   shortCriticalText?: string
+  showTime?: boolean
+  time?: number
 }
 
 export type LiveUpdateConfig = {

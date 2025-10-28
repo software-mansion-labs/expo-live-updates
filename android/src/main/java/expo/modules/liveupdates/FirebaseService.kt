@@ -9,6 +9,8 @@ import androidx.annotation.RequiresPermission
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlin.text.toBooleanStrictOrNull
+import kotlin.text.toIntOrNull
 
 const val FIREBASE_TAG = "FirebaseService"
 
@@ -29,6 +31,8 @@ data object FirebaseMessageProps {
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
   const val DEEP_LINK_URL = "deepLinkUrl"
+  const val SHOW_TIME = "showTime"
+  const val TIME = "time"
 }
 
 class FirebaseService : FirebaseMessagingService() {
@@ -96,20 +100,31 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun getLiveUpdateState(message: RemoteMessage): LiveUpdateState {
     val title = message.data[FirebaseMessageProps.TITLE]
-
-    val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
-    val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
-    val progressIndeterminate =
-      message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
-
-    val progress = getProgress(progressValue, progressIndeterminate, progressMax)
+    val progress = getProgress(message)
 
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       subtitle = message.data[FirebaseMessageProps.SUBTITLE],
       progress = progress,
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
+      showTime = message.data[FirebaseMessageProps.SHOW_TIME]?.toBooleanStrictOrNull(),
+      time = message.data[FirebaseMessageProps.TIME]?.toLongOrNull(),
     )
+  }
+
+  private fun getProgress(message: RemoteMessage): LiveUpdateProgress? {
+    val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
+    val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
+    val progressIndeterminate =
+      message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
+
+    return if (progressValue != null || progressIndeterminate == true) {
+      LiveUpdateProgress(
+        max = progressMax,
+        progress = progressValue,
+        indeterminate = progressIndeterminate,
+      )
+    } else null
   }
 
   private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
@@ -134,16 +149,3 @@ class FirebaseService : FirebaseMessagingService() {
     }
   }
 }
-
-private fun getProgress(
-  progressValue: Int?,
-  progressIndeterminate: Boolean?,
-  progressMax: Int?,
-): LiveUpdateProgress? =
-  if (progressValue != null || progressIndeterminate == true) {
-    LiveUpdateProgress(
-      max = progressMax,
-      progress = progressValue,
-      indeterminate = progressIndeterminate,
-    )
-  } else null
