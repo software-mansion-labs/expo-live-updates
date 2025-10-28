@@ -3,10 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as Linking from 'expo-linking'
 
 import TestScreen from './screens/TestScreen'
-import CreateLiveUpdatesScreen from './screens/CreateLiveUpdatesScreen'
+import LiveUpdatesScreen from './screens/LiveUpdatesScreen'
 
 export type RootStackParamList = {
-  CreateLiveUpdates: undefined
+  LiveUpdates: undefined
   Test: undefined
 }
 
@@ -21,10 +21,7 @@ export default function App() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="CreateLiveUpdates"
-          component={CreateLiveUpdatesScreen}
-        />
+        <Stack.Screen name="LiveUpdates" component={LiveUpdatesScreen} />
         <Stack.Screen name="Test" component={TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>

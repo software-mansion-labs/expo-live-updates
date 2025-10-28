@@ -5,6 +5,7 @@
     "paths": {
       "expo-live-updates": ["../src/index"],
       "expo-live-updates/*": ["../src/*"]
-    }
+    },
+    "moduleSuffixes": [".android", ".ios", ""]
   }
 }

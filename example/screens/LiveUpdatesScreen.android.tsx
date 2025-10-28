@@ -29,7 +29,7 @@ import { Asset } from 'expo-asset'
 
 const toggle = (previousState: boolean) => !previousState
 
-export default function CreateLiveUpdatesScreen() {
+export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
@@ -38,6 +38,11 @@ export default function CreateLiveUpdatesScreen() {
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
+  const [showTime, setShowTime] = useState(true)
+
+  const [hours, setHours] = useState('0')
+  const [minutes, setMinutes] = useState('10')
+  const [isPast, setIsPast] = useState(false)
 
   const [passText, setPassText] = useState(true)
   const [passImage, setPassImage] = useState(true)
@@ -45,6 +50,7 @@ export default function CreateLiveUpdatesScreen() {
   const [passDeepLink, setPassDeepLink] = useState(true)
   const [passShortCriticalText, setPassShortCriticalText] = useState(true)
   const [passSubText, setPassSubText] = useState(true)
+  const [passTime, setPassTime] = useState(false)
 
   const [notificationIdString, setNotificationIdString] = useState<string>('')
   const [token, setToken] = useState<string | undefined>(undefined)
@@ -104,7 +110,22 @@ export default function CreateLiveUpdatesScreen() {
         }
       : undefined,
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
+    showTime,
+    time: passTime ? getTimeTimestamp() : undefined,
   })
+
+  const getTimeTimestamp = () => {
+    const parsedHours = parseInt(hours)
+    const parsedMinutes = parseInt(minutes)
+
+    const hrs = isNaN(parsedHours) ? 0 : parsedHours
+    const mins = isNaN(parsedMinutes) ? 0 : parsedMinutes
+
+    const diffInMs = (hrs * 60 + mins) * 60 * 1000
+
+    const nowTimestamp = new Date().valueOf()
+    return isPast ? nowTimestamp - diffInMs : nowTimestamp + diffInMs
+  }
 
   const getConfig = (): LiveUpdateConfig => ({
     backgroundColor,
@@ -175,7 +196,7 @@ export default function CreateLiveUpdatesScreen() {
       <ScrollView contentContainerStyle={styles.screenContainer}>
         <View style={styles.sectionContainer}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Title</Text>
+            <Text style={styles.label}>Title:</Text>
             <TextInput
               style={styles.input}
               onChangeText={onChangeTitle}
@@ -219,7 +240,7 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Image:</Text>
+            <Text style={styles.label}>Image</Text>
             <Switch
               onValueChange={() => setPassImage(toggle)}
               value={passImage}
@@ -227,12 +248,65 @@ export default function CreateLiveUpdatesScreen() {
           </View>
 
           <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Icon image:</Text>
+            <Text style={styles.label}>Icon image</Text>
             <Switch
               onValueChange={() => setPassIconImage(toggle)}
               value={passIconImage}
             />
           </View>
+
+          <View style={styles.labelWithSwitch}>
+            <Text style={styles.label}>Show time</Text>
+            <Switch
+              onValueChange={() => setShowTime(toggle)}
+              value={showTime}
+            />
+          </View>
+
+          {showTime && (
+            <View style={styles.inputContainer}>
+              <View style={styles.labelWithSwitch}>
+                <Text style={styles.label}>Time</Text>
+                <Switch
+                  onValueChange={() => setPassTime(toggle)}
+                  value={passTime}
+                />
+              </View>
+
+              <View style={styles.inputsRow}>
+                <View style={styles.inputInRowContainer}>
+                  <Text style={styles.label}>Hours:</Text>
+                  <TextInput
+                    style={[styles.input, !passTime && styles.disabledInput]}
+                    onChangeText={setHours}
+                    value={hours}
+                    keyboardType="numeric"
+                    editable={passTime}
+                  />
+                </View>
+
+                <View style={styles.inputInRowContainer}>
+                  <Text style={styles.label}>Minutes:</Text>
+                  <TextInput
+                    style={[styles.input, !passTime && styles.disabledInput]}
+                    onChangeText={setMinutes}
+                    value={minutes}
+                    keyboardType="numeric"
+                    editable={passTime}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.labelWithSwitch}>
+                <Text style={styles.label}>Past</Text>
+                <Switch
+                  onValueChange={() => setIsPast(toggle)}
+                  value={isPast}
+                  disabled={!passTime}
+                />
+              </View>
+            </View>
+          )}
 
           <View style={styles.inputContainer}>
             <View style={styles.labelWithSwitch}>
@@ -283,7 +357,7 @@ export default function CreateLiveUpdatesScreen() {
               <>
                 <View style={styles.inputsRow}>
                   <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Progress value</Text>
+                    <Text style={styles.label}>Progress value:</Text>
                     <TextInput
                       style={[
                         styles.input,
@@ -298,7 +372,7 @@ export default function CreateLiveUpdatesScreen() {
                   </View>
 
                   <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Progress max</Text>
+                    <Text style={styles.label}>Progress max:</Text>
                     <TextInput
                       style={[
                         styles.input,
@@ -358,7 +432,7 @@ export default function CreateLiveUpdatesScreen() {
           <Text style={styles.sectionTitle}>Manage existing Live Update</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Live Update ID</Text>
+            <Text style={styles.label}>Live Update ID:</Text>
             <View style={styles.manageUpdatesContainer}>
               <TextInput
                 style={[styles.input, styles.manageUpdatesInput]}
@@ -517,7 +591,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   sectionContainer: {
-    gap: 12,
+    gap: 14,
   },
   sectionTitle: {
     fontSize: 18,

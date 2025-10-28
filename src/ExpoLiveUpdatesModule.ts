@@ -1,4 +1,4 @@
-import { NativeModule, requireNativeModule } from 'expo'
+import { NativeModule, requireOptionalNativeModule } from 'expo'
 import type {
   LiveUpdateState,
   LiveUpdateConfig,
@@ -23,7 +23,7 @@ declare class ExpoLiveUpdatesModule extends NativeModule<ExpoLiveUpdatesModuleEv
   addTokenChangeListener: () => EventSubscription | undefined
 }
 
-const module = requireNativeModule<ExpoLiveUpdatesModule>(
+const module = requireOptionalNativeModule<ExpoLiveUpdatesModule>(
   'ExpoLiveUpdatesModule',
 )
 
