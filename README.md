@@ -188,8 +188,8 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
           "backgroundColor":"red", // optional, works only on SDK < Baklava
           "shortCriticalText":"text", // optional: shouldn't be longer than 7 characters
-          "deepLinkUrl":"/Test" // optional: default it will just open the app
-          "showTime":"true": // optional: whether time is shown, if not provided = true
+          "deepLinkUrl":"/Test", // optional: default it will just open the app
+          "showTime":"true", // optional: whether time is shown, if not provided = true
           "time":"1761313668279" // optional: time as timestamp
       }
    }
