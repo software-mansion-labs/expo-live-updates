@@ -29,7 +29,7 @@ import { Asset } from 'expo-asset'
 
 const toggle = (previousState: boolean) => !previousState
 
-export default function CreateLiveUpdatesScreen() {
+export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [subtitle, onChangeSubtitle] = useState('This is a subtitle')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
