@@ -4,6 +4,7 @@ import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class LiveUpdateProgressPoint(@Field val position: Int, @Field val color: String? = null) :
   Record
 

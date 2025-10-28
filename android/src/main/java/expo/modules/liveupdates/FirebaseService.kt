@@ -30,6 +30,7 @@ data object FirebaseMessageProps {
   const val PROGRESS_MAX = "progressMax"
   const val PROGRESS_VALUE = "progressValue"
   const val PROGRESS_INDETERMINATE = "progressIndeterminate"
+  const val PROGRESS_POINTS = "progressPoints"
   const val PROGRESS_SEGMENTS = "progressSegments"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
@@ -122,6 +123,11 @@ class FirebaseService : FirebaseMessagingService() {
     val progressIndeterminate =
       message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
 
+    val pointsJson = message.data[FirebaseMessageProps.PROGRESS_POINTS]
+    val points = pointsJson?.let {
+      Json.decodeFromString<ArrayList<LiveUpdateProgressPoint>>(it)
+    }
+
     val segmentsJson = message.data[FirebaseMessageProps.PROGRESS_SEGMENTS]
     val segments = segmentsJson?.let {
       Json.decodeFromString<ArrayList<LiveUpdateProgressSegment>>(it)
@@ -132,6 +138,7 @@ class FirebaseService : FirebaseMessagingService() {
         max = progressMax,
         progress = progressValue,
         indeterminate = progressIndeterminate,
+        points = points,
         segments = segments
       )
     } else null
