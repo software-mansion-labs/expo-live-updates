@@ -18,11 +18,14 @@ export type LiveUpdateProgress = {
 
 export type LiveUpdateState = {
   title: string
-  subtitle?: string
+  text?: string
+  subText?: string
   imageName?: string
   dynamicIslandImageName?: string
   progress?: LiveUpdateProgress
   shortCriticalText?: string
+  showTime?: boolean
+  time?: number
 }
 
 export type LiveUpdateConfig = {

@@ -103,7 +103,8 @@ class LiveUpdatesManager(private val context: Context) {
       NotificationCompat.Builder(context, channelId)
         .setContentTitle(state.title)
         .setSmallIcon(android.R.drawable.star_on)
-        .setContentText(state.subtitle)
+        .setContentText(state.text)
+        .setSubText(state.subText)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
       notificationBuilder.setShortCriticalText(state.shortCriticalText)
@@ -137,6 +138,12 @@ class LiveUpdatesManager(private val context: Context) {
           }
         }
       }
+    }
+
+    if (state.showTime == false) {
+      notificationBuilder.setShowWhen(false)
+    } else {
+      state.time?.let { time -> notificationBuilder.setWhen(time) }
     }
 
     // TODO: save config by id to apply it when updating notification

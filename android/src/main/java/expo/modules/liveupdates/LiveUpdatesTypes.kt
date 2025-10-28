@@ -19,11 +19,14 @@ data class LiveUpdateProgress(
 
 data class LiveUpdateState(
   @Field val title: String,
-  @Field val subtitle: String? = null,
+  @Field val text: String? = null,
+  @Field val subText: String? = null,
   @Field val imageName: String? = null,
   @Field val smallImageName: String? = null,
   @Field val shortCriticalText: String? = null,
   @Field val progress: LiveUpdateProgress? = null,
+  @Field val showTime: Boolean? = null,
+  @Field val time: Long? = null,
 ) : Record
 
 data class LiveUpdateConfig(
