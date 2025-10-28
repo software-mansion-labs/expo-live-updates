@@ -38,7 +38,7 @@ export default function LiveUpdatesScreen() {
   const [iconImageUri, setIconImageUri] = useState<string>()
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
-  const [showTime, setShowTime] = useState(true)
+  const [showTime, setShowTime] = useState(false)
 
   const [hours, setHours] = useState('0')
   const [minutes, setMinutes] = useState('10')
