@@ -226,7 +226,7 @@ There are some restrictions that should be followed while managing Live Updates 
 - `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
 - `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
 - `progressPoints` must be specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
-- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegment`.
+- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegments`.
 
 ## expo-live-updates is created by Software Mansion
 
