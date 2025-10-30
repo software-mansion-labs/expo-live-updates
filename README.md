@@ -225,8 +225,8 @@ There are some restrictions that should be followed while managing Live Updates 
 - `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
 - `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
 - `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
-- `progressPoints` must be specific format. Convert your points of type `ProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
-- `progressSegments` must be specific format. Convert your segments of type `ProgressSegment[]` to JSON and pass string with JSON `progressSegment`.
+- `progressPoints` must be specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
+- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegment`.
 
 ## expo-live-updates is created by Software Mansion
 
