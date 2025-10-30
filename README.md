@@ -198,8 +198,8 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "progressMax":"100", // optional: maximum progress value, if not provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
-          "progressSegments":"[{\"length\":50,\"color\":\"red\"},{\"length\":100,\"color\":\"blue\"}]", // optional: should be a string with JSON
           "progressPoints":"[{\"position\":10,\"color\":\"red\"},{\"position\":50,\"color\":\"blue\"}]", // optional: should be a string with JSON
+          "progressSegments":"[{\"length\":50,\"color\":\"red\"},{\"length\":100,\"color\":\"blue\"}]", // optional: should be a string with JSON
           "backgroundColor":"red", // optional, works only on SDK < Baklava
           "shortCriticalText":"text", // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test", // optional: default it will just open the app
