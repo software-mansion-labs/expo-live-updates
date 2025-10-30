@@ -22,7 +22,8 @@ export default function CustomInput({
 }: CustomInputProps) {
   const editableText = useMemo(() => {
     const switchValue = labelProps.switchProps?.value
-    return editable !== undefined ? editable : (switchValue ?? true)
+    // eslint-disable-next-line prettier/prettier
+    return editable !== undefined ? editable : switchValue ?? true
   }, [editable, labelProps.switchProps])
 
   return (
