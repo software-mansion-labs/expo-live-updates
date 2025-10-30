@@ -18,16 +18,14 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
   View,
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
-
-const toggle = (previousState: boolean) => !previousState
+import CustomInput from '../components/CustomInput'
+import CustomLabel from '../components/CustomLabel'
 
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
@@ -63,11 +61,6 @@ export default function LiveUpdatesScreen() {
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
   const [passPoints, setPassPoints] = useState(false)
   const [passSegments, setPassSegments] = useState(false)
-
-  const disableMaxPoints = useMemo(
-    () => progressIndeterminate || passSegments,
-    [passSegments, progressIndeterminate],
-  )
 
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -214,241 +207,156 @@ export default function LiveUpdatesScreen() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.screenContainer}>
         <View style={styles.sectionContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Title:</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={onChangeTitle}
-              placeholder="Live Update title"
-              value={title}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Text:</Text>
-              <Switch
-                onValueChange={() => setPassText(toggle)}
-                value={passText}
-              />
-            </View>
-            <TextInput
-              style={[styles.input, !passText && styles.disabledInput]}
-              onChangeText={onChangeText}
-              placeholder="Text"
-              value={text}
-              editable={passText}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>SubText:</Text>
-              <Switch
-                onValueChange={() => setPassSubText(toggle)}
-                value={passSubText}
-              />
-            </View>
-            <TextInput
-              style={[styles.input, !passSubText && styles.disabledInput]}
-              onChangeText={onChangeSubText}
-              placeholder="SubText"
-              value={subText}
-              editable={passSubText}
-            />
-          </View>
-
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Image</Text>
-            <Switch
-              onValueChange={() => setPassImage(toggle)}
-              value={passImage}
-            />
-          </View>
-
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Icon image</Text>
-            <Switch
-              onValueChange={() => setPassIconImage(toggle)}
-              value={passIconImage}
-            />
-          </View>
-
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Show time</Text>
-            <Switch
-              onValueChange={() => setShowTime(toggle)}
-              value={showTime}
-            />
-          </View>
-
+          <CustomInput
+            value={title}
+            onValueChange={onChangeTitle}
+            label="Title:"
+            placeholder="Live Update title"
+          />
+          <CustomInput
+            value={text}
+            onValueChange={onChangeText}
+            label="Text:"
+            placeholder="Text"
+            switchProps={{
+              value: passText,
+              setValue: setPassText,
+            }}
+          />
+          <CustomInput
+            value={subText}
+            onValueChange={onChangeSubText}
+            label="SubText:"
+            placeholder="SubText"
+            switchProps={{ value: passSubText, setValue: setPassSubText }}
+          />
+          <CustomLabel
+            label="Image"
+            switchProps={{ value: passImage, setValue: setPassImage }}
+          />
+          <CustomLabel
+            label="Icon image"
+            switchProps={{ value: passIconImage, setValue: setPassIconImage }}
+          />
+          <CustomLabel
+            label="Show time"
+            switchProps={{ value: showTime, setValue: setShowTime }}
+          />
           {showTime && (
-            <View style={styles.inputContainer}>
-              <View style={styles.labelWithSwitch}>
-                <Text style={styles.label}>Time</Text>
-                <Switch
-                  onValueChange={() => setPassTime(toggle)}
-                  value={passTime}
-                />
-              </View>
-
-              <View style={styles.inputsRow}>
-                <View style={styles.inputInRowContainer}>
-                  <Text style={styles.label}>Hours:</Text>
-                  <TextInput
-                    style={[styles.input, !passTime && styles.disabledInput]}
-                    onChangeText={setHours}
-                    value={hours}
-                    keyboardType="numeric"
-                    editable={passTime}
+            <View style={styles.subSectionContainer}>
+              <CustomLabel
+                label="Time"
+                switchProps={{ value: passTime, setValue: setPassTime }}
+              />
+              {passTime && (
+                <>
+                  <View style={styles.inputsRow}>
+                    <CustomInput
+                      value={hours}
+                      onValueChange={setHours}
+                      label="Hours:"
+                      keyboardType="numeric"
+                    />
+                    <CustomInput
+                      value={minutes}
+                      onValueChange={setMinutes}
+                      label="Minutes:"
+                      keyboardType="numeric"
+                    />
+                  </View>
+                  <CustomLabel
+                    label="Past"
+                    switchProps={{
+                      value: isPast,
+                      setValue: setIsPast,
+                    }}
                   />
-                </View>
-
-                <View style={styles.inputInRowContainer}>
-                  <Text style={styles.label}>Minutes:</Text>
-                  <TextInput
-                    style={[styles.input, !passTime && styles.disabledInput]}
-                    onChangeText={setMinutes}
-                    value={minutes}
-                    keyboardType="numeric"
-                    editable={passTime}
-                  />
-                </View>
-              </View>
-
-              <View style={styles.labelWithSwitch}>
-                <Text style={styles.label}>Past</Text>
-                <Switch
-                  onValueChange={() => setIsPast(toggle)}
-                  value={isPast}
-                  disabled={!passTime}
-                />
-              </View>
+                </>
+              )}
             </View>
           )}
 
-          <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Short critical text:</Text>
-              <Switch
-                onValueChange={() => setPassShortCriticalText(toggle)}
-                value={passShortCriticalText}
-              />
-            </View>
-            <TextInput
-              style={[
-                styles.input,
-                !passShortCriticalText && styles.disabledInput,
-              ]}
-              onChangeText={setShortCriticalText}
-              placeholder="Live Update short critical text"
-              value={shortCriticalText}
-              editable={passShortCriticalText}
-            />
-          </View>
-
-          <View style={styles.labelWithSwitch}>
-            <Text style={styles.label}>Deep link URL:</Text>
-            <Switch
-              onValueChange={() => setPassDeepLink(toggle)}
-              value={passDeepLink}
-            />
-          </View>
-          <TextInput
-            style={[styles.input, !passDeepLink && styles.disabledInput]}
-            onChangeText={setDeepLinkUrl}
-            placeholder="Deep link URL (e.g., /Test)"
+          <CustomInput
+            value={shortCriticalText}
+            onValueChange={setShortCriticalText}
+            label="Short critical text:"
+            placeholder="Live Update short critical text"
+            switchProps={{
+              value: passShortCriticalText,
+              setValue: setPassShortCriticalText,
+            }}
+          />
+          <CustomInput
             value={deepLinkUrl}
-            editable={passDeepLink}
-            autoCapitalize="none"
+            onValueChange={setDeepLinkUrl}
+            label="Deep link URL:"
+            placeholder="Deep link URL (e.g., /Test)"
+            switchProps={{
+              value: passDeepLink,
+              setValue: setPassDeepLink,
+            }}
           />
 
-          <View style={styles.inputContainer}>
-            <View style={styles.labelWithSwitch}>
-              <Text style={styles.label}>Progress</Text>
-              <Switch
-                onValueChange={() => setPassProgress(toggle)}
-                value={passProgress}
-              />
-            </View>
+          <View style={styles.subSectionContainer}>
+            <CustomLabel
+              label="Progress"
+              switchProps={{ value: passProgress, setValue: setPassProgress }}
+            />
 
             {passProgress && (
               <>
                 <View style={styles.inputsRow}>
-                  <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Progress value:</Text>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        progressIndeterminate && styles.disabledInput,
-                      ]}
-                      onChangeText={setProgressValue}
-                      value={progressValue}
-                      placeholder="Value, e.g. 50"
-                      editable={!progressIndeterminate}
-                      keyboardType="numeric"
-                    />
-                  </View>
-
-                  <View style={styles.inputInRowContainer}>
-                    <Text style={styles.label}>Progress max:</Text>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        disableMaxPoints && styles.disabledInput,
-                      ]}
-                      onChangeText={setProgressMax}
-                      value={progressMax}
-                      placeholder="Maximum, default 100"
-                      editable={!disableMaxPoints}
-                      keyboardType="numeric"
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.labelWithSwitch}>
-                  <Text style={styles.label}>Indeterminate progress</Text>
-                  <Switch
-                    onValueChange={() => setProgressIndeterminate(toggle)}
-                    value={progressIndeterminate}
+                  <CustomInput
+                    value={progressValue}
+                    onValueChange={setProgressValue}
+                    label="Progress value:"
+                    placeholder="Value, e.g. 50"
+                    keyboardType="numeric"
+                    editable={!progressIndeterminate}
+                  />
+                  <CustomInput
+                    value={progressMax}
+                    onValueChange={setProgressMax}
+                    label="Progress max:"
+                    placeholder="Maximum, default 100"
+                    keyboardType="numeric"
+                    editable={!(progressIndeterminate || passSegments)}
                   />
                 </View>
-
-                <View style={styles.labelWithSwitch}>
-                  <Text style={styles.label}>Points</Text>
-                  <Switch
-                    onValueChange={() => setPassPoints(toggle)}
-                    value={passPoints}
-                  />
-                </View>
-
-                <View style={styles.labelWithSwitch}>
-                  <Text style={styles.label}>Segments</Text>
-                  <Switch
-                    onValueChange={() => setPassSegments(toggle)}
-                    value={passSegments}
-                  />
-                </View>
+                <CustomLabel
+                  label="Indeterminate progress"
+                  switchProps={{
+                    value: progressIndeterminate,
+                    setValue: setProgressIndeterminate,
+                  }}
+                />
+                <CustomLabel
+                  label="Points"
+                  switchProps={{
+                    value: passPoints,
+                    setValue: setPassPoints,
+                  }}
+                />
+                <CustomLabel
+                  label="Segments"
+                  switchProps={{
+                    value: passSegments,
+                    setValue: setPassSegments,
+                  }}
+                />
               </>
             )}
 
             {!isBaklava() && (
-              <View style={styles.inputContainer}>
-                <View style={styles.labelWithSwitch}>
-                  <Text style={styles.label}>
-                    Background color (hex) (for SDK &lt; 16 Baklava):
-                  </Text>
-                </View>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setBackgroundColor}
-                  autoCapitalize="none"
-                  placeholder="Background color"
-                  value={backgroundColor}
-                />
-              </View>
+              <CustomInput
+                value={backgroundColor}
+                onValueChange={setBackgroundColor}
+                label="Background color (hex) (for SDK &lt; 16 Baklava):"
+                placeholder="Background color"
+              />
             )}
           </View>
+
           <View style={styles.buttonsContainer}>
             <Button
               title="Start"
@@ -465,34 +373,29 @@ export default function LiveUpdatesScreen() {
 
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Manage existing Live Update</Text>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Live Update ID:</Text>
-            <View style={styles.manageUpdatesContainer}>
-              <TextInput
-                style={[styles.input, styles.manageUpdatesInput]}
-                placeholder="Live Update ID"
-                onChangeText={setNotificationIdString}
-                value={notificationIdString}
-                keyboardType="numeric"
-              />
-              <Button
-                title="Update"
-                onPress={handleUpdateLiveUpdate}
-                disabled={notificationId === undefined}
-              />
-              <Button
-                title="Stop"
-                onPress={handleStopLiveUpdate}
-                disabled={notificationId === undefined}
-              />
-            </View>
+          <CustomInput
+            value={notificationIdString}
+            onValueChange={setNotificationIdString}
+            label="Live Update ID:"
+            placeholder="Live Update ID"
+            keyboardType="numeric"
+          />
+          <View style={styles.buttonsContainer}>
+            <Button
+              title="Update"
+              onPress={handleUpdateLiveUpdate}
+              disabled={notificationId === undefined}
+            />
+            <Button
+              title="Stop"
+              onPress={handleStopLiveUpdate}
+              disabled={notificationId === undefined}
+            />
           </View>
         </View>
 
         <View style={styles.eventsContainer}>
           <Text style={styles.eventsTitle}>Notification Events</Text>
-
           <ScrollView
             ref={scrollViewRef}
             onContentSizeChange={() => scrollViewRef.current?.scrollToEnd()}>
@@ -558,13 +461,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'center',
-    marginTop: 16,
     paddingHorizontal: '20%',
-  },
-  disabledInput: {
-    backgroundColor: '#ECECEC',
-    borderColor: '#DEDEDE',
-    color: '#808080',
   },
   eventText: {
     fontSize: 14,
@@ -581,40 +478,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  input: {
-    borderColor: '#808080',
-    borderRadius: 10,
-    borderWidth: 1,
-    height: 44,
-    padding: 10,
-  },
-  inputContainer: {
-    gap: 6,
-    width: '100%',
-  },
-  inputInRowContainer: {
-    gap: 6,
-    width: '50%',
-  },
   inputsRow: {
     flexDirection: 'row',
     gap: 12,
-  },
-  label: {
-    fontSize: 16,
-  },
-  labelWithSwitch: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  manageUpdatesContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-  },
-  manageUpdatesInput: {
-    flex: 1,
   },
   noEventsText: {
     color: '#666',
@@ -631,5 +497,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  subSectionContainer: {
+    gap: 6,
   },
 })
