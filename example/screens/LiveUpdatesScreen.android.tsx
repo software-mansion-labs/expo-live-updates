@@ -10,7 +10,7 @@ import type {
   LiveUpdateState,
   NotificationStateChangeEvent,
 } from 'expo-live-updates/types'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Keyboard,
@@ -26,6 +26,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
 import CustomInput from '../components/CustomInput'
 import CustomLabel from '../components/CustomLabel'
+import EventsList from '../components/EventsList'
 
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
@@ -61,8 +62,6 @@ export default function LiveUpdatesScreen() {
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
   const [passPoints, setPassPoints] = useState(false)
   const [passSegments, setPassSegments] = useState(false)
-
-  const scrollViewRef = useRef<ScrollView>(null)
 
   const notificationId = useMemo(() => {
     const parsedNotificationId = parseInt(notificationIdString)
@@ -394,22 +393,9 @@ export default function LiveUpdatesScreen() {
           </View>
         </View>
 
-        <View style={styles.eventsContainer}>
-          <Text style={styles.eventsTitle}>Notification Events</Text>
-          <ScrollView
-            ref={scrollViewRef}
-            onContentSizeChange={() => scrollViewRef.current?.scrollToEnd()}>
-            {notificationEvents.length === 0 ? (
-              <Text style={styles.noEventsText}>No events yet</Text>
-            ) : (
-              notificationEvents.map((event, index) => (
-                <Text key={index} style={styles.eventText}>
-                  {event.action} (ID: {event.notificationId}) -{' '}
-                  {new Date(event.timestamp).toLocaleTimeString()}
-                </Text>
-              ))
-            )}
-          </ScrollView>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Notification Events</Text>
+          <EventsList events={notificationEvents} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -463,28 +449,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: '20%',
   },
-  eventText: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  eventsContainer: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    height: 200,
-    padding: 16,
-  },
-  eventsTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
   inputsRow: {
     flexDirection: 'row',
     gap: 12,
-  },
-  noEventsText: {
-    color: '#666',
-    fontStyle: 'italic',
   },
   screenContainer: {
     display: 'flex',
