@@ -27,7 +27,11 @@ data object FirebaseMessageProps {
   const val TITLE = "title"
   const val TEXT = "text"
   const val SUB_TEXT = "subText"
-  const val PROGRESS = "progress"
+  const val PROGRESS_MAX = "progressMax"
+  const val PROGRESS_VALUE = "progressValue"
+  const val PROGRESS_INDETERMINATE = "progressIndeterminate"
+  const val PROGRESS_POINTS = "progressPoints"
+  const val PROGRESS_SEGMENTS = "progressSegments"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
   const val BACKGROUND_COLOR = "backgroundColor"
   const val DEEP_LINK_URL = "deepLinkUrl"
@@ -114,12 +118,30 @@ class FirebaseService : FirebaseMessagingService() {
   }
 
   private fun getProgress(message: RemoteMessage): LiveUpdateProgress? {
-    val progressJson = message.data[FirebaseMessageProps.PROGRESS]
-    val progress = progressJson?.let {
-      Json.decodeFromString<LiveUpdateProgress>(it)
+    val progressMax = message.data[FirebaseMessageProps.PROGRESS_MAX]?.toIntOrNull()
+    val progressValue = message.data[FirebaseMessageProps.PROGRESS_VALUE]?.toIntOrNull()
+    val progressIndeterminate =
+      message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
+
+    val pointsJson = message.data[FirebaseMessageProps.PROGRESS_POINTS]
+    val points = pointsJson?.let {
+      Json.decodeFromString<ArrayList<LiveUpdateProgressPoint>>(it)
     }
 
-    return if (progress?.progress != null || progress?.indeterminate == true) progress else null
+    val segmentsJson = message.data[FirebaseMessageProps.PROGRESS_SEGMENTS]
+    val segments = segmentsJson?.let {
+      Json.decodeFromString<ArrayList<LiveUpdateProgressSegment>>(it)
+    }
+
+    return if (progressValue != null || progressIndeterminate == true) {
+      LiveUpdateProgress(
+        max = progressMax,
+        progress = progressValue,
+        indeterminate = progressIndeterminate,
+        points = points,
+        segments = segments
+      )
+    } else null
   }
 
   private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {

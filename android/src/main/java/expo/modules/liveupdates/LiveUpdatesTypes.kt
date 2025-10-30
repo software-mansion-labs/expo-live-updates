@@ -12,11 +12,10 @@ data class LiveUpdateProgressPoint(@Field val position: Int, @Field val color: S
 data class LiveUpdateProgressSegment(@Field val length: Int, @Field val color: String? = null) :
   Record
 
-@Serializable
 data class LiveUpdateProgress(
-  @Field val max: Int? = null,
-  @Field val progress: Int? = null,
-  @Field val indeterminate: Boolean? = null,
+  @Field val max: Int?,
+  @Field val progress: Int?,
+  @Field val indeterminate: Boolean?,
   @Field val points: ArrayList<LiveUpdateProgressPoint>? = null,
   @Field val segments: ArrayList<LiveUpdateProgressSegment>? = null,
 ) : Record
