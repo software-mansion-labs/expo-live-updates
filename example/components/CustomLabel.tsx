@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { StyleSheet, Switch, Text, View } from 'react-native'
 
-type CustomLabelProps = {
-  label: string
+export type CustomLabelProps = {
+  text: string
   switchProps?: {
     value: boolean
     setValue: Dispatch<SetStateAction<boolean>>
@@ -12,10 +12,10 @@ type CustomLabelProps = {
 
 const toggle = (previousState: boolean) => !previousState
 
-export default function CustomLabel({ label, switchProps }: CustomLabelProps) {
+export default function CustomLabel({ text, switchProps }: CustomLabelProps) {
   return (
-    <View style={styles.labelWithSwitch}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>{text}</Text>
       {switchProps && (
         <Switch
           onValueChange={() => switchProps.setValue(toggle)}
@@ -28,12 +28,12 @@ export default function CustomLabel({ label, switchProps }: CustomLabelProps) {
 }
 
 const styles = StyleSheet.create({
-  label: {
-    fontSize: 16,
-  },
-  labelWithSwitch: {
+  container: {
     alignItems: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  text: {
+    fontSize: 16,
   },
 })

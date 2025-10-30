@@ -1,56 +1,50 @@
-import type { Dispatch, SetStateAction } from 'react'
 import { useMemo } from 'react'
-import type { KeyboardTypeOptions } from 'react-native'
 import { StyleSheet, TextInput, View } from 'react-native'
+import type { CustomLabelProps } from './CustomLabel'
 import CustomLabel from './CustomLabel'
 
 type CustomInputProps = {
   value: string
-  onValueChange: (value: string) => void
-  label: string
+  onChangeText: (text: string) => void
+  labelProps: CustomLabelProps
   placeholder?: string
-  switchProps?: {
-    value: boolean
-    setValue: Dispatch<SetStateAction<boolean>>
-  }
-  keyboardType?: KeyboardTypeOptions
+  numeric?: boolean
   editable?: boolean
 }
 
 export default function CustomInput({
   value,
-  onValueChange,
-  label,
+  onChangeText,
+  labelProps,
   placeholder,
-  switchProps,
-  keyboardType,
+  numeric,
   editable,
 }: CustomInputProps) {
-  const CanEditText = useMemo(() => {
-    if (editable !== undefined) {
-      return editable
-    } else {
-      return switchProps ? switchProps.value : true
-    }
-  }, [editable, switchProps])
+  const editableText = useMemo(() => {
+    const switchValue = labelProps.switchProps?.value
+    return editable !== undefined ? editable : (switchValue ?? true)
+  }, [editable, labelProps.switchProps])
 
   return (
-    <View style={styles.inputContainer}>
-      <CustomLabel label={label} switchProps={switchProps} />
-
+    <View style={styles.container}>
+      <CustomLabel {...labelProps} />
       <TextInput
-        style={[styles.input, !CanEditText && styles.disabledInput]}
-        onChangeText={onValueChange}
-        placeholder={placeholder}
+        style={[styles.input, !editableText && styles.disabledInput]}
         value={value}
-        editable={CanEditText}
-        keyboardType={keyboardType}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        editable={editableText}
+        keyboardType={numeric ? 'numeric' : undefined}
       />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    gap: 6,
+  },
   disabledInput: {
     backgroundColor: '#ECECEC',
     borderColor: '#DEDEDE',
@@ -62,9 +56,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 44,
     padding: 10,
-  },
-  inputContainer: {
-    flex: 1,
-    gap: 6,
   },
 })
