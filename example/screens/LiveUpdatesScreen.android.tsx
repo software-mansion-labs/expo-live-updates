@@ -61,6 +61,13 @@ export default function LiveUpdatesScreen() {
   const [progressMax, setProgressMax] = useState('100')
   const [progressValue, setProgressValue] = useState('50')
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
+  const [passPoints, setPassPoints] = useState(false)
+  const [passSegments, setPassSegments] = useState(false)
+
+  const disableMaxPoints = useMemo(
+    () => progressIndeterminate || passSegments,
+    [passSegments, progressIndeterminate],
+  )
 
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -107,6 +114,18 @@ export default function LiveUpdatesScreen() {
             ? 0
             : parseInt(progressValue),
           indeterminate: progressIndeterminate,
+          points: passPoints
+            ? [
+                { position: 30, color: 'red' },
+                { position: 70, color: 'blue' },
+              ]
+            : undefined,
+          segments: passSegments
+            ? [
+                { length: 30, color: 'red' },
+                { length: 300, color: 'blue' },
+              ]
+            : undefined,
         }
       : undefined,
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
@@ -376,12 +395,12 @@ export default function LiveUpdatesScreen() {
                     <TextInput
                       style={[
                         styles.input,
-                        progressIndeterminate && styles.disabledInput,
+                        disableMaxPoints && styles.disabledInput,
                       ]}
                       onChangeText={setProgressMax}
                       value={progressMax}
                       placeholder="Maximum, default 100"
-                      editable={!progressIndeterminate}
+                      editable={!disableMaxPoints}
                       keyboardType="numeric"
                     />
                   </View>
@@ -392,6 +411,22 @@ export default function LiveUpdatesScreen() {
                   <Switch
                     onValueChange={() => setProgressIndeterminate(toggle)}
                     value={progressIndeterminate}
+                  />
+                </View>
+
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label}>Points</Text>
+                  <Switch
+                    onValueChange={() => setPassPoints(toggle)}
+                    value={passPoints}
+                  />
+                </View>
+
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label}>Segments</Text>
+                  <Switch
+                    onValueChange={() => setPassSegments(toggle)}
+                    value={passSegments}
                   />
                 </View>
               </>

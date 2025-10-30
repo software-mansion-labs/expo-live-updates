@@ -128,12 +128,15 @@ class LiveUpdatesManager(private val context: Context) {
     state.progress?.let { progress ->
       if (progress.indeterminate == true) {
         notificationBuilder.setProgress(0, 0, true)
-      } else if (progress.progress != null) {
-        notificationBuilder.setProgress(
-          progress.max ?: DEFAULT_MAX_PROGRESS,
-          progress.progress,
-          false,
-        )
+      } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+          val style = createProgressStyle(progress)
+          notificationBuilder.setStyle(style)
+        } else {
+          progress.progress?.let {
+            notificationBuilder.setProgress(progress.max ?: DEFAULT_MAX_PROGRESS, it, false)
+          }
+        }
       }
     }
 
@@ -150,7 +153,7 @@ class LiveUpdatesManager(private val context: Context) {
           notificationBuilder.setColor(backgroundColor.toColorInt())
           notificationBuilder.setColorized(true)
         } catch (e: IllegalArgumentException) {
-          Log.e(TAG, "Invalid color format for backgroundColor: $backgroundColor", e)
+          Log.e(TAG, getInvalidColorFormatErrorMessage(backgroundColor), e)
         }
       }
     }
@@ -159,6 +162,47 @@ class LiveUpdatesManager(private val context: Context) {
     setNotificationClickIntent(notificationId, config, notificationBuilder)
 
     return notificationBuilder.build()
+  }
+
+  private fun createProgressStyle(progress: LiveUpdateProgress): NotificationCompat.ProgressStyle {
+    val points =
+      progress.points?.map {
+        val (position, color) = it
+        val point = NotificationCompat.ProgressStyle.Point(position)
+        color?.let { color ->
+          try {
+            point.setColor(color.toColorInt())
+          } catch (e: IllegalArgumentException) {
+            Log.e(TAG, getInvalidColorFormatErrorMessage(color), e)
+          }
+        }
+        point
+      }
+
+    val segments =
+      progress.segments?.map {
+        val (length, color) = it
+        val segment = NotificationCompat.ProgressStyle.Segment(length)
+        color?.let { color ->
+          try {
+            segment.setColor(color.toColorInt())
+          } catch (e: IllegalArgumentException) {
+            Log.e(TAG, getInvalidColorFormatErrorMessage(color), e)
+          }
+        }
+        segment
+      } ?: listOf(NotificationCompat.ProgressStyle.Segment(progress.max ?: DEFAULT_MAX_PROGRESS))
+
+    val style = NotificationCompat.ProgressStyle().setProgressSegments(segments)
+
+    points?.let { style.setProgressPoints(it) }
+    progress.progress?.let { style.setProgress(it) }
+
+    return style
+  }
+
+  private fun getInvalidColorFormatErrorMessage(color: String): String {
+    return "Invalid color format: $color"
   }
 
   private fun loadBitmapByName(name: String): android.graphics.Bitmap? {

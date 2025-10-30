@@ -119,6 +119,18 @@ type LiveUpdateProgress = {
   max?: number // Maximum progress value (default: 100)
   progress?: number // Current progress value
   indeterminate?: boolean // Whether to show indeterminate progress bar
+  points?: LiveUpdateProgressPoint[] // Points for dividing progress bar
+  segments?: LiveUpdateProgressSegment[] // Segments for dividing progress bar
+}
+
+type LiveUpdateProgressPoint = {
+  position: number // Point's position relative to progress bar length
+  color?: string // Point's color
+}
+
+type LiveUpdateProgressSegment = {
+  length: number // Segment's length
+  color?: string // Segment's color
 }
 ```
 
@@ -210,6 +222,7 @@ There are some restrictions that should be followed while managing Live Updates 
 - `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
 - `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
 - `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
+- `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
 
 ## expo-live-updates is created by Software Mansion
 
