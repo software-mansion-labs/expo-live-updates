@@ -9,9 +9,9 @@ import androidx.annotation.RequiresPermission
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.serialization.json.Json
 import kotlin.text.toBooleanStrictOrNull
 import kotlin.text.toIntOrNull
+import kotlinx.serialization.json.Json
 
 const val FIREBASE_TAG = "FirebaseService"
 
@@ -124,14 +124,11 @@ class FirebaseService : FirebaseMessagingService() {
       message.data[FirebaseMessageProps.PROGRESS_INDETERMINATE]?.toBooleanStrictOrNull()
 
     val pointsJson = message.data[FirebaseMessageProps.PROGRESS_POINTS]
-    val points = pointsJson?.let {
-      Json.decodeFromString<ArrayList<LiveUpdateProgressPoint>>(it)
-    }
+    val points = pointsJson?.let { Json.decodeFromString<ArrayList<LiveUpdateProgressPoint>>(it) }
 
     val segmentsJson = message.data[FirebaseMessageProps.PROGRESS_SEGMENTS]
-    val segments = segmentsJson?.let {
-      Json.decodeFromString<ArrayList<LiveUpdateProgressSegment>>(it)
-    }
+    val segments =
+      segmentsJson?.let { Json.decodeFromString<ArrayList<LiveUpdateProgressSegment>>(it) }
 
     return if (progressValue != null || progressIndeterminate == true) {
       LiveUpdateProgress(
@@ -139,7 +136,7 @@ class FirebaseService : FirebaseMessagingService() {
         progress = progressValue,
         indeterminate = progressIndeterminate,
         points = points,
-        segments = segments
+        segments = segments,
       )
     } else null
   }
