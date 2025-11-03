@@ -1,3 +1,8 @@
+export type LiveUpdateImage = {
+  url: string
+  isRemote: boolean
+}
+
 export type LiveUpdateProgressPoint = {
   position: number
   color?: string
@@ -20,8 +25,8 @@ export type LiveUpdateState = {
   title: string
   text?: string
   subText?: string
-  imageLocalUri?: string
-  iconLocalUri?: string
+  image?: LiveUpdateImage
+  icon?: LiveUpdateImage
   progress?: LiveUpdateProgress
   shortCriticalText?: string
   showTime?: boolean

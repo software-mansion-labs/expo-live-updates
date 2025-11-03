@@ -27,6 +27,8 @@ data object FirebaseMessageProps {
   const val TITLE = "title"
   const val TEXT = "text"
   const val SUB_TEXT = "subText"
+  const val IMAGE_URL = "imageUrl"
+  const val ICON_URL = "iconUrl"
   const val PROGRESS_MAX = "progressMax"
   const val PROGRESS_VALUE = "progressValue"
   const val PROGRESS_INDETERMINATE = "progressIndeterminate"
@@ -106,10 +108,15 @@ class FirebaseService : FirebaseMessagingService() {
     val title = message.data[FirebaseMessageProps.TITLE]
     val progress = getProgress(message)
 
+    val image = message.data[FirebaseMessageProps.IMAGE_URL]?.let { LiveUpdateImage(it, true) }
+    val icon = message.data[FirebaseMessageProps.ICON_URL]?.let { LiveUpdateImage(it, true) }
+
     return LiveUpdateState(
       title = requireNotNull(title) { getMissingOrInvalidErrorMessage(FirebaseMessageProps.TITLE) },
       text = message.data[FirebaseMessageProps.TEXT],
       subText = message.data[FirebaseMessageProps.SUB_TEXT],
+      image = image,
+      icon = icon,
       progress = progress,
       shortCriticalText = message.data[FirebaseMessageProps.SHORT_CRITICAL_TEXT],
       showTime = message.data[FirebaseMessageProps.SHOW_TIME]?.toBooleanStrictOrNull(),

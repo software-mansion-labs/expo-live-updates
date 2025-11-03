@@ -4,6 +4,8 @@ import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 import kotlinx.serialization.Serializable
 
+data class LiveUpdateImage(@Field val url: String, @Field val isRemote: Boolean) : Record
+
 @Serializable
 data class LiveUpdateProgressPoint(@Field val position: Int, @Field val color: String? = null) :
   Record
@@ -25,7 +27,8 @@ data class LiveUpdateState(
   @Field val text: String? = null,
   @Field val subText: String? = null,
   @Field val imageLocalUri: String? = null,
-  @Field val iconLocalUri: String? = null,
+  @Field val image: LiveUpdateImage? = null,
+  @Field val icon: LiveUpdateImage? = null,
   @Field val shortCriticalText: String? = null,
   @Field val progress: LiveUpdateProgress? = null,
   @Field val showTime: Boolean? = null,

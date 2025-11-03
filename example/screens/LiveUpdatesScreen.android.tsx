@@ -7,6 +7,7 @@ import {
 } from 'expo-live-updates'
 import type {
   LiveUpdateConfig,
+  LiveUpdateImage,
   LiveUpdateState,
   NotificationStateChangeEvent,
 } from 'expo-live-updates/types'
@@ -37,8 +38,8 @@ export default function LiveUpdatesScreen() {
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
-  const [imageLocalUri, setImageLocalUri] = useState<string>()
-  const [iconLocalUri, setIconLocalUri] = useState<string>()
+  const [image, setImage] = useState<LiveUpdateImage>()
+  const [icon, setIcon] = useState<LiveUpdateImage>()
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
   const [showTime, setShowTime] = useState(false)
@@ -81,9 +82,14 @@ export default function LiveUpdatesScreen() {
 
   useEffect(() => {
     const loadImages = async () => {
-      const images = await getImgsUri()
-      setImageLocalUri(images.imageLocalUri)
-      setIconLocalUri(images.iconLocalUri)
+      const { imageLocalUri, iconLocalUri } = await getImgsUri()
+
+      if (imageLocalUri) {
+        setImage({ url: imageLocalUri, isRemote: false })
+      }
+      if (iconLocalUri) {
+        setIcon({ url: iconLocalUri, isRemote: false })
+      }
     }
 
     loadImages()
@@ -108,8 +114,8 @@ export default function LiveUpdatesScreen() {
     title,
     text: passText ? text : undefined,
     subText: passSubText ? subText : undefined,
-    imageLocalUri: passImage ? imageLocalUri : undefined,
-    iconLocalUri: passIcon ? iconLocalUri : undefined,
+    image: passImage ? image : undefined,
+    icon: passIcon ? icon : undefined,
     progress: passProgress
       ? {
           max: isNaN(parseInt(progressMax)) ? 100 : parseInt(progressMax),
