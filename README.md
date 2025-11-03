@@ -198,6 +198,8 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "progressMax":"100", // optional: maximum progress value, if not provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
+          "progressPoints":"[{\"position\":10,\"color\":\"red\"},{\"position\":50,\"color\":\"blue\"}]", // optional: should be a string with JSON
+          "progressSegments":"[{\"length\":50,\"color\":\"red\"},{\"length\":100,\"color\":\"blue\"}]", // optional: should be a string with JSON
           "backgroundColor":"red", // optional, works only on SDK < Baklava
           "shortCriticalText":"text", // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test", // optional: default it will just open the app
@@ -223,6 +225,8 @@ There are some restrictions that should be followed while managing Live Updates 
 - `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
 - `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
 - `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
+- `progressPoints` must be specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
+- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegments`.
 
 ## expo-live-updates is created by Software Mansion
 

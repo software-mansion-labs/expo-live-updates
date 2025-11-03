@@ -1,4 +1,7 @@
-apply plugin: 'com.android.library'
+plugins {
+  id 'com.android.library'
+  id 'org.jetbrains.kotlin.plugin.serialization' version '2.2.21'
+}
 
 group = 'expo.modules.liveupdates'
 version = '0.1.0'
@@ -79,4 +82,7 @@ dependencies {
   // Configure Firebase
   implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
   implementation 'com.google.firebase:firebase-messaging'
+
+  // Manage JSON
+  implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0'
 }
