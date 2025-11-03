@@ -26,7 +26,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
 import CustomInput from '../components/CustomInput'
 import CustomLabel from '../components/CustomLabel'
-import EventsList from '../components/EventsList'
+import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
@@ -397,7 +397,7 @@ export default function LiveUpdatesScreen() {
 
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Notification Events</Text>
-          <EventsList events={notificationEvents} />
+          <ExpoLiveUpdateEventsList events={notificationEvents} />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -1,11 +1,14 @@
 import type { NotificationStateChangeEvent } from 'expo-live-updates/types'
 import { useRef } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-type EventsListProps = {
+
+type ExpoLiveUpdateEventsListProps = {
   events: NotificationStateChangeEvent[]
 }
 
-export default function EventsList({ events }: EventsListProps) {
+export default function ExpoLiveUpdateEventsList({
+  events,
+}: ExpoLiveUpdateEventsListProps) {
   const scrollViewRef = useRef<ScrollView>(null)
 
   return (
