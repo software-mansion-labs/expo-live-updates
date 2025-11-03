@@ -25,7 +25,7 @@ import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
 import Input from '../components/Input'
-import SwitchWithLabel from '../components/SwitchWithLabel'
+import LabelWithSwitch from '../components/LabelWithSwitch'
 import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 
 export default function LiveUpdatesScreen() {
@@ -233,21 +233,21 @@ export default function LiveUpdatesScreen() {
             }}
             placeholder="SubText"
           />
-          <SwitchWithLabel
+          <LabelWithSwitch
             label="Image"
             switchProps={{ value: passImage, setValue: setPassImage }}
           />
-          <SwitchWithLabel
+          <LabelWithSwitch
             label="Icon image"
             switchProps={{ value: passIconImage, setValue: setPassIconImage }}
           />
-          <SwitchWithLabel
+          <LabelWithSwitch
             label="Show time"
             switchProps={{ value: showTime, setValue: setShowTime }}
           />
           {showTime && (
             <View style={styles.subSectionContainer}>
-              <SwitchWithLabel
+              <LabelWithSwitch
                 label="Time"
                 switchProps={{ value: passTime, setValue: setPassTime }}
               />
@@ -267,7 +267,7 @@ export default function LiveUpdatesScreen() {
                       numeric
                     />
                   </View>
-                  <SwitchWithLabel
+                  <LabelWithSwitch
                     label="Past"
                     switchProps={{
                       value: isPast,
@@ -305,7 +305,7 @@ export default function LiveUpdatesScreen() {
           />
 
           <View style={styles.subSectionContainer}>
-            <SwitchWithLabel
+            <LabelWithSwitch
               label="Progress"
               switchProps={{ value: passProgress, setValue: setPassProgress }}
             />
@@ -330,21 +330,21 @@ export default function LiveUpdatesScreen() {
                     editable={!(progressIndeterminate || passSegments)}
                   />
                 </View>
-                <SwitchWithLabel
+                <LabelWithSwitch
                   label="Indeterminate progress"
                   switchProps={{
                     value: progressIndeterminate,
                     setValue: setProgressIndeterminate,
                   }}
                 />
-                <SwitchWithLabel
+                <LabelWithSwitch
                   label="Points"
                   switchProps={{
                     value: passPoints,
                     setValue: setPassPoints,
                   }}
                 />
-                <SwitchWithLabel
+                <LabelWithSwitch
                   label="Segments"
                   switchProps={{
                     value: passSegments,
