@@ -21,7 +21,7 @@ export type LiveUpdateState = {
   text?: string
   subText?: string
   imageName?: string
-  dynamicIslandImageName?: string
+  smallImageName?: string
   progress?: LiveUpdateProgress
   shortCriticalText?: string
   showTime?: boolean
