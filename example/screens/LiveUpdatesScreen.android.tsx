@@ -24,8 +24,8 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Asset } from 'expo-asset'
-import CustomInput from '../components/CustomInput'
-import CustomLabel from '../components/CustomLabel'
+import Input from '../components/Input'
+import SwitchWithLabel from '../components/SwitchWithLabel'
 import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 
 export default function LiveUpdatesScreen() {
@@ -206,17 +206,17 @@ export default function LiveUpdatesScreen() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.screenContainer}>
         <View style={styles.sectionContainer}>
-          <CustomInput
+          <Input
             value={title}
             onChangeText={onChangeTitle}
-            labelProps={{ text: 'Title:' }}
+            labelProps={{ label: 'Title:' }}
             placeholder="Live Update title"
           />
-          <CustomInput
+          <Input
             value={text}
             onChangeText={onChangeText}
             labelProps={{
-              text: 'Text:',
+              label: 'Text:',
               switchProps: {
                 value: passText,
                 setValue: setPassText,
@@ -224,51 +224,51 @@ export default function LiveUpdatesScreen() {
             }}
             placeholder="Text"
           />
-          <CustomInput
+          <Input
             value={subText}
             onChangeText={onChangeSubText}
             labelProps={{
-              text: 'SubText:',
+              label: 'SubText:',
               switchProps: { value: passSubText, setValue: setPassSubText },
             }}
             placeholder="SubText"
           />
-          <CustomLabel
-            text="Image"
+          <SwitchWithLabel
+            label="Image"
             switchProps={{ value: passImage, setValue: setPassImage }}
           />
-          <CustomLabel
-            text="Icon image"
+          <SwitchWithLabel
+            label="Icon image"
             switchProps={{ value: passIconImage, setValue: setPassIconImage }}
           />
-          <CustomLabel
-            text="Show time"
+          <SwitchWithLabel
+            label="Show time"
             switchProps={{ value: showTime, setValue: setShowTime }}
           />
           {showTime && (
             <View style={styles.subSectionContainer}>
-              <CustomLabel
-                text="Time"
+              <SwitchWithLabel
+                label="Time"
                 switchProps={{ value: passTime, setValue: setPassTime }}
               />
               {passTime && (
                 <>
                   <View style={styles.inputsRow}>
-                    <CustomInput
+                    <Input
                       value={hours}
                       onChangeText={setHours}
-                      labelProps={{ text: 'Hours:' }}
+                      labelProps={{ label: 'Hours:' }}
                       numeric
                     />
-                    <CustomInput
+                    <Input
                       value={minutes}
                       onChangeText={setMinutes}
-                      labelProps={{ text: 'Minutes:' }}
+                      labelProps={{ label: 'Minutes:' }}
                       numeric
                     />
                   </View>
-                  <CustomLabel
-                    text="Past"
+                  <SwitchWithLabel
+                    label="Past"
                     switchProps={{
                       value: isPast,
                       setValue: setIsPast,
@@ -279,11 +279,11 @@ export default function LiveUpdatesScreen() {
             </View>
           )}
 
-          <CustomInput
+          <Input
             value={shortCriticalText}
             onChangeText={setShortCriticalText}
             labelProps={{
-              text: 'Short critical text:',
+              label: 'Short critical text:',
               switchProps: {
                 value: passShortCriticalText,
                 setValue: setPassShortCriticalText,
@@ -291,11 +291,11 @@ export default function LiveUpdatesScreen() {
             }}
             placeholder="Live Update short critical text"
           />
-          <CustomInput
+          <Input
             value={deepLinkUrl}
             onChangeText={setDeepLinkUrl}
             labelProps={{
-              text: 'Deep link URL:',
+              label: 'Deep link URL:',
               switchProps: {
                 value: passDeepLink,
                 setValue: setPassDeepLink,
@@ -305,47 +305,47 @@ export default function LiveUpdatesScreen() {
           />
 
           <View style={styles.subSectionContainer}>
-            <CustomLabel
-              text="Progress"
+            <SwitchWithLabel
+              label="Progress"
               switchProps={{ value: passProgress, setValue: setPassProgress }}
             />
 
             {passProgress && (
               <>
                 <View style={styles.inputsRow}>
-                  <CustomInput
+                  <Input
                     value={progressValue}
                     onChangeText={setProgressValue}
-                    labelProps={{ text: 'Progress value:' }}
+                    labelProps={{ label: 'Progress value:' }}
                     placeholder="Value, e.g. 50"
                     numeric
                     editable={!progressIndeterminate}
                   />
-                  <CustomInput
+                  <Input
                     value={progressMax}
                     onChangeText={setProgressMax}
-                    labelProps={{ text: 'Progress max:' }}
+                    labelProps={{ label: 'Progress max:' }}
                     placeholder="Maximum, default 100"
                     numeric
                     editable={!(progressIndeterminate || passSegments)}
                   />
                 </View>
-                <CustomLabel
-                  text="Indeterminate progress"
+                <SwitchWithLabel
+                  label="Indeterminate progress"
                   switchProps={{
                     value: progressIndeterminate,
                     setValue: setProgressIndeterminate,
                   }}
                 />
-                <CustomLabel
-                  text="Points"
+                <SwitchWithLabel
+                  label="Points"
                   switchProps={{
                     value: passPoints,
                     setValue: setPassPoints,
                   }}
                 />
-                <CustomLabel
-                  text="Segments"
+                <SwitchWithLabel
+                  label="Segments"
                   switchProps={{
                     value: passSegments,
                     setValue: setPassSegments,
@@ -355,11 +355,11 @@ export default function LiveUpdatesScreen() {
             )}
 
             {!isBaklava() && (
-              <CustomInput
+              <Input
                 value={backgroundColor}
                 onChangeText={setBackgroundColor}
                 labelProps={{
-                  text: 'Background color (hex) (for SDK &lt; 16 Baklava):',
+                  label: 'Background color (hex) (for SDK &lt; 16 Baklava):',
                 }}
                 placeholder="Background color"
               />
@@ -382,10 +382,10 @@ export default function LiveUpdatesScreen() {
 
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Manage existing Live Update</Text>
-          <CustomInput
+          <Input
             value={notificationIdString}
             onChangeText={setNotificationIdString}
-            labelProps={{ text: 'Live Update ID:' }}
+            labelProps={{ label: 'Live Update ID:' }}
             placeholder="Live Update ID"
             numeric
           />
