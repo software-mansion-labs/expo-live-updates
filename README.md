@@ -109,9 +109,11 @@ type LiveUpdateState = {
   title: string // Main title text
   text?: string // Additional descriptive text
   subText?: string // Subtext text
-  imageName?: string // Name of image resource
-  dynamicIslandImageName?: string // Custom image for dynamic notification area
+  imageLocalUri?: string // Local uri for image
+  iconLocalUri?: string // Local uri for notification icon
   progress?: LiveUpdateProgress // Progress bar configuration
+  showTime?: boolean // Shows notification time
+  time?: number // Timestamp of notification time
   shortCriticalText?: string // Critical text (max 7 chars recommended)
 }
 
@@ -144,6 +146,21 @@ type LiveUpdateConfig = {
   deepLinkUrl?: string // Deep link URL to navigate when tapped
 }
 ```
+
+### LiveUpdate restrictions
+
+Keep in mind that:
+
+- `subText` - there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
+- `imageLocalUri` and `iconLocalUri` are local uris obtained with `Asset.loadAsync`
+- `iconLocalUri` - should navigate to file that follows [UX guidelines](https://m3.material.io/styles/icons/designing-icons)
+- `progressIndeterminate` - when `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
+- passing `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
+- `progressPoints` - requires specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
+- `progressSegments` - requires specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegments`.
+- `showTime` - when `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
+- `time` - affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
+- `shortCriticalText` - is not recommended to be longer than 7 characters. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 
 ## Deep Linking
 
@@ -216,17 +233,9 @@ Request variables:
 - testing `<YOUR_BEARER_TOKEN>` - can be generated using [Google OAuth Playground](https://developers.google.com/oauthplayground/)
 - `<DEVICE_PUSH_TOKEN>` - can be copied from the example app
 
-There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
+Keep in mind that passing:
 
-- `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
-- `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
-- `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
-- `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
-- `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
-- `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
-- `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
-- `progressPoints` must be specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
-- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegments`.
+- `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update
 
 ## expo-live-updates is created by Software Mansion
 
