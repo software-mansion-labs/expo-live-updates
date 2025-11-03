@@ -1,16 +1,13 @@
 import { useMemo } from 'react'
+import type { TextInputProps } from 'react-native'
 import { StyleSheet, TextInput, View } from 'react-native'
 import type { CustomLabelProps } from './CustomLabel'
 import CustomLabel from './CustomLabel'
 
 type CustomInputProps = {
-  value: string
-  onChangeText: (text: string) => void
   labelProps: CustomLabelProps
-  placeholder?: string
   numeric?: boolean
-  editable?: boolean
-}
+} & Pick<TextInputProps, 'value' | 'onChangeText' | 'placeholder' | 'editable'>
 
 export default function CustomInput({
   value,
@@ -23,7 +20,7 @@ export default function CustomInput({
   const editableText = useMemo(() => {
     const switchValue = labelProps.switchProps?.value
     // eslint-disable-next-line prettier/prettier
-    return editable !== undefined ? editable : switchValue ?? true
+    return editable !== undefined ? editable : (switchValue ?? true)
   }, [editable, labelProps.switchProps])
 
   return (

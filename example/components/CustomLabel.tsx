@@ -1,12 +1,11 @@
 import type { Dispatch, SetStateAction } from 'react'
+import type { SwitchProps } from 'react-native'
 import { StyleSheet, Switch, Text, View } from 'react-native'
 
 export type CustomLabelProps = {
   text: string
-  switchProps?: {
-    value: boolean
+  switchProps?: Pick<SwitchProps, 'value' | 'disabled'> & {
     setValue: Dispatch<SetStateAction<boolean>>
-    disabled?: boolean
   }
 }
 
@@ -19,8 +18,7 @@ export default function CustomLabel({ text, switchProps }: CustomLabelProps) {
       {switchProps && (
         <Switch
           onValueChange={() => switchProps.setValue(toggle)}
-          value={switchProps.value}
-          disabled={switchProps.disabled}
+          {...switchProps}
         />
       )}
     </View>

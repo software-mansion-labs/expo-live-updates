@@ -390,16 +390,8 @@ export default function LiveUpdatesScreen() {
             numeric
           />
           <View style={styles.buttonsContainer}>
-            <Button
-              title="Update"
-              onPress={handleUpdateLiveUpdate}
-              disabled={notificationId === undefined}
-            />
-            <Button
-              title="Stop"
-              onPress={handleStopLiveUpdate}
-              disabled={notificationId === undefined}
-            />
+            <Button title="Update" onPress={handleUpdateLiveUpdate} />
+            <Button title="Stop" onPress={handleStopLiveUpdate} />
           </View>
         </View>
 
