@@ -112,12 +112,12 @@ class LiveUpdatesManager(private val context: Context) {
       notificationBuilder.setRequestPromotedOngoing(true)
     }
 
-    state.imageName?.let { imageName ->
+    state.imageLocalUri?.let { imageName ->
       val bitmap = loadBitmapByName(imageName)
       bitmap?.let { bitmap -> notificationBuilder.setLargeIcon(bitmap) }
     }
 
-    state.smallImageName?.let { smallImageName ->
+    state.iconLocalUri?.let { smallImageName ->
       val bitmap = loadBitmapByName(smallImageName)
       bitmap?.let { bitmap ->
         val icon = IconCompat.createWithBitmap(bitmap)

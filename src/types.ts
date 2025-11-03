@@ -20,8 +20,8 @@ export type LiveUpdateState = {
   title: string
   text?: string
   subText?: string
-  imageName?: string
-  smallImageName?: string
+  imageLocalUri?: string
+  iconLocalUri?: string
   progress?: LiveUpdateProgress
   shortCriticalText?: string
   showTime?: boolean

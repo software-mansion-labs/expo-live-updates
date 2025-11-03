@@ -29,13 +29,16 @@ import { Asset } from 'expo-asset'
 
 const toggle = (previousState: boolean) => !previousState
 
+const IMAGE_PATH = `./../assets/LiveUpdates/logo.png`
+const ICON_PATH = `./../assets/LiveUpdates/logo-island.png`
+
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
-  const [imageUri, setImageUri] = useState<string>()
-  const [iconImageUri, setIconImageUri] = useState<string>()
+  const [imageLocalUri, setImageLocalUri] = useState<string>()
+  const [iconLocalUri, setIconLocalUri] = useState<string>()
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
   const [showTime, setShowTime] = useState(false)
@@ -46,7 +49,7 @@ export default function LiveUpdatesScreen() {
 
   const [passText, setPassText] = useState(true)
   const [passImage, setPassImage] = useState(true)
-  const [passIconImage, setPassIconImage] = useState(true)
+  const [passIcon, setPassIcon] = useState(true)
   const [passDeepLink, setPassDeepLink] = useState(true)
   const [passShortCriticalText, setPassShortCriticalText] = useState(true)
   const [passSubText, setPassSubText] = useState(true)
@@ -79,8 +82,8 @@ export default function LiveUpdatesScreen() {
   useEffect(() => {
     const loadImages = async () => {
       const images = await getImgsUri()
-      setImageUri(images.logo)
-      setIconImageUri(images.logoIsland)
+      setImageLocalUri(images.imageLocalUri)
+      setIconLocalUri(images.iconLocalUri)
     }
 
     loadImages()
@@ -105,8 +108,8 @@ export default function LiveUpdatesScreen() {
     title,
     text: passText ? text : undefined,
     subText: passSubText ? subText : undefined,
-    imageName: passImage ? imageUri : undefined,
-    dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
+    imageLocalUri: passImage ? imageLocalUri : undefined,
+    iconLocalUri: passIcon ? iconLocalUri : undefined,
     progress: passProgress
       ? {
           max: isNaN(parseInt(progressMax)) ? 100 : parseInt(progressMax),
@@ -269,8 +272,8 @@ export default function LiveUpdatesScreen() {
           <View style={styles.labelWithSwitch}>
             <Text style={styles.label}>Icon image</Text>
             <Switch
-              onValueChange={() => setPassIconImage(toggle)}
-              value={passIconImage}
+              onValueChange={() => setPassIcon(toggle)}
+              value={passIcon}
             />
           </View>
 
@@ -517,17 +520,18 @@ function isBaklava() {
   return Platform.OS === 'android' && Platform.Version >= 36
 }
 
-async function getImgsUri() {
-  const [{ localUri: logoLocalUri }] = await Asset.loadAsync(
-    require(`./../assets/LiveUpdates/logo.png`),
+async function getImgsUri(): Promise<{
+  imageLocalUri: string | undefined
+  iconLocalUri: string | undefined
+}> {
+  const [{ localUri: imageLocalUri }] = await Asset.loadAsync(
+    require(IMAGE_PATH),
   )
-  const [{ localUri: logoIslandLocalUri }] = await Asset.loadAsync(
-    require(`./../assets/LiveUpdates/logo-island.png`),
-  )
+  const [{ localUri: iconLocalUri }] = await Asset.loadAsync(require(ICON_PATH))
 
   return {
-    logo: logoLocalUri ?? undefined,
-    logoIsland: logoIslandLocalUri ?? undefined,
+    imageLocalUri: imageLocalUri ?? undefined,
+    iconLocalUri: iconLocalUri ?? undefined,
   }
 }
 
