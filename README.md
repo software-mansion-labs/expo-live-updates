@@ -118,6 +118,15 @@ type LiveUpdateState = {
 }
 ```
 
+Important notes:
+
+- `icon` is not fully supported on API 36.1. On this version the notification icon is app's icon and the `icon` will only be visible inside device status bar.
+- Using `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
+- `subText` for [Build.VERSION_CODES.N](https://developer.android.com/reference/android/os/Build.VERSION_CODES#N) is displayed in the notification header area, but there are no guarantees where exactly it will be located, base on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>)
+- `showTime` indicates wether notification time should be displayed based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation on the native side is displayed - keep in mind that for Live Updates created with FCM it will be the time of message delivery.
+- `time` will be displayed in status chip only when the given timestamp is at least 2 minutes in the future and `shortCriticalText`
+  is undefined.
+
 ### LiveUpdateProgress Object Structure
 
 Defines progress representation for a Live Update notification:
@@ -125,12 +134,17 @@ Defines progress representation for a Live Update notification:
 ```ts
 type LiveUpdateProgress = {
   max?: number
-  progress?: number
+  progress?: number // default: 100
   indeterminate?: boolean
   points?: LiveUpdateProgressPoint[] // { position: number, color?: string }
   segments?: LiveUpdateProgressSegment[] // { position: number, color?: string }
 }
 ```
+
+Important notes:
+
+- All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
+- If `segments` are defined, maximum value will be calculated based on provided `segments` and the `max` is ignored.
 
 ### LiveUpdateConfig Object Structure
 
@@ -142,6 +156,10 @@ type LiveUpdateConfig = {
   deepLinkUrl?: string
 }
 ```
+
+Important notes:
+
+-
 
 ## Deep Linking
 
@@ -219,15 +237,8 @@ Request variables:
 There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
-- `iconUrl` is not fully supported on API 36.1. On this version notification icon is your app icon and the only place where you will be able to see the difference is status bar.
-- `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
-- `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
-- `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
-- `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
-- `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
-- `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
-- `progressPoints` must be specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
-- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegments`.
+- `progressPoints` must be a specific string format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass it as string to `progressPoints`.
+- `progressSegments` ust be a specific string format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass it string to `progressSegments`.
 
 ## expo-live-updates is created by Software Mansion
 
