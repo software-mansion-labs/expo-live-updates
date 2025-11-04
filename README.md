@@ -105,53 +105,44 @@ startLiveUpdate({ title: 'Test notifications' })
 
 ### LiveUpdateState Object Structure
 
-Defines the visual content and progress information for a Live Update notification:
+Defines the visual content for a Live Update notification:
 
 ```ts
 type LiveUpdateState = {
-  title: string // Main title text
-  text?: string // Additional descriptive text
-  subText?: string // Subtext text
-  image?: LiveUpdateImage // Image data
-  icon?: LiveUpdateImage // Icon data
-  progress?: LiveUpdateProgress // Progress bar configuration
-  showTime?: boolean // Shows notification time
-  time?: number // Timestamp of notification time
-  shortCriticalText?: string // Critical text (max 7 chars recommended)
+  title: string
+  text?: string
+  subText?: string
+  image?: LiveUpdateImage // { url: string, isRemote: boolean}
+  icon?: LiveUpdateImage // { url: string, isRemote: boolean}
+  progress?: LiveUpdateProgress
+  showTime?: boolean
+  time?: number
+  shortCriticalText?: string
 }
+```
 
-export type LiveUpdateImage = {
-  url: string // Local uri or url to image resource
-  isRemote: boolean // Wether a resource is local or remote
-}
+### LiveUpdateProgress Object Structure
 
+Defines progress representation for a Live Update notification:
+
+```ts
 type LiveUpdateProgress = {
-  max?: number // Maximum progress value (default: 100)
-  progress?: number // Current progress value
-  indeterminate?: boolean // Whether to show indeterminate progress bar
-  points?: LiveUpdateProgressPoint[] // Points for dividing progress bar
-  segments?: LiveUpdateProgressSegment[] // Segments for dividing progress bar
-}
-
-type LiveUpdateProgressPoint = {
-  position: number // Point's position relative to progress bar length
-  color?: string // Point's color
-}
-
-type LiveUpdateProgressSegment = {
-  length: number // Segment's length
-  color?: string // Segment's color
+  max?: number
+  progress?: number
+  indeterminate?: boolean
+  points?: LiveUpdateProgressPoint[] // { position: number, color?: string }
+  segments?: LiveUpdateProgressSegment[] // { position: number, color?: string }
 }
 ```
 
 ### LiveUpdateConfig Object Structure
 
-Configuration options for the Live Update notification. Separated from state to allow in the future updating only state without passing config every time:
+Defines configuration options for the Live Update notification. Separated from state to allow in the future updating only state without passing config every time:
 
 ```ts
 type LiveUpdateConfig = {
-  backgroundColor?: string // Background color (only SDK < 16)
-  deepLinkUrl?: string // Deep link URL to navigate when tapped
+  backgroundColor?: string // only SDK < 16
+  deepLinkUrl?: string
 }
 ```
 
