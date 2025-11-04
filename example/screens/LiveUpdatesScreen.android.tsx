@@ -7,7 +7,6 @@ import {
 } from 'expo-live-updates'
 import type {
   LiveUpdateConfig,
-  LiveUpdateImage,
   LiveUpdateState,
   NotificationStateChangeEvent,
 } from 'expo-live-updates/types'
@@ -37,10 +36,10 @@ export default function LiveUpdatesScreen() {
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
-  const [imageLocalUrl, setImageLocalUrl] = useState('')
+  const [imageLocalUri, setImageLocalUri] = useState('')
   const [isImageRemote, setIsImageRemote] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-  const [iconLocalUrl, setIconLocalUrl] = useState('')
+  const [iconLocalUri, setIconLocalUri] = useState('')
   const [isIconRemote, setIsIconRemote] = useState(false)
   const [iconUrl, setIconUrl] = useState('')
   const [backgroundColor, setBackgroundColor] = useState('red')
@@ -78,13 +77,13 @@ export default function LiveUpdatesScreen() {
 
   useEffect(() => {
     const loadImages = async () => {
-      const { imageLocalUri, iconLocalUri } = await getImgsUri()
+      const uris = await getImgsUri()
 
-      if (imageLocalUri) {
-        setImageLocalUrl(imageLocalUri)
+      if (uris.imageLocalUri) {
+        setImageLocalUri(uris.imageLocalUri)
       }
-      if (iconLocalUri) {
-        setIconLocalUrl(iconLocalUri)
+      if (uris.iconLocalUri) {
+        setIconLocalUri(uris.iconLocalUri)
       }
     }
 
@@ -112,13 +111,13 @@ export default function LiveUpdatesScreen() {
     subText: passSubText ? subText : undefined,
     image: passImage
       ? {
-          url: isImageRemote ? imageUrl : imageLocalUrl,
+          url: isImageRemote ? imageUrl : imageLocalUri,
           isRemote: isImageRemote,
         }
       : undefined,
     icon: passIcon
       ? {
-          url: isIconRemote ? iconUrl : iconLocalUrl,
+          url: isIconRemote ? iconUrl : iconLocalUri,
           isRemote: isIconRemote,
         }
       : undefined,
@@ -465,14 +464,12 @@ async function getImgsUri(): Promise<{
   imageLocalUri: string | undefined
   iconLocalUri: string | undefined
 }> {
-  const [{ localUri: imageLocalUri }] = await Asset.loadAsync(
-    require(IMAGE_PATH),
-  )
-  const [{ localUri: iconLocalUri }] = await Asset.loadAsync(require(ICON_PATH))
+  const [{ localUri: imageUri }] = await Asset.loadAsync(require(IMAGE_PATH))
+  const [{ localUri: iconUri }] = await Asset.loadAsync(require(ICON_PATH))
 
   return {
-    imageLocalUri: imageLocalUri ?? undefined,
-    iconLocalUri: iconLocalUri ?? undefined,
+    imageLocalUri: imageUri ?? undefined,
+    iconLocalUri: iconUri ?? undefined,
   }
 }
 

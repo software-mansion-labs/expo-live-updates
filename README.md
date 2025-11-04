@@ -109,12 +109,17 @@ type LiveUpdateState = {
   title: string // Main title text
   text?: string // Additional descriptive text
   subText?: string // Subtext text
-  imageLocalUri?: string // Local uri for image
-  iconLocalUri?: string // Local uri for notification icon
+  image?: LiveUpdateImage // Image data
+  icon?: LiveUpdateImage // Icon data
   progress?: LiveUpdateProgress // Progress bar configuration
   showTime?: boolean // Shows notification time
   time?: number // Timestamp of notification time
   shortCriticalText?: string // Critical text (max 7 chars recommended)
+}
+
+export type LiveUpdateImage = {
+  url: string // Local uri or url to image resource
+  isRemote: boolean // Wether a resource is local or remote
 }
 
 type LiveUpdateProgress = {
@@ -152,8 +157,7 @@ type LiveUpdateConfig = {
 Keep in mind that:
 
 - `subText` - there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
-- `imageLocalUri` and `iconLocalUri` are local uris obtained with `Asset.loadAsync`
-- `iconLocalUri` - should navigate to file that follows [UX guidelines](https://m3.material.io/styles/icons/designing-icons)
+- `url` for local resources can be obtained with `Asset.loadAsync`
 - `progressIndeterminate` - when `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
 - passing `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
 - `progressPoints` - requires specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
