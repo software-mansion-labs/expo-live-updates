@@ -37,8 +37,12 @@ export default function LiveUpdatesScreen() {
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
-  const [image, setImage] = useState<LiveUpdateImage>()
-  const [icon, setIcon] = useState<LiveUpdateImage>()
+  const [imageLocalUrl, setImageLocalUrl] = useState('')
+  const [isImageRemote, setIsImageRemote] = useState(false)
+  const [imageUrl, setImageUrl] = useState('')
+  const [iconLocalUrl, setIconLocalUrl] = useState('')
+  const [isIconRemote, setIsIconRemote] = useState(false)
+  const [iconUrl, setIconUrl] = useState('')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
   const [showTime, setShowTime] = useState(false)
@@ -77,10 +81,10 @@ export default function LiveUpdatesScreen() {
       const { imageLocalUri, iconLocalUri } = await getImgsUri()
 
       if (imageLocalUri) {
-        setImage({ url: imageLocalUri, isRemote: false })
+        setImageLocalUrl(imageLocalUri)
       }
       if (iconLocalUri) {
-        setIcon({ url: iconLocalUri, isRemote: false })
+        setIconLocalUrl(iconLocalUri)
       }
     }
 
@@ -106,8 +110,18 @@ export default function LiveUpdatesScreen() {
     title,
     text: passText ? text : undefined,
     subText: passSubText ? subText : undefined,
-    image: passImage ? image : undefined,
-    icon: passIcon ? icon : undefined,
+    image: passImage
+      ? {
+          url: isImageRemote ? imageUrl : imageLocalUrl,
+          isRemote: isImageRemote,
+        }
+      : undefined,
+    icon: passIcon
+      ? {
+          url: isIconRemote ? iconUrl : iconLocalUrl,
+          isRemote: isIconRemote,
+        }
+      : undefined,
     progress: passProgress
       ? {
           max: isNaN(parseInt(progressMax)) ? 100 : parseInt(progressMax),
@@ -246,10 +260,40 @@ export default function LiveUpdatesScreen() {
             label="Image"
             switchProps={{ value: passImage, setValue: setPassImage }}
           />
+          {passImage && (
+            <Input
+              labelProps={{
+                label: 'Image remote url:',
+                switchProps: {
+                  value: isImageRemote,
+                  setValue: setIsImageRemote,
+                },
+              }}
+              value={imageUrl}
+              onChangeText={setImageUrl}
+              placeholder="Image remote url"
+            />
+          )}
+
           <LabelWithSwitch
             label="Icon image"
             switchProps={{ value: passIcon, setValue: setPassIcon }}
           />
+          {passIcon && (
+            <Input
+              labelProps={{
+                label: 'Icon remote url',
+                switchProps: {
+                  value: isIconRemote,
+                  setValue: setIsIconRemote,
+                },
+              }}
+              value={iconUrl}
+              onChangeText={setIconUrl}
+              placeholder="Icon remote url"
+            />
+          )}
+
           <LabelWithSwitch
             label="Show time"
             switchProps={{ value: showTime, setValue: setShowTime }}
