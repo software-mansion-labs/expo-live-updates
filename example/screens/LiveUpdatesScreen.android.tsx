@@ -7,6 +7,7 @@ import {
 } from 'expo-live-updates'
 import type {
   LiveUpdateConfig,
+  LiveUpdateImage,
   LiveUpdateState,
   NotificationStateChangeEvent,
 } from 'expo-live-updates/types'
@@ -110,16 +111,10 @@ export default function LiveUpdatesScreen() {
     text: passText ? text : undefined,
     subText: passSubText ? subText : undefined,
     image: passImage
-      ? {
-          url: isImageRemote ? imageUrl : imageLocalUrl,
-          isRemote: isImageRemote,
-        }
+      ? getLiveUpdateImage(imageLocalUrl, imageUrl, isImageRemote)
       : undefined,
     icon: passIcon
-      ? {
-          url: isIconRemote ? iconUrl : iconLocalUrl,
-          isRemote: isIconRemote,
-        }
+      ? getLiveUpdateImage(iconLocalUrl, iconUrl, isIconRemote)
       : undefined,
     progress: passProgress
       ? {
@@ -145,6 +140,15 @@ export default function LiveUpdatesScreen() {
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
     showTime,
     time: passTime ? getTimeTimestamp() : undefined,
+  })
+
+  const getLiveUpdateImage = (
+    localUri: string,
+    url: string,
+    isRemote: boolean,
+  ): LiveUpdateImage => ({
+    url: isRemote ? url : localUri,
+    isRemote,
   })
 
   const getTimeTimestamp = () => {
