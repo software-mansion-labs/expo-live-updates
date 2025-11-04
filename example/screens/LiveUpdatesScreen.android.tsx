@@ -36,10 +36,10 @@ export default function LiveUpdatesScreen() {
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
-  const [imageLocalUri, setImageLocalUri] = useState('')
+  const [imageLocalUrl, setImageLocalUrl] = useState('')
   const [isImageRemote, setIsImageRemote] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-  const [iconLocalUri, setIconLocalUri] = useState('')
+  const [iconLocalUrl, setIconLocalUrl] = useState('')
   const [isIconRemote, setIsIconRemote] = useState(false)
   const [iconUrl, setIconUrl] = useState('')
   const [backgroundColor, setBackgroundColor] = useState('red')
@@ -77,13 +77,13 @@ export default function LiveUpdatesScreen() {
 
   useEffect(() => {
     const loadImages = async () => {
-      const uris = await getImgsUri()
+      const { imageLocalUri, iconLocalUri } = await getImgsUri()
 
-      if (uris.imageLocalUri) {
-        setImageLocalUri(uris.imageLocalUri)
+      if (imageLocalUri) {
+        setImageLocalUrl(imageLocalUri)
       }
-      if (uris.iconLocalUri) {
-        setIconLocalUri(uris.iconLocalUri)
+      if (iconLocalUri) {
+        setIconLocalUrl(iconLocalUri)
       }
     }
 
@@ -111,13 +111,13 @@ export default function LiveUpdatesScreen() {
     subText: passSubText ? subText : undefined,
     image: passImage
       ? {
-          url: isImageRemote ? imageUrl : imageLocalUri,
+          url: isImageRemote ? imageUrl : imageLocalUrl,
           isRemote: isImageRemote,
         }
       : undefined,
     icon: passIcon
       ? {
-          url: isIconRemote ? iconUrl : iconLocalUri,
+          url: isIconRemote ? iconUrl : iconLocalUrl,
           isRemote: isIconRemote,
         }
       : undefined,
