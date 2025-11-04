@@ -285,7 +285,7 @@ export default function LiveUpdatesScreen() {
           {passIcon && (
             <Input
               labelProps={{
-                label: 'Icon remote url',
+                label: 'Icon remote url:',
                 switchProps: {
                   value: isIconRemote,
                   setValue: setIsIconRemote,
