@@ -279,7 +279,6 @@ class LiveUpdatesManager(private val context: Context) {
     notificationBuilder.setContentIntent(clickPendingIntent)
   }
 
-  // TODO: delete?
   fun getScheme(context: Context): String {
     val applicationInfo =
       context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)

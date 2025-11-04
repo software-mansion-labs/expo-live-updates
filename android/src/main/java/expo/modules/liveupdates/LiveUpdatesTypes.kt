@@ -26,7 +26,6 @@ data class LiveUpdateState(
   @Field val title: String,
   @Field val text: String? = null,
   @Field val subText: String? = null,
-  @Field val imageLocalUri: String? = null,
   @Field val image: LiveUpdateImage? = null,
   @Field val icon: LiveUpdateImage? = null,
   @Field val shortCriticalText: String? = null,
