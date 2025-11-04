@@ -216,6 +216,8 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "title":"Firebase message",
           "text":"This is a message sent via Firebase", // optional
           "subText":"Firebase", // optional
+          "imageUrl":"", // optional
+          "iconUrl":"", // optional
           "progressMax":"100", // optional: maximum progress value, if not provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
