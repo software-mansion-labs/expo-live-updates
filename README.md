@@ -123,11 +123,11 @@ type LiveUpdateState = {
 
 Important notes:
 
-- `icon` is not fully supported on API 36.1. On this version the notification icon is app's icon and the `icon` will only be visible inside device status bar.
+- Adding `icon` will result in changing icon inside notification and device status bar. However, on API 36.1 it works differently - only the icon inside status bar will be affected, because the one inside notification is your app icon and could not be changed through `icon` property.
 - `shortCriticalText` maximum length is recommended to be 7 characters. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
-- `subText` from Android Nougat is displayed in the notification header area, but there are no guarantees where exactly it will be located, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>)
-- `showTime` indicates wether notification time should be displayed. By default time is always displayed, to hide time you need to set `showTime` to `false`.
-- notification time is based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation on the native side is displayed - keep in mind that for Live Updates created with FCM it will be the time of message delivery.
+- `subText` from Android Nougat is displayed in the notification header area, but there are no guarantees where exactly it will be located, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>).
+- `showTime` indicates wether notification time should be displayed. By default, time is always displayed - to hide it you need to directly set `showTime` to `false`.
+- Notification time is based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation on the native side is displayed - keep in mind that for Live Updates created with FCM it will be the time of message delivery.
 - `time` will be displayed in status chip only when the given timestamp is at least 2 minutes in the future and `shortCriticalText` is not defined.
 
 ### LiveUpdateProgress Object Structure
@@ -146,8 +146,8 @@ type LiveUpdateProgress = {
 
 Important notes:
 
-- All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
-- If `segments` property is defined, progress bar maximum value will be calculated based on provided `segments` and the `max` property will be ignored. // TODO: maybe throw exception inside app
+- Progress will not be displayed unless `progressIndeterminate` is set to `true` or `progress` is specified.
+- Progress maximum value is based on `max`. However, if `segments` property is defined, maximum value will be calculated based on provided `segments` and the `max` will be ignored.
 
 ### LiveUpdateConfig Object Structure
 
@@ -155,14 +155,14 @@ Defines configuration options for the Live Update notification. Separated from s
 
 ```ts
 type LiveUpdateConfig = {
-  backgroundColor?: string // only SDK < 16
   deepLinkUrl?: string
+  iconBackgroundColor?: string
 }
 ```
 
 Important notes:
 
-- TODO: setColorized, setColor
+- `iconBackgroundColor` will have no effect, because icon inside notification is your app's icon and it's background could not be changed through `iconBackgroundProperty` property.
 
 ## Deep Linking
 
