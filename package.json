@@ -13,6 +13,7 @@
     "clean": "expo-module clean",
     "lint": "expo-module lint",
     "lint:fix": "expo-module lint --fix",
+    "lint:libOnly": "expo-module eslint --ignore-pattern 'example/*'",
     "test": "expo-module test",
     "prepare": "expo-module prepare && rm .eslintrc.js",
     "prepublishOnly": "expo-module prepublishOnly",
