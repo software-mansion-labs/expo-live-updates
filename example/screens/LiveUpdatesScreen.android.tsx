@@ -7,6 +7,7 @@ import {
 } from 'expo-live-updates'
 import type {
   LiveUpdateConfig,
+  LiveUpdateImage,
   LiveUpdateState,
   NotificationStateChangeEvent,
 } from 'expo-live-updates/types'
@@ -28,13 +29,20 @@ import Input from '../components/Input'
 import LabelWithSwitch from '../components/LabelWithSwitch'
 import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 
+const IMAGE_PATH = `./../assets/LiveUpdates/logo.png`
+const ICON_PATH = `./../assets/LiveUpdates/logo-island.png`
+
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
   const [text, onChangeText] = useState('This is a text')
   const [subText, onChangeSubText] = useState('SWM')
   const [deepLinkUrl, setDeepLinkUrl] = useState('/Test')
-  const [imageUri, setImageUri] = useState<string>()
-  const [iconImageUri, setIconImageUri] = useState<string>()
+  const [imageLocalUrl, setImageLocalUrl] = useState('')
+  const [isImageRemote, setIsImageRemote] = useState(false)
+  const [imageUrl, setImageUrl] = useState('')
+  const [iconLocalUrl, setIconLocalUrl] = useState('')
+  const [isIconRemote, setIsIconRemote] = useState(false)
+  const [iconUrl, setIconUrl] = useState('')
   const [backgroundColor, setBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
   const [showTime, setShowTime] = useState(false)
@@ -45,7 +53,7 @@ export default function LiveUpdatesScreen() {
 
   const [passText, setPassText] = useState(true)
   const [passImage, setPassImage] = useState(true)
-  const [passIconImage, setPassIconImage] = useState(true)
+  const [passIcon, setPassIcon] = useState(true)
   const [passDeepLink, setPassDeepLink] = useState(true)
   const [passShortCriticalText, setPassShortCriticalText] = useState(true)
   const [passSubText, setPassSubText] = useState(true)
@@ -70,9 +78,14 @@ export default function LiveUpdatesScreen() {
 
   useEffect(() => {
     const loadImages = async () => {
-      const images = await getImgsUri()
-      setImageUri(images.logo)
-      setIconImageUri(images.logoIsland)
+      const { imageLocalUri, iconLocalUri } = await getImgsUri()
+
+      if (imageLocalUri) {
+        setImageLocalUrl(imageLocalUri)
+      }
+      if (iconLocalUri) {
+        setIconLocalUrl(iconLocalUri)
+      }
     }
 
     loadImages()
@@ -97,8 +110,12 @@ export default function LiveUpdatesScreen() {
     title,
     text: passText ? text : undefined,
     subText: passSubText ? subText : undefined,
-    imageName: passImage ? imageUri : undefined,
-    dynamicIslandImageName: passIconImage ? iconImageUri : undefined,
+    image: passImage
+      ? getLiveUpdateImage(imageLocalUrl, imageUrl, isImageRemote)
+      : undefined,
+    icon: passIcon
+      ? getLiveUpdateImage(iconLocalUrl, iconUrl, isIconRemote)
+      : undefined,
     progress: passProgress
       ? {
           max: isNaN(parseInt(progressMax)) ? 100 : parseInt(progressMax),
@@ -123,6 +140,15 @@ export default function LiveUpdatesScreen() {
     shortCriticalText: passShortCriticalText ? shortCriticalText : undefined,
     showTime,
     time: passTime ? getTimeTimestamp() : undefined,
+  })
+
+  const getLiveUpdateImage = (
+    localUrl: string,
+    url: string,
+    isRemote: boolean,
+  ): LiveUpdateImage => ({
+    url: isRemote ? url : localUrl,
+    isRemote,
   })
 
   const getTimeTimestamp = () => {
@@ -237,10 +263,40 @@ export default function LiveUpdatesScreen() {
             label="Image"
             switchProps={{ value: passImage, setValue: setPassImage }}
           />
+          {passImage && (
+            <Input
+              labelProps={{
+                label: 'Image remote url:',
+                switchProps: {
+                  value: isImageRemote,
+                  setValue: setIsImageRemote,
+                },
+              }}
+              value={imageUrl}
+              onChangeText={setImageUrl}
+              placeholder="Image remote url"
+            />
+          )}
+
           <LabelWithSwitch
             label="Icon image"
-            switchProps={{ value: passIconImage, setValue: setPassIconImage }}
+            switchProps={{ value: passIcon, setValue: setPassIcon }}
           />
+          {passIcon && (
+            <Input
+              labelProps={{
+                label: 'Icon remote url:',
+                switchProps: {
+                  value: isIconRemote,
+                  setValue: setIsIconRemote,
+                },
+              }}
+              value={iconUrl}
+              onChangeText={setIconUrl}
+              placeholder="Icon remote url"
+            />
+          )}
+
           <LabelWithSwitch
             label="Show time"
             switchProps={{ value: showTime, setValue: setShowTime }}
@@ -408,17 +464,16 @@ function isBaklava() {
   return Platform.OS === 'android' && Platform.Version >= 36
 }
 
-async function getImgsUri() {
-  const [{ localUri: logoLocalUri }] = await Asset.loadAsync(
-    require(`./../assets/LiveUpdates/logo.png`),
-  )
-  const [{ localUri: logoIslandLocalUri }] = await Asset.loadAsync(
-    require(`./../assets/LiveUpdates/logo-island.png`),
-  )
+async function getImgsUri(): Promise<{
+  imageLocalUri: string | undefined
+  iconLocalUri: string | undefined
+}> {
+  const [{ localUri: imageUri }] = await Asset.loadAsync(require(IMAGE_PATH))
+  const [{ localUri: iconUri }] = await Asset.loadAsync(require(ICON_PATH))
 
   return {
-    logo: logoLocalUri ?? undefined,
-    logoIsland: logoIslandLocalUri ?? undefined,
+    imageLocalUri: imageUri ?? undefined,
+    iconLocalUri: iconUri ?? undefined,
   }
 }
 
