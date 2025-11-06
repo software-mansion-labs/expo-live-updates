@@ -210,8 +210,7 @@ class LiveUpdatesManager(private val context: Context) {
   private fun getBitmapFromImage(image: LiveUpdateImage): Bitmap? {
     try {
       val (url, isRemote) = image
-      val bitmap = if (isRemote) getBitmapFromRemoteUrl(url) else getBitmapFromLocalUrl(url)
-      return bitmap
+      return if (isRemote) getBitmapFromRemoteUrl(url) else getBitmapFromLocalUrl(url)
     } catch (e: Exception) {
       Log.i(TAG, "Creating bitmap from url failed.", e)
       return null
@@ -223,8 +222,7 @@ class LiveUpdatesManager(private val context: Context) {
     val file = File(fileUrl)
 
     if (file.exists()) {
-      val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-      return bitmap
+      return BitmapFactory.decodeFile(file.absolutePath)
     } else {
       throw Exception("FileCheck could not find file at $fileUrl.")
     }
