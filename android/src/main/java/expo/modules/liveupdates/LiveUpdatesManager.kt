@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
@@ -16,6 +17,7 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import java.io.File
+import java.net.URL
 
 private const val TAG = "LiveUpdatesManager"
 private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
@@ -112,13 +114,13 @@ class LiveUpdatesManager(private val context: Context) {
       notificationBuilder.setRequestPromotedOngoing(true)
     }
 
-    state.imageName?.let { imageName ->
-      val bitmap = loadBitmapByName(imageName)
+    state.image?.let { image ->
+      val bitmap = getBitmapFromImage(image)
       bitmap?.let { bitmap -> notificationBuilder.setLargeIcon(bitmap) }
     }
 
-    state.smallImageName?.let { smallImageName ->
-      val bitmap = loadBitmapByName(smallImageName)
+    state.icon?.let { icon ->
+      val bitmap = getBitmapFromImage(icon)
       bitmap?.let { bitmap ->
         val icon = IconCompat.createWithBitmap(bitmap)
         notificationBuilder.setSmallIcon(icon)
@@ -205,16 +207,30 @@ class LiveUpdatesManager(private val context: Context) {
     return "Invalid color format: $color"
   }
 
-  private fun loadBitmapByName(name: String): android.graphics.Bitmap? {
-    val fileUrl = name.replace("file://", "")
-    val file = File(fileUrl)
-    if (file.exists()) {
-      val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-      return bitmap
-    } else {
-      Log.e(TAG, "FileCheck could not find file at $fileUrl")
+  private fun getBitmapFromImage(image: LiveUpdateImage): Bitmap? {
+    try {
+      val (url, isRemote) = image
+      return if (isRemote) getBitmapFromRemoteUrl(url) else getBitmapFromLocalUrl(url)
+    } catch (e: Exception) {
+      Log.w(TAG, "Creating bitmap from url failed.", e)
       return null
     }
+  }
+
+  private fun getBitmapFromLocalUrl(url: String): Bitmap {
+    val fileUrl = url.replace("file://", "")
+    val file = File(fileUrl)
+
+    if (file.exists()) {
+      return BitmapFactory.decodeFile(file.absolutePath)
+    } else {
+      throw Exception("FileCheck could not find file at $fileUrl.")
+    }
+  }
+
+  private fun getBitmapFromRemoteUrl(url: String): Bitmap {
+    val parsedUrl = URL(url)
+    return BitmapFactory.decodeStream(parsedUrl.openConnection().getInputStream())
   }
 
   private fun setNotificationDeleteIntent(

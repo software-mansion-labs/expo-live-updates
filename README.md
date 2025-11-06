@@ -112,10 +112,17 @@ type LiveUpdateState = {
   title: string // Main title text
   text?: string // Additional descriptive text
   subText?: string // Subtext text
-  imageName?: string // Name of image resource
-  dynamicIslandImageName?: string // Custom image for dynamic notification area
+  image?: LiveUpdateImage // Image data
+  icon?: LiveUpdateImage // Icon data
   progress?: LiveUpdateProgress // Progress bar configuration
+  showTime?: boolean // Shows notification time
+  time?: number // Timestamp of notification time
   shortCriticalText?: string // Critical text (max 7 chars recommended)
+}
+
+export type LiveUpdateImage = {
+  url: string // Local uri or url to image resource
+  isRemote: boolean // Wether a resource is local or remote
 }
 
 type LiveUpdateProgress = {
@@ -198,6 +205,8 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "title":"Firebase message",
           "text":"This is a message sent via Firebase", // optional
           "subText":"Firebase", // optional
+          "imageUrl":"", // optional
+          "iconUrl":"", // optional
           "progressMax":"100", // optional: maximum progress value, if not provided = 100
           "progressValue":"50", // optional: current progress value
           "progressIndeterminate":"false", // optional: whether progress is indeterminate
@@ -222,6 +231,7 @@ Request variables:
 There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
+- `iconUrl` is not fully supported on API 36.1. On this version notification icon is your app icon and the only place where you will be able to see the difference is status bar.
 - `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 - `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
 - `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
