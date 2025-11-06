@@ -20,7 +20,6 @@ import java.io.File
 import java.net.URL
 
 private const val TAG = "LiveUpdatesManager"
-private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 private const val DEFAULT_MAX_PROGRESS = 100
 
 object NotificationActionExtra {
@@ -283,12 +282,5 @@ class LiveUpdatesManager(private val context: Context) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
       )
     notificationBuilder.setContentIntent(clickPendingIntent)
-  }
-
-  fun getScheme(context: Context): String {
-    val applicationInfo =
-      context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-    return applicationInfo.metaData?.getString(EXPO_MODULE_SCHEME_KEY)
-      ?: throw IllegalStateException("$EXPO_MODULE_SCHEME_KEY not found in AndroidManifest.xml")
   }
 }
