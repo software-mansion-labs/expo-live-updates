@@ -104,7 +104,7 @@ startLiveUpdate({ title: 'Test notifications' })
 
 ### LiveUpdateState Object Structure
 
-Defines the visual content for a Live Update notification:
+Defines the visual content and progress information for a Live Update notification:
 
 ```ts
 type LiveUpdateState = {
@@ -122,12 +122,12 @@ type LiveUpdateState = {
 
 Important notes:
 
-- Adding `icon` results in changing icon inside notification and device status bar. However, on API 36.1 only the icon inside status bar will be changed - icon inside notification is your app's icon and could not be changed with `icon` property.
+- Adding `icon` results in changing icon inside notification and device status bar. However, on API 36.1 only the icon inside status bar will be changed - icon inside notification is your app's icon and cannot be changed with `icon` property.
 - `shortCriticalText` is recommended to be not longer than 7 characters. If this limit is exceeded, there is no guarantee how much text will be displayed, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
-- `subText` is displayed in the notification header area from Android Nougat, but there are no guarantees where exactly it will be located, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>).
-- `showTime` indicates wether notification time should be displayed. By default, time is always displayed - if you want to hide it, you need to directly set `showTime` to `false`.
-- Notification time is based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation (on the native side) is displayed - keep in mind that for Live Updates created with FCM it will be the time of Firebase message delivery.
+- `subText` is displayed in the notification header area since Android Nougat version, but there is no guarantee where exactly it will be located, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>).
+- `showTime` indicates wether notification time should be displayed. By default, time is always visible - if you want to hide it, you need to directly set `showTime` to `false`.
 - `time` will be displayed in status chip only when the `time` timestamp is at least 2 minutes in the future and `shortCriticalText` is not defined.
+- Notification time is based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation (on the native side) is displayed - keep in mind that for Live Updates created with FCM it will be the time of Firebase message delivery.
 
 ### LiveUpdateProgress Object Structure
 
@@ -146,11 +146,11 @@ type LiveUpdateProgress = {
 Important notes:
 
 - Progress will not be displayed unless `progressIndeterminate` is set to `true` or `progress` is specified.
-- Progress maximum value is based on `max`. However, if `segments` property is defined, maximum value will be calculated based on provided `segments` and the `max` property will be ignored.
+- Progress maximum value is specified with `max`. However, if `segments` property is defined, maximum value will be calculated based on provided `segments` and the `max` property will be ignored.
 
 ### LiveUpdateConfig Object Structure
 
-Defines configuration options for the Live Update notification. Separated from state to allow in the future updating only state without passing config every time:
+Configuration options for the Live Update notification. Separated from state to allow in the future updating only state without passing config every time:
 
 ```ts
 type LiveUpdateConfig = {
@@ -161,7 +161,7 @@ type LiveUpdateConfig = {
 
 Important notes:
 
-- On API 36.1 adding `iconBackgroundColor` will have no effect, because icon inside notification is your app's icon and it's background could not be changed with `iconBackgroundColor` property.
+- On API 36.1 adding `iconBackgroundColor` will have no effect, because icon inside notification is your app's icon and it's background cannot be changed with `iconBackgroundColor` property.
 
 ## Deep Linking
 
