@@ -212,7 +212,7 @@ class LiveUpdatesManager(private val context: Context) {
       val (url, isRemote) = image
       return if (isRemote) getBitmapFromRemoteUrl(url) else getBitmapFromLocalUrl(url)
     } catch (e: Exception) {
-      Log.i(TAG, "Creating bitmap from url failed.", e)
+      Log.w(TAG, "Creating bitmap from url failed.", e)
       return null
     }
   }
