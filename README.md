@@ -114,9 +114,9 @@ type LiveUpdateState = {
   image?: LiveUpdateImage // { url: string, isRemote: boolean}
   icon?: LiveUpdateImage // { url: string, isRemote: boolean}
   progress?: LiveUpdateProgress
+  shortCriticalText?: string
   showTime?: boolean
   time?: number
-  shortCriticalText?: string
 }
 ```
 
@@ -126,7 +126,7 @@ Important notes:
 - `shortCriticalText` is recommended to be not longer than 7 characters. If this limit is exceeded, there is no guarantee how much text will be displayed, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
 - `subText` is displayed in the notification header area since Android Nougat version, but there is no guarantee where exactly it will be located, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>).
 - `showTime` indicates wether notification time should be displayed. By default, time is always visible - if you want to hide it, you need to directly set `showTime` to `false`.
-- `time` will be displayed in status chip only when the `time` timestamp is at least 2 minutes in the future and `shortCriticalText` is not defined.
+- `time` should be a timestamp based on which time inside notification will be displayed. Time will be visible inside status chip as well, but only when the given timestamp is at least 2 minutes in the future and `shortCriticalText` is not defined.
 - Notification time is based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation (on the native side) is displayed - keep in mind that for Live Updates created with FCM it will be the time of Firebase message delivery.
 
 ### LiveUpdateProgress Object Structure
@@ -145,7 +145,7 @@ type LiveUpdateProgress = {
 
 Important notes:
 
-- Progress will not be displayed unless `progressIndeterminate` is set to `true` or `progress` is specified.
+- Progress will not be displayed unless `progressIndeterminate` is set to `true` or `progress` is passed.
 - Progress maximum value is specified with `max`. However, if `segments` property is defined, maximum value will be calculated based on provided `segments` and the `max` property will be ignored.
 
 ### LiveUpdateConfig Object Structure
@@ -240,7 +240,7 @@ There are some restrictions that should be followed while managing Live Updates 
 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `progressPoints` must be a string with specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass it as string to `progressPoints`.
-- `progressSegments` ust be a string with specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass it string to `progressSegments`.
+- `progressSegments` must be a string with specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass it string to `progressSegments`.
 
 ## expo-live-updates is created by Software Mansion
 
