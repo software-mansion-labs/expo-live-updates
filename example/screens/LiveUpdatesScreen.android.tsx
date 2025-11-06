@@ -143,11 +143,11 @@ export default function LiveUpdatesScreen() {
   })
 
   const getLiveUpdateImage = (
-    localUri: string,
+    localUrl: string,
     url: string,
     isRemote: boolean,
   ): LiveUpdateImage => ({
-    url: isRemote ? url : localUri,
+    url: isRemote ? url : localUrl,
     isRemote,
   })
 
