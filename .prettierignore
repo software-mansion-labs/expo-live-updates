@@ -5,3 +5,4 @@
 /.eslintrc.js
 android/build
 example/android/
+.github/
