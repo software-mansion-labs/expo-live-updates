@@ -1,9 +1,12 @@
-# expo-live-updates
 
-Expo module that enables Android Live Updates functionality, allowing you to display real-time, ongoing notifications with progress tracking and dynamic content updates directly from your React Native app or Firebase Cloud.
+![expo-live-updates by Software Mansion](https://github.com/user-attachments/assets/46edb342-4577-4fcd-8ccf-c87759346a45)
 
 > ⚠️ **WARNING**  
 > This library is in early development stage; breaking changes can be introduced in minor version upgrades.
+
+# expo-live-updates
+
+Expo module that enables Android Live Updates functionality, allowing you to display real-time, ongoing notifications with progress tracking and dynamic content updates directly from your React Native app or Firebase Cloud.
 
 ## Features
 
