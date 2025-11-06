@@ -149,12 +149,11 @@ class LiveUpdatesManager(private val context: Context) {
     }
 
     config?.iconBackgroundColor?.let { backgroundColor ->
-        try {
-          notificationBuilder.setColor(backgroundColor.toColorInt())
-        } catch (e: IllegalArgumentException) {
-          Log.e(TAG, getInvalidColorFormatErrorMessage(backgroundColor), e)
-        }
-
+      try {
+        notificationBuilder.setColor(backgroundColor.toColorInt())
+      } catch (e: IllegalArgumentException) {
+        Log.e(TAG, getInvalidColorFormatErrorMessage(backgroundColor), e)
+      }
     }
 
     setNotificationDeleteIntent(notificationId, notificationBuilder)
