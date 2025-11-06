@@ -106,7 +106,16 @@ class LiveUpdatesManager(private val context: Context) {
         .setContentTitle(state.title)
         .setSmallIcon(android.R.drawable.star_on)
         .setContentText(state.text)
-        .setSubText(state.subText)
+
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+      notificationBuilder.setSubText(state.subText)
+    } else {
+      if(state.subText !== null && state.progress !== null){
+        throw Exception("Do not use subText and progress on versions before Android Nougat. They occupy the same space.")
+      } else {
+        notificationBuilder.setSubText(state.subText)
+      }
+    }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
       notificationBuilder.setShortCriticalText(state.shortCriticalText)
