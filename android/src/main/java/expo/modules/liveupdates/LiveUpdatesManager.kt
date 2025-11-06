@@ -230,8 +230,7 @@ class LiveUpdatesManager(private val context: Context) {
 
   private fun getBitmapFromRemoteUrl(url: String): Bitmap {
     val parsedUrl = URL(url)
-    val bitmap = BitmapFactory.decodeStream(parsedUrl.openConnection().getInputStream())
-    return bitmap
+    return BitmapFactory.decodeStream(parsedUrl.openConnection().getInputStream())
   }
 
   private fun setNotificationDeleteIntent(
