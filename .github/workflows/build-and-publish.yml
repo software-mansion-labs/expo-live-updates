@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
       - 'alpha_v*'
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   publish:
