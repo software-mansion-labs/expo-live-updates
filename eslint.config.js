@@ -23,7 +23,7 @@ module.exports = defineConfig([
       settings: {
         'import/resolver': {
           alias: {
-            map: [['expo-live-activity', './src']],
+            map: [['expo-live-updates', './src']],
             extensions: ['.ts'],
           },
         },
