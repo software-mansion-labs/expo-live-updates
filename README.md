@@ -90,18 +90,17 @@ startLiveUpdate({ title: 'Test notifications' })
 
 ### Managing Live Updates
 
-- `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined` Creates and displays a new Live Update notification. Returns notification ID or undefined if failed.
-- `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void` Updates an existing Live Update notification.
+- `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined`: Creates and displays a new Live Update notification. Returns id of the created notification or undefined if creation failed.
+- `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void`: Updates an existing Live Update notification.
 
-- `stopLiveUpdate(notificationId: number): void` Stops an existing Live Update notification.
-
+- `stopLiveUpdate(notificationId: number): void`: Stops an existing Live Update notification.
 ### Handling Push Notification Tokens
 
-- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined` Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
+- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined`: Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
 
 ### Handling Notification Events Listener
 
-- `addNotificationStateChangeListener(listener: (event: NotificationStateChangeEvent) => void): EventSubscription | undefined` Subscribes to notification state changes (started, updated, stopped, dismissed, clicked). Call .remove() to unsubscribe
+- `addNotificationStateChangeListener(listener: (event: NotificationStateChangeEvent) => void): EventSubscription | undefined`: Subscribes to notification state changes (started, updated, stopped, dismissed, clicked). Call .remove() to unsubscribe
 
 ### LiveUpdateState Object Structure
 
@@ -216,16 +215,16 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "subText":"Firebase", // optional
           "imageUrl":"", // optional
           "iconUrl":"", // optional
-          "progressMax":"100", // optional: maximum progress value, if not provided = 100
-          "progressValue":"50", // optional: current progress value
-          "progressIndeterminate":"false", // optional: whether progress is indeterminate
+          "progressMax":"100", // optional: if not provided = 100
+          "progressValue":"50", // optional
+          "progressIndeterminate":"false", // optional
           "progressPoints":"[{\"position\":10,\"color\":\"red\"},{\"position\":50,\"color\":\"blue\"}]", // optional: should be a string with JSON
           "progressSegments":"[{\"length\":50,\"color\":\"red\"},{\"length\":100,\"color\":\"blue\"}]", // optional: should be a string with JSON
-          "backgroundColor":"red", // optional, works only on SDK < Baklava
+          "iconBackgroundColor":"red", // optional
           "shortCriticalText":"text", // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test", // optional: default it will just open the app
-          "showTime":"true", // optional: whether time is shown, if not provided = true
-          "time":"1761313668279" // optional: time as timestamp
+          "showTime":"true", // optional: if not provided = true
+          "time":"1761313668279" // optional: should be timestamp
       }
    }
 }
