@@ -1,5 +1,5 @@
 
-![expo-live-updates by Software Mansion]("https://github.com/user-attachments/assets/46edb342-4577-4fcd-8ccf-c87759346a45")
+![expo-live-updates by Software Mansion](https://github.com/user-attachments/assets/46edb342-4577-4fcd-8ccf-c87759346a45)
 
 > ⚠️ **WARNING**  
 > This library is in early development stage; breaking changes can be introduced in minor version upgrades.
