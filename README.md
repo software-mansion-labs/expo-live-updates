@@ -159,7 +159,7 @@ type LiveUpdateConfig = {
 
 Important notes:
 
-- `iconBackgroundColor` will have no effect, because icon inside notification is your app's icon and it's background could not be changed through `iconBackgroundProperty` property.
+- On API 36.1 adding `iconBackgroundColor` will have no effect, because icon inside notification is your app's icon and it's background could not be changed through `iconBackgroundProperty` property.
 
 ## Deep Linking
 
