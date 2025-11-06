@@ -293,7 +293,7 @@ There are some restrictions that should be followed while managing Live Updates 
 - `progressPoints` must be a string with specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass it as string to `progressPoints`.
 - `progressSegments` must be a string with specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass it string to `progressSegments`.
 
-## Push token listener
+### Push token listener
 
 Subscribing to push token changes:
 
