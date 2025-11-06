@@ -1,0 +1,43 @@
+name: Build and Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'alpha_v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run linter
+        run: npm run lint:libOnly
+
+      - name: Update version
+        run: ./scripts/update-version.sh
+
+      - name: Build project
+        run: npm run prepare
+
+      - name: Publish to npm (stable)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: npm publish
+
+      - name: Publish to npm (alpha)
+        if: startsWith(github.ref, 'refs/tags/alpha_v')
+        run: npm publish --tag alpha
