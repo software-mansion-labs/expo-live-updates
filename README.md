@@ -188,6 +188,57 @@ const linking = {
 return <Navigation linking={linking} />
 ```
 
+## Example Usage
+
+
+Managing a Live Update:
+
+```typescript
+const state: LiveUpdateState = {
+  title: "This is a title",
+  text: "This is a text",
+  progress: {
+    progress: 70,
+    segments: [
+      { length: 50, color: "red" },
+      { length: 100, color: "blue" },
+    ],
+    points: [
+      { position: 10, color: "red" },
+      { position: 50, color: "blue" },
+    ],
+  },
+};
+
+const config: LiveUpdateConfig = {
+  deepLinkUrl: "/dashboard",
+};
+
+const notificationId = LiveUpdates.startLiveUpdate(state, config);
+// Store notificationId for future reference
+```
+
+This will initiate a Live Update with the specified title, text and progress with points and segment.
+
+Subscribing to notifications state changes:
+
+```typescript
+useEffect(() => {
+  const notificationStateChangeSubscription =
+    LiveUpdates.addNotificationStateChangeListener(
+      ({ notificationId, action, timestamp }) => {
+        // Handle notification state change
+      }
+    );
+
+  return () => {
+    notificationStateChangeSubscription?.remove();
+  };
+}, []);
+```
+
+
+
 ## Firebase Cloud Messaging integration
 
 1. Create project at [Firebase](https://firebase.google.com/).
@@ -241,6 +292,24 @@ There are some restrictions that should be followed while managing Live Updates 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
 - `progressPoints` must be a string with specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass it as string to `progressPoints`.
 - `progressSegments` must be a string with specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass it string to `progressSegments`.
+
+## Push token listener
+
+Subscribing to push token changes:
+
+```typescript
+useEffect(() => {
+  const tokenChangeSubscription = LiveUpdates.addTokenChangeListener(
+    ({ token }) => {
+      // Handle push token change
+    }
+  );
+
+  return () => {
+    tokenChangeSubscription?.remove();
+  };
+}, []);
+```
 
 ## expo-live-updates is created by Software Mansion
 
