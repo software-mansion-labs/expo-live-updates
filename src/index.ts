@@ -1,11 +1,12 @@
 import type { EventSubscription } from 'expo-modules-core'
 import { Platform } from 'react-native'
+
 import ExpoLiveUpdatesModule from './ExpoLiveUpdatesModule'
 import type {
-  LiveUpdateState,
   LiveUpdateConfig,
-  TokenChangeEvent,
+  LiveUpdateState,
   NotificationStateChangeEvent,
+  TokenChangeEvent,
 } from './types'
 
 type Voidable<T> = T | void

@@ -1,8 +1,6 @@
 {
   "extends": "expo-module-scripts/tsconfig.base",
   "compilerOptions": {
-    "moduleResolution": "bundler",
-    "strict": true,
     "outDir": "./build"
   },
   "include": ["./src"],

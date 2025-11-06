@@ -1,11 +1,12 @@
 import { NativeModule, requireOptionalNativeModule } from 'expo'
+import type { EventSubscription } from 'react-native'
+
 import type {
-  LiveUpdateState,
   LiveUpdateConfig,
+  LiveUpdateState,
   NotificationStateChangeEvent,
   TokenChangeEvent,
 } from './types'
-import type { EventSubscription } from 'react-native'
 
 type ExpoLiveUpdatesModuleEvents = {
   onNotificationStateChange: (event: NotificationStateChangeEvent) => void
