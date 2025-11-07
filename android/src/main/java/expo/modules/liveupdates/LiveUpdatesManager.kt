@@ -35,8 +35,6 @@ class LiveUpdatesManager(private val context: Context) {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
-    checkPostNotificationPermission(context)
-
     val notificationId = idGenerator.generateNextId()
 
     if (notificationExists(notificationId)) {
@@ -62,8 +60,6 @@ class LiveUpdatesManager(private val context: Context) {
     state: LiveUpdateState,
     config: LiveUpdateConfig?,
   ) {
-    checkPostNotificationPermission(context)
-
     if (!notificationExists(notificationId)) {
       Log.w(
         TAG,

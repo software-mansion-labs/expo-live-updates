@@ -37,6 +37,6 @@ fun checkPostNotificationPermission(context: Context) {
       ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
         PackageManager.PERMISSION_GRANTED
   ) {
-    throw Exception("${Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
+    throw Exception("Cannot manage Live Updates: ${Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
   }
 }

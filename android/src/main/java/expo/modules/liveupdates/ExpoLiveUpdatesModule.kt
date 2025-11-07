@@ -38,6 +38,7 @@ class ExpoLiveUpdatesModule : Module() {
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
     Function("stopLiveUpdate") { notificationId: Int ->
+      checkPostNotificationPermission(context)
       liveUpdatesManager.stopNotification(notificationId)
     }
     Function("updateLiveUpdate") {
