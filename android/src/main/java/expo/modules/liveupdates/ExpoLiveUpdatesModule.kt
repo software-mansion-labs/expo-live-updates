@@ -34,6 +34,7 @@ class ExpoLiveUpdatesModule : Module() {
     OnCreate { initializeModule() }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
+      checkPostNotificationPermission(context)
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
     Function("stopLiveUpdate") { notificationId: Int ->
@@ -43,6 +44,7 @@ class ExpoLiveUpdatesModule : Module() {
       notificationId: Int,
       state: LiveUpdateState,
       config: LiveUpdateConfig? ->
+      checkPostNotificationPermission(context)
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
 
