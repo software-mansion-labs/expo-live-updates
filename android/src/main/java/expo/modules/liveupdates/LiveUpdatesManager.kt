@@ -5,7 +5,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -33,15 +32,13 @@ class LiveUpdatesManager(private val context: Context) {
   private val idGenerator = IdGenerator(context)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-  fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
+  fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int {
     val notificationId = idGenerator.generateNextId()
 
     if (notificationExists(notificationId)) {
-      Log.w(
-        TAG,
-        "failed to start notification - notification with id $notificationId already exists",
+      throw Exception(
+        "Failed to start notification - notification with id $notificationId already exists",
       )
-      return null
     }
 
     val notification = createNotification(state, notificationId, config)
@@ -60,11 +57,9 @@ class LiveUpdatesManager(private val context: Context) {
     config: LiveUpdateConfig?,
   ) {
     if (!notificationExists(notificationId)) {
-      Log.w(
-        TAG,
-        "failed to update notification - notification with id $notificationId does not exists",
+      throw Exception(
+        "Failed to update notification - notification with id $notificationId does not exists",
       )
-      return
     }
 
     val notification = createNotification(state, notificationId, config)
@@ -77,11 +72,9 @@ class LiveUpdatesManager(private val context: Context) {
 
   fun stopNotification(notificationId: Int) {
     if (!notificationExists(notificationId)) {
-      Log.w(
-        TAG,
-        "failed to stop notification - notification with id $notificationId does not exists",
+      throw Exception(
+        "Failed to stop notification - notification with id $notificationId does not exists",
       )
-      return
     }
 
     notificationManager.cancel(notificationId)
@@ -110,7 +103,7 @@ class LiveUpdatesManager(private val context: Context) {
       notificationBuilder.setSubText(state.subText)
     } else {
       if(state.subText !== null && state.progress !== null){
-        throw Exception("Do not use subText and progress on versions before Android Nougat. They occupy the same space.")
+        Log.w(TAG, "Do not use subText and progress on versions before Android Nougat. They occupy the same space.")
       } else {
         notificationBuilder.setSubText(state.subText)
       }
