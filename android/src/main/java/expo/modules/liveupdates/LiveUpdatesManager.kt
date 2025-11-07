@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
@@ -36,7 +35,7 @@ class LiveUpdatesManager(private val context: Context) {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   fun startLiveUpdateNotification(state: LiveUpdateState, config: LiveUpdateConfig? = null): Int? {
-    checkPermissions()
+    checkPostNotificationPermission(context)
 
     val notificationId = idGenerator.generateNextId()
 
@@ -63,7 +62,7 @@ class LiveUpdatesManager(private val context: Context) {
     state: LiveUpdateState,
     config: LiveUpdateConfig?,
   ) {
-    checkPermissions()
+    checkPostNotificationPermission(context)
 
     if (!notificationExists(notificationId)) {
       Log.w(
@@ -286,14 +285,5 @@ class LiveUpdatesManager(private val context: Context) {
       context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
     return applicationInfo.metaData?.getString(EXPO_MODULE_SCHEME_KEY)
       ?: throw IllegalStateException("$EXPO_MODULE_SCHEME_KEY not found in AndroidManifest.xml")
-  }
-
-  private fun checkPermissions(){
-    if(ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.POST_NOTIFICATIONS
-      ) != PackageManager.PERMISSION_GRANTED) {
-      throw Exception("POST_NOTIFICATION permission is not granted.")
-    }
   }
 }

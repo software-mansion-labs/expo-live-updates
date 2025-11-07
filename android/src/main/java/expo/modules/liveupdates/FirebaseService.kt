@@ -55,6 +55,8 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
+    checkPostNotificationPermission(this)
+
     Log.i(FIREBASE_TAG, "Message received with event: ${message.data[FirebaseMessageProps.EVENT]}")
 
     try {
