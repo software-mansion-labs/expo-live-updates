@@ -58,7 +58,7 @@ class FirebaseService : FirebaseMessagingService() {
     try {
       checkPostNotificationPermission(this)
     } catch (e: Exception) {
-      Log.w(FIREBASE_TAG, e)
+      Log.e(FIREBASE_TAG, e)
     }
 
     Log.i(FIREBASE_TAG, "Message received with event: ${message.data[FirebaseMessageProps.EVENT]}")
