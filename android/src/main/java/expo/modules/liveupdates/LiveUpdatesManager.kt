@@ -250,10 +250,18 @@ class LiveUpdatesManager(private val context: Context) {
 
     clickIntent?.apply {
       action = Intent.ACTION_VIEW
+
+      val scheme = getScheme(context)
+
       config?.deepLinkUrl?.let { deepLink ->
-        val scheme = getScheme(context)
-        data = "$scheme://${deepLink.removePrefix("/")}".toUri()
+        scheme?.let {
+          data = "$scheme://${deepLink.removePrefix("/")}".toUri()
+        } ?: run {
+          Log.w(TAG, "Deeplink property ignored. Please setup scheme before using deeplinks.")
+        }
       }
+
+
       putExtra(NotificationActionExtra.NOTIFICATION_ACTION, NotificationAction.CLICKED)
       putExtra(NotificationActionExtra.NOTIFICATION_ID, notificationId)
     }
