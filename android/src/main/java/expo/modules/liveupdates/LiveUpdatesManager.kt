@@ -140,7 +140,6 @@ class LiveUpdatesManager(private val context: Context) {
       state.time?.let { time -> notificationBuilder.setWhen(time) }
     }
 
-    // TODO: save config by id to apply it when updating notification
     config?.backgroundColor?.let { backgroundColor ->
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
         try {
@@ -204,7 +203,7 @@ class LiveUpdatesManager(private val context: Context) {
       val (url, isRemote) = image
       return if (isRemote) getBitmapFromRemoteUrl(url) else getBitmapFromLocalUrl(url)
     } catch (e: Exception) {
-      Log.w(TAG, "Creating bitmap from url failed.", e)
+      Log.e(TAG, "Failed to create bitmap from url.", e)
       return null
     }
   }

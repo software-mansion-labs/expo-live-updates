@@ -85,7 +85,7 @@ class FirebaseService : FirebaseMessagingService() {
         }
       }
     } catch (e: Exception) {
-      Log.e(FIREBASE_TAG, e.message.toString())
+      Log.e(FIREBASE_TAG, "Managing Live Update with Firebase failed.", e)
     }
   }
 
@@ -164,7 +164,7 @@ class FirebaseService : FirebaseMessagingService() {
       return try {
         FirebaseApp.getApps(context).isNotEmpty()
       } catch (e: Exception) {
-        Log.w(FIREBASE_TAG, "Error checking Firebase availability: ${e.message}")
+        Log.e(FIREBASE_TAG, "Error checking Firebase availability.", e)
         false
       }
     }
