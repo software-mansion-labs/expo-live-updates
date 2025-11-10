@@ -189,7 +189,7 @@ export default function LiveUpdatesScreen() {
         throw Error('notificationId is undefined.')
       }
     } catch (e) {
-      console.error(`Stopping Live Update Failed! ${e}`)
+      console.error(`Stopping Live Update failed! ${e}`)
     }
   }
 
@@ -210,7 +210,7 @@ export default function LiveUpdatesScreen() {
       if (token !== undefined) {
         Clipboard.setStringAsync(token)
       } else {
-        throw Error('Token is undefined.')
+        throw Error('Push token is undefined.')
       }
     } catch (e) {
       console.error(`Copying push token failed! ${e}`)
