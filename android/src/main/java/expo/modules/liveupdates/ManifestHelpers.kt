@@ -17,8 +17,7 @@ private fun getMetadataFromManifest(context: Context, key: String): String? {
 }
 
 private fun getRequiredMetadataFromManifest(context: Context, key: String): String {
-  val metadata = getMetadataFromManifest(context, key)
-  return metadata
+  return getMetadataFromManifest(context, key)
     ?: run {
       Log.w(TAG, "Failed to read $key from manifest.")
       throw RuntimeException(
