@@ -12,12 +12,10 @@ private const val TAG = "ManifestHelpers"
 private fun getMetadataFromManifest(context: Context, key: String): String? {
   val packageManager = context.packageManager
   val packageInfo =
-    packageManager.getApplicationInfo(
-      context.packageName,
-      PackageManager.GET_META_DATA,
-    )
+    packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
   return packageInfo.metaData?.getString(key)
 }
+
 private fun getRequiredMetadataFromManifest(context: Context, key: String): String {
   val metadata = getMetadataFromManifest(context, key)
   return metadata
@@ -28,6 +26,7 @@ private fun getRequiredMetadataFromManifest(context: Context, key: String): Stri
       )
     }
 }
+
 fun getChannelId(context: Context): String {
   return getRequiredMetadataFromManifest(context, CHANNEL_ID_KEY)
 }
