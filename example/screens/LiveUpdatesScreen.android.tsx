@@ -1,9 +1,11 @@
+import { Asset } from 'expo-asset'
+import * as Clipboard from 'expo-clipboard'
 import {
+  addNotificationStateChangeListener,
+  addTokenChangeListener,
   startLiveUpdate,
   stopLiveUpdate,
   updateLiveUpdate,
-  addTokenChangeListener,
-  addNotificationStateChangeListener,
 } from 'expo-live-updates'
 import type {
   LiveUpdateConfig,
@@ -22,12 +24,11 @@ import {
   Text,
   View,
 } from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Asset } from 'expo-asset'
+
+import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 import Input from '../components/Input'
 import LabelWithSwitch from '../components/LabelWithSwitch'
-import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 
 const IMAGE_PATH = `./../assets/LiveUpdates/logo.png`
 const ICON_PATH = `./../assets/LiveUpdates/logo-island.png`
@@ -174,13 +175,9 @@ export default function LiveUpdatesScreen() {
 
     try {
       const id = startLiveUpdate(getState(), getConfig())
-      if (id) {
-        console.log('Notification started with id: ', id)
-      } else {
-        throw new Error('no notificationId returned')
-      }
+      console.log('Notification started with id: ', id)
     } catch (e) {
-      console.error('Starting Live Update failed! ' + e)
+      console.error(`Failed to start notification: ${e}`)
     }
   }
 
@@ -189,10 +186,10 @@ export default function LiveUpdatesScreen() {
       if (notificationId) {
         stopLiveUpdate(notificationId)
       } else {
-        throw Error('notificationId is undefined')
+        throw Error('notificationId is undefined.')
       }
     } catch (e) {
-      console.error('Stopping Live Update failed! ' + e)
+      console.error(`$Failed to stop notification: ${e}`)
     }
   }
 
@@ -201,10 +198,10 @@ export default function LiveUpdatesScreen() {
       if (notificationId) {
         updateLiveUpdate(notificationId, getState(), getConfig())
       } else {
-        throw Error('notificationId is undefined')
+        throw Error('notificationId is undefined.')
       }
     } catch (e) {
-      console.error('Updating Live Update failed! ' + e)
+      console.error(`Failed to update notification: ${e}`)
     }
   }
 
@@ -213,10 +210,10 @@ export default function LiveUpdatesScreen() {
       if (token !== undefined) {
         Clipboard.setStringAsync(token)
       } else {
-        throw Error('push token is undefined')
+        throw Error('Token is undefined.')
       }
     } catch (e) {
-      console.error('Copying push token failed! ' + e)
+      console.error(`Failed to copy push token: ${e}`)
     }
   }
 
@@ -468,7 +465,9 @@ async function getImgsUri(): Promise<{
   imageLocalUri: string | undefined
   iconLocalUri: string | undefined
 }> {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const [{ localUri: imageUri }] = await Asset.loadAsync(require(IMAGE_PATH))
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const [{ localUri: iconUri }] = await Asset.loadAsync(require(ICON_PATH))
 
   return {
