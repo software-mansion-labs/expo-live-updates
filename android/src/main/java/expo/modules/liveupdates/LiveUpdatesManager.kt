@@ -265,7 +265,7 @@ class LiveUpdatesManager(private val context: Context) {
           ?: run {
             Log.w(
               TAG,
-              "Deeplink property ignored. Please configure withChannelConfig plugin with scheme in app.config.ts to enable managing deeplinks.",
+              "deepLinkUrl property ignored. Please configure withChannelConfig plugin with scheme in app.config.ts to enable managing Live Update deeplinks.",
             )
           }
       }
