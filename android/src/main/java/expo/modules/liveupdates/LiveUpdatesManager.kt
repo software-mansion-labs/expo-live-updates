@@ -19,7 +19,6 @@ import java.io.File
 import java.net.URL
 
 private const val TAG = "LiveUpdatesManager"
-private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 private const val DEFAULT_MAX_PROGRESS = 100
 
 object NotificationActionExtra {
