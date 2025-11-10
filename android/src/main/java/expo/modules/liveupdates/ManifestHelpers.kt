@@ -1,6 +1,7 @@
 package expo.modules.liveupdates
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 
 private const val CHANNEL_ID_KEY = "expo.modules.liveupdates.channelId"
