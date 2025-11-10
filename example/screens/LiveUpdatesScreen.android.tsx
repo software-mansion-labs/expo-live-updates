@@ -43,7 +43,7 @@ export default function LiveUpdatesScreen() {
   const [iconLocalUrl, setIconLocalUrl] = useState('')
   const [isIconRemote, setIsIconRemote] = useState(false)
   const [iconUrl, setIconUrl] = useState('')
-  const [backgroundColor, setBackgroundColor] = useState('red')
+  const [iconBackgroundColor, onIconBackgroundColor] = useState('red')
   const [shortCriticalText, setShortCriticalText] = useState('SWM')
   const [showTime, setShowTime] = useState(false)
 
@@ -70,6 +70,7 @@ export default function LiveUpdatesScreen() {
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
   const [passPoints, setPassPoints] = useState(false)
   const [passSegments, setPassSegments] = useState(false)
+  const [passIconBackgroundColor, setPassIconBackgroundColor] = useState(false)
 
   const notificationId = useMemo(() => {
     const parsedNotificationId = parseInt(notificationIdString)
@@ -165,8 +166,10 @@ export default function LiveUpdatesScreen() {
   }
 
   const getConfig = (): LiveUpdateConfig => ({
-    backgroundColor,
     deepLinkUrl: passDeepLink ? deepLinkUrl : undefined,
+    iconBackgroundColor: passIconBackgroundColor
+      ? iconBackgroundColor
+      : undefined,
   })
 
   const handleStartLiveUpdate = () => {
@@ -412,10 +415,14 @@ export default function LiveUpdatesScreen() {
 
             {!isBaklava() && (
               <Input
-                value={backgroundColor}
-                onChangeText={setBackgroundColor}
+                value={iconBackgroundColor}
+                onChangeText={onIconBackgroundColor}
                 labelProps={{
                   label: 'Background color (hex) (for SDK &lt; 16 Baklava):',
+                  switchProps: {
+                    value: passIconBackgroundColor,
+                    setValue: setPassIconBackgroundColor,
+                  },
                 }}
                 placeholder="Background color"
               />

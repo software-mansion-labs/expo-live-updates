@@ -35,7 +35,7 @@ data object FirebaseMessageProps {
   const val PROGRESS_POINTS = "progressPoints"
   const val PROGRESS_SEGMENTS = "progressSegments"
   const val SHORT_CRITICAL_TEXT = "shortCriticalText"
-  const val BACKGROUND_COLOR = "backgroundColor"
+  const val ICON_BACKGROUND_COLOR = "iconBackgroundColor"
   const val DEEP_LINK_URL = "deepLinkUrl"
   const val SHOW_TIME = "showTime"
   const val TIME = "time"
@@ -150,8 +150,8 @@ class FirebaseService : FirebaseMessagingService() {
 
   private fun getLiveUpdateConfig(message: RemoteMessage): LiveUpdateConfig {
     return LiveUpdateConfig(
-      backgroundColor = message.data[FirebaseMessageProps.BACKGROUND_COLOR],
       deepLinkUrl = message.data[FirebaseMessageProps.DEEP_LINK_URL],
+      iconBackgroundColor = message.data[FirebaseMessageProps.ICON_BACKGROUND_COLOR],
     )
   }
 
