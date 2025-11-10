@@ -18,13 +18,13 @@ Expo module that enables Android Live Updates functionality, allowing you to dis
 
 ## Platform Compatibility
 
-**Android Only**: This library is currently available exclusively for Android. Live Updates functionality is supported starting from **Android Baklava Preview (Android 16.0)** SDK. Note that the standard `Android 16.0 ("Baklava")` SDK won't support Live Updates; you must use the **Baklava Preview** SDK. If Live Updates are not available on the device's SDK version, standard notifications will be displayed instead.
+**Android Only**: This library is currently available exclusively for Android. Live Updates functionality is supported starting from **API 36.1**. Note that the standard API 36.0 won't support Live Updates; you must use **API 36.1**. If Live Updates are not available, standard notifications will be displayed instead.
 
 **Looking for iOS?** If you need similar functionality for iOS, check out [expo-live-activity](https://github.com/software-mansion-labs/expo-live-activity) which provides Live Activities support for iOS 16.2+.
 
 ## How to run example app
 
-1. Prepare Android emulator with `Android Baklava Preview` SDK.
+1. Prepare Android emulator with `API 36.1`.
 2. Run `npm i` in root & `/example` directories.
 3. Run `npm run android` (or `npx expo run:android --device` to select proper emulator) in `example/` directory.
 
@@ -63,7 +63,7 @@ plugins: [
 
 ### 3. Handle permissions
 
-Expo-live-updates require 2 Android permissions to work. Add them to `android.permissions` in app config and remember to request for them in React Native app.
+expo-live-updates require 2 Android permissions to work. Add them to `android.permissions` in app config and remember to request for them in React Native app.
 
 ```ts
 permissions: [
