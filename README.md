@@ -18,13 +18,13 @@ Expo module that enables Android Live Updates functionality, allowing you to dis
 
 ## Platform Compatibility
 
-**Android Only**: This library is currently available exclusively for Android. Live Updates functionality is supported starting from **Android Baklava Preview (Android 16.0)** SDK. Note that the standard `Android 16.0 ("Baklava")` SDK won't support Live Updates; you must use the **Baklava Preview** SDK. If Live Updates are not available on the device's SDK version, standard notifications will be displayed instead.
+**Android Only**: This library is currently available exclusively for Android. Live Updates functionality is supported starting from **API 36.1**. Note that the standard API 36.0 won't support Live Updates; you must use **API 36.1**. If Live Updates are not available, standard notifications will be displayed instead.
 
 **Looking for iOS?** If you need similar functionality for iOS, check out [expo-live-activity](https://github.com/software-mansion-labs/expo-live-activity) which provides Live Activities support for iOS 16.2+.
 
 ## How to run example app
 
-1. Prepare Android emulator with `Android Baklava Preview` SDK.
+1. Prepare Android emulator with `API 36.1`.
 2. Run `npm i` in root & `/example` directories.
 3. Run `npm run android` (or `npx expo run:android --device` to select proper emulator) in `example/` directory.
 
@@ -63,7 +63,7 @@ plugins: [
 
 ### 3. Handle permissions
 
-Expo-live-updates require 2 Android permissions to work. Add them to `android.permissions` in app config and remember to request for them in React Native app.
+expo-live-updates require 2 Android permissions to work. Add them to `android.permissions` in app config and remember to request for them in React Native app.
 
 ```ts
 permissions: [
@@ -90,18 +90,17 @@ startLiveUpdate({ title: 'Test notifications' })
 
 ### Managing Live Updates
 
-- `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined` Creates and displays a new Live Update notification. Returns notification ID or undefined if failed.
-- `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void` Updates an existing Live Update notification.
+- `startLiveUpdate(state: LiveUpdateState, config?: LiveUpdateConfig): number | undefined`: Creates and displays a new Live Update notification. Returns id of the created notification or undefined if creation failed.
+- `updateLiveUpdate(notificationId: number, state: LiveUpdateState, config?: LiveUpdateConfig): void`: Updates an existing Live Update notification.
 
-- `stopLiveUpdate(notificationId: number): void` Stops an existing Live Update notification.
-
+- `stopLiveUpdate(notificationId: number): void`: Stops an existing Live Update notification.
 ### Handling Push Notification Tokens
 
-- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined` Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
+- `addTokenChangeListener(listener: (event: TokenChangeEvent) => void): EventSubscription | undefined`: Subscribes to FCM token changes. Returns current token (if it already exists) on start listening. Call `.remove()` to unsubscribe.
 
 ### Handling Notification Events Listener
 
-- `addNotificationStateChangeListener(listener: (event: NotificationStateChangeEvent) => void): EventSubscription | undefined` Subscribes to notification state changes (started, updated, stopped, dismissed, clicked). Call .remove() to unsubscribe
+- `addNotificationStateChangeListener(listener: (event: NotificationStateChangeEvent) => void): EventSubscription | undefined`: Subscribes to notification state changes (started, updated, stopped, dismissed, clicked). Call .remove() to unsubscribe
 
 ### LiveUpdateState Object Structure
 
@@ -109,40 +108,45 @@ Defines the visual content and progress information for a Live Update notificati
 
 ```ts
 type LiveUpdateState = {
-  title: string // Main title text
-  text?: string // Additional descriptive text
-  subText?: string // Subtext text
-  image?: LiveUpdateImage // Image data
-  icon?: LiveUpdateImage // Icon data
-  progress?: LiveUpdateProgress // Progress bar configuration
-  showTime?: boolean // Shows notification time
-  time?: number // Timestamp of notification time
-  shortCriticalText?: string // Critical text (max 7 chars recommended)
-}
-
-export type LiveUpdateImage = {
-  url: string // Local uri or url to image resource
-  isRemote: boolean // Wether a resource is local or remote
-}
-
-type LiveUpdateProgress = {
-  max?: number // Maximum progress value (default: 100)
-  progress?: number // Current progress value
-  indeterminate?: boolean // Whether to show indeterminate progress bar
-  points?: LiveUpdateProgressPoint[] // Points for dividing progress bar
-  segments?: LiveUpdateProgressSegment[] // Segments for dividing progress bar
-}
-
-type LiveUpdateProgressPoint = {
-  position: number // Point's position relative to progress bar length
-  color?: string // Point's color
-}
-
-type LiveUpdateProgressSegment = {
-  length: number // Segment's length
-  color?: string // Segment's color
+  title: string
+  text?: string
+  subText?: string
+  image?: LiveUpdateImage // { url: string, isRemote: boolean}
+  icon?: LiveUpdateImage // { url: string, isRemote: boolean}
+  progress?: LiveUpdateProgress
+  shortCriticalText?: string
+  showTime?: boolean
+  time?: number
 }
 ```
+
+Important notes:
+
+- Adding `icon` results in changing icon inside notification and device status bar. However, on API 36.1 only the icon inside status bar will be changed - icon inside notification is your app's icon and cannot be changed with `icon` property.
+- `shortCriticalText` is recommended to be not longer than 7 characters. If this limit is exceeded, there is no guarantee how much text will be displayed, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
+- `subText` is displayed in the notification header area since Android Nougat version, but there is no guarantee where exactly it will be located, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setSubText(java.lang.CharSequence)>).
+- `showTime` indicates wether notification time should be displayed. By default, time is always visible - if you want to hide it, you need to directly set `showTime` to `false`.
+- `time` should be a timestamp based on which time inside notification will be displayed. Time will be visible inside status chip as well, but only when the given timestamp is at least 2 minutes in the future and `shortCriticalText` is not defined.
+- Notification time is based on timestamp provided with `time` property. If `time` is undefined, the time of notification's creation (on the native side) is displayed - keep in mind that for Live Updates created with FCM it will be the time of Firebase message delivery.
+
+### LiveUpdateProgress Object Structure
+
+Defines progress representation for a Live Update notification:
+
+```ts
+type LiveUpdateProgress = {
+  max?: number
+  progress?: number // default: 100
+  indeterminate?: boolean
+  points?: LiveUpdateProgressPoint[] // { position: number, color?: string }
+  segments?: LiveUpdateProgressSegment[] // { position: number, color?: string }
+}
+```
+
+Important notes:
+
+- Progress will not be displayed unless `progressIndeterminate` is set to `true` or `progress` is passed.
+- Progress maximum value is specified with `max`. However, if `segments` property is defined, maximum value will be calculated based on provided `segments` and the `max` property will be ignored.
 
 ### LiveUpdateConfig Object Structure
 
@@ -150,10 +154,14 @@ Configuration options for the Live Update notification. Separated from state to 
 
 ```ts
 type LiveUpdateConfig = {
-  backgroundColor?: string // Background color (only SDK < 16)
-  deepLinkUrl?: string // Deep link URL to navigate when tapped
+  deepLinkUrl?: string
+  iconBackgroundColor?: string
 }
 ```
+
+Important notes:
+
+- On API 36.1 adding `iconBackgroundColor` will have no effect, because icon inside notification is your app's icon and it's background cannot be changed with `iconBackgroundColor` property.
 
 ## Deep Linking
 
@@ -179,6 +187,57 @@ const linking = {
 
 return <Navigation linking={linking} />
 ```
+
+## Example Usage
+
+
+Managing a Live Update:
+
+```typescript
+const state: LiveUpdateState = {
+  title: "This is a title",
+  text: "This is a text",
+  progress: {
+    progress: 70,
+    segments: [
+      { length: 50, color: "red" },
+      { length: 100, color: "blue" },
+    ],
+    points: [
+      { position: 10, color: "red" },
+      { position: 50, color: "blue" },
+    ],
+  },
+};
+
+const config: LiveUpdateConfig = {
+  deepLinkUrl: "/dashboard",
+};
+
+const notificationId = LiveUpdates.startLiveUpdate(state, config);
+// Store notificationId for future reference
+```
+
+This will initiate a Live Update with the specified title, text and progress with points and segment.
+
+Subscribing to notifications state changes:
+
+```typescript
+useEffect(() => {
+  const notificationStateChangeSubscription =
+    LiveUpdates.addNotificationStateChangeListener(
+      ({ notificationId, action, timestamp }) => {
+        // Handle notification state change
+      }
+    );
+
+  return () => {
+    notificationStateChangeSubscription?.remove();
+  };
+}, []);
+```
+
+
 
 ## Firebase Cloud Messaging integration
 
@@ -207,16 +266,16 @@ Authorization: Bearer <YOUR_BEARER_TOKEN>
           "subText":"Firebase", // optional
           "imageUrl":"", // optional
           "iconUrl":"", // optional
-          "progressMax":"100", // optional: maximum progress value, if not provided = 100
-          "progressValue":"50", // optional: current progress value
-          "progressIndeterminate":"false", // optional: whether progress is indeterminate
+          "progressMax":"100", // optional: if not provided = 100
+          "progressValue":"50", // optional
+          "progressIndeterminate":"false", // optional
           "progressPoints":"[{\"position\":10,\"color\":\"red\"},{\"position\":50,\"color\":\"blue\"}]", // optional: should be a string with JSON
           "progressSegments":"[{\"length\":50,\"color\":\"red\"},{\"length\":100,\"color\":\"blue\"}]", // optional: should be a string with JSON
-          "backgroundColor":"red", // optional, works only on SDK < Baklava
+          "iconBackgroundColor":"red", // optional
           "shortCriticalText":"text", // optional: shouldn't be longer than 7 characters
           "deepLinkUrl":"/Test", // optional: default it will just open the app
-          "showTime":"true", // optional: whether time is shown, if not provided = true
-          "time":"1761313668279" // optional: time as timestamp
+          "showTime":"true", // optional: if not provided = true
+          "time":"1761313668279" // optional: should be timestamp
       }
    }
 }
@@ -231,15 +290,26 @@ Request variables:
 There are some restrictions that should be followed while managing Live Updates via Firebase Cloud Messaging. Keep in mind that passing:
 
 - `notificationId` with event `'start'` is prohibited and will result in error. Notification id is generated on Live Update start and cannot be customized.
-- `iconUrl` is not fully supported on API 36.1. On this version notification icon is your app icon and the only place where you will be able to see the difference is status bar.
-- `shortCriticalText` of length longer than 7 characters is not recommended. There is no guarantee how much text will be displayed if this limit is exceeded, based on [Android documentation](<https://developer.android.com/reference/android/app/Notification.Builder#setShortCriticalText(java.lang.String)>).
-- `progressIndeterminate` as `true`, the notification will show an indeterminate progress bar. When `false`, it will show a determinate progress bar with the current progress relative to the maximum value. All progress fields are optional. At least `progressIndeterminate: true` or `progressValue` must be included for the progress to be displayed.
-- `subText` provides information displayed in the notification, but there are no guarantees where exactly it will be located. Usually it is placed in the notification header.
-- `showTime` as `false`, the notification time will be hidden. When `true`, the notification time will be displayed based on the provided timestamp from `time` property. All time fields are optional. By default, the notification time is displayed with the time of its creation on the native side - for FCM Live Updates it will be the time of message delivery.
-- `time` affects status chip content, but only when the given timestamp is at least 2 minutes in the future. When `time` is passed together with `showCriticalText`, only `showCriticalText` will be displayed in status chip.
-- `progress.max` and `progress.segments` at the same time will result in omitting `progress.max` value, because maximum value is based on provided segments.
-- `progressPoints` must be specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass string with JSON as `progressPoints`.
-- `progressSegments` must be specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass string with JSON `progressSegments`.
+- `progressPoints` must be a string with specific format. Convert your points of type `LiveUpdateProgressPoint[]` to JSON and pass it as string to `progressPoints`.
+- `progressSegments` must be a string with specific format. Convert your segments of type `LiveUpdateProgressSegment[]` to JSON and pass it string to `progressSegments`.
+
+### Push token listener
+
+Subscribing to push token changes:
+
+```typescript
+useEffect(() => {
+  const tokenChangeSubscription = LiveUpdates.addTokenChangeListener(
+    ({ token }) => {
+      // Handle push token change
+    }
+  );
+
+  return () => {
+    tokenChangeSubscription?.remove();
+  };
+}, []);
+```
 
 ## expo-live-updates is created by Software Mansion
 

@@ -148,15 +148,11 @@ class LiveUpdatesManager(private val context: Context) {
       state.time?.let { time -> notificationBuilder.setWhen(time) }
     }
 
-    // TODO: save config by id to apply it when updating notification
-    config?.backgroundColor?.let { backgroundColor ->
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
-        try {
-          notificationBuilder.setColor(backgroundColor.toColorInt())
-          notificationBuilder.setColorized(true)
-        } catch (e: IllegalArgumentException) {
-          Log.e(TAG, getInvalidColorFormatErrorMessage(backgroundColor), e)
-        }
+    config?.iconBackgroundColor?.let { backgroundColor ->
+      try {
+        notificationBuilder.setColor(backgroundColor.toColorInt())
+      } catch (e: IllegalArgumentException) {
+        Log.e(TAG, getInvalidColorFormatErrorMessage(backgroundColor), e)
       }
     }
 
