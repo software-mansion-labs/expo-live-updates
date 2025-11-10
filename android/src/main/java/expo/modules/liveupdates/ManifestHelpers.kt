@@ -8,7 +8,6 @@ private const val CHANNEL_ID_KEY = "expo.modules.liveupdates.channelId"
 private const val CHANNEL_NAME_KEY = "expo.modules.liveupdates.channelName"
 private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 
-
 private fun getMetadataFromManifest(context: Context, key: String): String {
   val packageManager = context.packageManager
   val packageInfo =

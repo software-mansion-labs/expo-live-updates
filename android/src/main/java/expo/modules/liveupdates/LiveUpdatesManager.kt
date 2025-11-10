@@ -37,7 +37,7 @@ class LiveUpdatesManager(private val context: Context) {
 
     if (notificationExists(notificationId)) {
       throw Exception(
-        "Failed to start notification - notification with id $notificationId already exists.",
+        "Failed to start notification - notification with id $notificationId already exists."
       )
     }
 
@@ -58,7 +58,7 @@ class LiveUpdatesManager(private val context: Context) {
   ) {
     if (!notificationExists(notificationId)) {
       throw Exception(
-        "Failed to update notification - notification with id $notificationId does not exists.",
+        "Failed to update notification - notification with id $notificationId does not exists."
       )
     }
 
@@ -73,7 +73,7 @@ class LiveUpdatesManager(private val context: Context) {
   fun stopNotification(notificationId: Int) {
     if (!notificationExists(notificationId)) {
       throw Exception(
-        "Failed to stop notification - notification with id $notificationId does not exists.",
+        "Failed to stop notification - notification with id $notificationId does not exists."
       )
     }
 
@@ -99,11 +99,14 @@ class LiveUpdatesManager(private val context: Context) {
         .setSmallIcon(android.R.drawable.star_on)
         .setContentText(state.text)
 
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       notificationBuilder.setSubText(state.subText)
     } else {
-      if(state.subText !== null && state.progress !== null){
-        Log.w(TAG, "Failed to apply subText - subText and progress on versions before Android Nougat cannot be used together, they occupy the same space.")
+      if (state.subText !== null && state.progress !== null) {
+        Log.w(
+          TAG,
+          "Failed to apply subText - subText and progress on versions before Android Nougat cannot be used together, they occupy the same space.",
+        )
       } else {
         notificationBuilder.setSubText(state.subText)
       }
