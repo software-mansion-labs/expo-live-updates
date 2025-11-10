@@ -177,7 +177,7 @@ export default function LiveUpdatesScreen() {
       const id = startLiveUpdate(getState(), getConfig())
       console.log('Notification started with id: ', id)
     } catch (e) {
-      console.error(`Failed to start notification: ${e}`)
+      console.error(`Starting Live Update failed! ${e}`)
     }
   }
 
@@ -189,7 +189,7 @@ export default function LiveUpdatesScreen() {
         throw Error('notificationId is undefined.')
       }
     } catch (e) {
-      console.error(`$Failed to stop notification: ${e}`)
+      console.error(`Stopping Live Update Failed! ${e}`)
     }
   }
 
@@ -201,7 +201,7 @@ export default function LiveUpdatesScreen() {
         throw Error('notificationId is undefined.')
       }
     } catch (e) {
-      console.error(`Failed to update notification: ${e}`)
+      console.error(`Updating Live Update failed! ${e}`)
     }
   }
 
@@ -213,7 +213,7 @@ export default function LiveUpdatesScreen() {
         throw Error('Token is undefined.')
       }
     } catch (e) {
-      console.error(`Failed to copy push token: ${e}`)
+      console.error(`Copying push token failed! ${e}`)
     }
   }
 
