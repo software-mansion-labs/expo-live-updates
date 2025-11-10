@@ -28,7 +28,7 @@ if (useManagedAndroidSdkVersions) {
   project.android {
     compileSdkVersion safeExtGet("compileSdkVersion", 36)
     defaultConfig {
-      minSdkVersion safeExtGet("minSdkVersion", 24) // TODO: delete section about subText from readme
+      minSdkVersion safeExtGet("minSdkVersion", 24)
       targetSdkVersion safeExtGet("targetSdkVersion", 36)
     }
   }
