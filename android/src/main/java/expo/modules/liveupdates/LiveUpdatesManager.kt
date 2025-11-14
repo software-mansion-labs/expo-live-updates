@@ -5,7 +5,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -20,7 +19,6 @@ import java.io.File
 import java.net.URL
 
 private const val TAG = "LiveUpdatesManager"
-private const val EXPO_MODULE_SCHEME_KEY = "expo.modules.scheme"
 private const val DEFAULT_MAX_PROGRESS = 100
 
 object NotificationActionExtra {
@@ -254,10 +252,19 @@ class LiveUpdatesManager(private val context: Context) {
 
     clickIntent?.apply {
       action = Intent.ACTION_VIEW
+
+      val scheme = getScheme(context)
+
       config?.deepLinkUrl?.let { deepLink ->
-        val scheme = getScheme(context)
-        data = "$scheme://${deepLink.removePrefix("/")}".toUri()
+        scheme?.let { data = "$scheme://${deepLink.removePrefix("/")}".toUri() }
+          ?: run {
+            Log.w(
+              TAG,
+              "deepLinkUrl property ignored. Please configure withChannelConfig plugin with scheme in app.config.ts to enable managing Live Update deeplinks.",
+            )
+          }
       }
+
       putExtra(NotificationActionExtra.NOTIFICATION_ACTION, NotificationAction.CLICKED)
       putExtra(NotificationActionExtra.NOTIFICATION_ID, notificationId)
     }
@@ -270,12 +277,5 @@ class LiveUpdatesManager(private val context: Context) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
       )
     notificationBuilder.setContentIntent(clickPendingIntent)
-  }
-
-  fun getScheme(context: Context): String {
-    val applicationInfo =
-      context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-    return applicationInfo.metaData?.getString(EXPO_MODULE_SCHEME_KEY)
-      ?: throw IllegalStateException("$EXPO_MODULE_SCHEME_KEY not found in AndroidManifest.xml")
   }
 }
