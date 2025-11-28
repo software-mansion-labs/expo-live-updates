@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import expo.modules.liveupdates.TokenChangeHandler.Companion.setHandlerSendEvent
 
 const val MODULE_TAG = "ExpoLiveUpdatesModule"
 
@@ -48,7 +47,7 @@ class ExpoLiveUpdatesModule : Module() {
 
     OnStartObserving {
       if (FirebaseService.isFirebaseAvailable(context)) {
-        setHandlerSendEvent(this@ExpoLiveUpdatesModule::sendEvent)
+        TokenChangeHandler.sendEvent = this@ExpoLiveUpdatesModule::sendEvent
       }
     }
 
