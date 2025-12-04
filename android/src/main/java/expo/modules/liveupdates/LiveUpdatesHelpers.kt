@@ -1,8 +1,11 @@
 package expo.modules.liveupdates
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 
 private const val CHANNEL_ID_KEY = "expo.modules.liveupdates.channelId"
 private const val CHANNEL_NAME_KEY = "expo.modules.liveupdates.channelName"
@@ -37,3 +40,8 @@ fun getChannelName(context: Context): String {
 fun getScheme(context: Context): String? {
   return getMetadataFromManifest(context, EXPO_MODULE_SCHEME_KEY)
 }
+
+fun Context.checkPostNotificationPermission() =
+  Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+      PackageManager.PERMISSION_GRANTED
