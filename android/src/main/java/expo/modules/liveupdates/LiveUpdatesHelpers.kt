@@ -31,10 +31,7 @@ fun getChannelName(context: Context): String {
   return getMetadataFromManifest(context, CHANNEL_NAME_KEY)
 }
 
-fun checkPostNotificationPermission(context: Context): Boolean {
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+fun checkPostNotificationPermission(context: Context): Boolean =
+  Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+    ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
       PackageManager.PERMISSION_GRANTED
-  }
-  return true
-}

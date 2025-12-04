@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
+import expo.modules.kotlin.exception.CodedException
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.liveupdates.TokenChangeHandler.Companion.setHandlerSendEvent
@@ -35,7 +36,7 @@ class ExpoLiveUpdatesModule : Module() {
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
       if (!checkPostNotificationPermission(context)) {
-        throw expo.modules.kotlin.exception.CodedException("${android.Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
+        throw CodedException("${android.Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
       }
       liveUpdatesManager.startLiveUpdateNotification(state, config)
     }
@@ -47,7 +48,7 @@ class ExpoLiveUpdatesModule : Module() {
       state: LiveUpdateState,
       config: LiveUpdateConfig? ->
       if (!checkPostNotificationPermission(context)) {
-        throw expo.modules.kotlin.exception.CodedException("${android.Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
+        throw CodedException("${android.Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
       }
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)
     }
