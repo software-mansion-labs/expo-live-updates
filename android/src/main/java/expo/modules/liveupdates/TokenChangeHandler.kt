@@ -5,33 +5,28 @@ import android.util.Log
 import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessaging
 
-const val TOKEN_CHANGE_HANDLER_TAG = "TokenChangeHandler"
+object TokenChangeHandler {
+  private const val TAG = "TokenChangeHandler"
 
-class TokenChangeHandler() {
-  companion object {
-    var sendEvent: ((String, Bundle) -> Unit)? = null
-    var lastReceivedToken: String? = null
+  private var lastReceivedToken: String? = null
 
-    @JvmStatic
-    fun setHandlerSendEvent(sendEvent: (String, Bundle) -> Unit) {
-      this.sendEvent = sendEvent
-      Log.i(TOKEN_CHANGE_HANDLER_TAG, "Token change handler setEvent added")
+  var sendEvent: ((String, Bundle) -> Unit)? = null
+    set(value) {
+      field = value
+      Log.i(TAG, "Token change handler setEvent added")
 
-      lastReceivedToken?.let { token -> sendTokenChangeEvent(token) }
-        ?: run {
-          FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            task.result?.let { token -> sendTokenChangeEvent(token) }
-          }
+      lastReceivedToken?.let(::sendTokenChangeEvent)
+        ?: FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+          if (task.result != null) sendTokenChangeEvent(task.result)
         }
     }
 
-    fun sendTokenChangeEvent(token: String) {
-      sendEvent?.let { it(LiveUpdatesModuleEvents.ON_TOKEN_CHANGE, bundleOf("token" to token)) }
-    }
+  private fun sendTokenChangeEvent(token: String) {
+    sendEvent?.invoke(LiveUpdatesModuleEvents.ON_TOKEN_CHANGE, bundleOf("token" to token))
   }
 
   fun onNewToken(newToken: String) {
-    Log.i(TOKEN_CHANGE_HANDLER_TAG, "New token received: $newToken")
+    Log.i(TAG, "New token received: $newToken")
     lastReceivedToken = newToken
     sendTokenChangeEvent(newToken)
   }

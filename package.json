@@ -33,6 +33,10 @@
   },
   "license": "MIT",
   "author": "Kamil Owczarz",
+  "contributors": [
+    "Anna Cichocka <anna.cichocka@swmansion.com> (https://github.com/AnCichocka)",
+    "Jan Ciesielczyk <jan.ciesielczyk@swmansion.com> (https://github.com/janciesielczyk)"
+  ],
   "homepage": "https://github.com/software-mansion-labs/expo-live-updates#readme",
   "dependencies": {
     "babel-plugin-module-resolver": "^5.0.2",

@@ -44,14 +44,13 @@ data object FirebaseMessageProps {
 class FirebaseService : FirebaseMessagingService() {
 
   private lateinit var liveUpdatesManager: LiveUpdatesManager
-  val tokenChangeHandler: TokenChangeHandler = TokenChangeHandler()
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onCreate() {
     liveUpdatesManager = LiveUpdatesManager(this)
   }
 
-  override fun onNewToken(token: String) = tokenChangeHandler.onNewToken(token)
+  override fun onNewToken(token: String) = TokenChangeHandler.onNewToken(token)
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
