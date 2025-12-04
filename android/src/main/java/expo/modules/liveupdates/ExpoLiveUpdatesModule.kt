@@ -35,7 +35,7 @@ class ExpoLiveUpdatesModule : Module() {
     OnCreate { initializeModule() }
 
     Function("startLiveUpdate") { state: LiveUpdateState, config: LiveUpdateConfig? ->
-      if (!checkPostNotificationPermission(context)) {
+      if (!context.checkPostNotificationPermission()) {
         throw CodedException("${android.Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
       }
       liveUpdatesManager.startLiveUpdateNotification(state, config)
@@ -47,7 +47,7 @@ class ExpoLiveUpdatesModule : Module() {
       notificationId: Int,
       state: LiveUpdateState,
       config: LiveUpdateConfig? ->
-      if (!checkPostNotificationPermission(context)) {
+      if (!context.checkPostNotificationPermission()) {
         throw CodedException("${android.Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
       }
       liveUpdatesManager.updateLiveUpdateNotification(notificationId, state, config)

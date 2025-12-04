@@ -55,7 +55,7 @@ class FirebaseService : FirebaseMessagingService() {
 
   @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
   override fun onMessageReceived(message: RemoteMessage) {
-    if (!checkPostNotificationPermission(this)) {
+    if (!this.checkPostNotificationPermission()) {
       Log.e(FIREBASE_TAG, "POST_NOTIFICATIONS permission is not granted. Cannot display message.")
       return
     }
