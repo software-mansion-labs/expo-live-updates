@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
-import expo.modules.kotlin.exception.CodedException
 
 private const val CHANNEL_ID_KEY = "expo.modules.liveupdates.channelId"
 private const val CHANNEL_NAME_KEY = "expo.modules.liveupdates.channelName"
@@ -32,12 +31,7 @@ fun getChannelName(context: Context): String {
   return getMetadataFromManifest(context, CHANNEL_NAME_KEY)
 }
 
-fun checkPostNotificationPermission(context: Context) {
-  if (
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-      ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-        PackageManager.PERMISSION_GRANTED
-  ) {
-    throw CodedException("${Manifest.permission.POST_NOTIFICATIONS} permission is not granted.")
-  }
-}
+fun Context.checkPostNotificationPermission() =
+  Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+      PackageManager.PERMISSION_GRANTED
