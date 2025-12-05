@@ -45,10 +45,7 @@ class LiveUpdatesManager(private val context: Context) {
 
     val notification = createNotification(state, notificationId, config)
     notificationManager.notify(notificationId, notification)
-    NotificationStateEventEmitter.emitNotificationStateChange(
-      notificationId,
-      NotificationAction.STARTED,
-    )
+    NotificationStateEventEmitter.emit(notificationId, NotificationAction.STARTED)
     return notificationId
   }
 
@@ -68,10 +65,7 @@ class LiveUpdatesManager(private val context: Context) {
 
     val notification = createNotification(state, notificationId, config)
     notificationManager.notify(notificationId, notification)
-    NotificationStateEventEmitter.emitNotificationStateChange(
-      notificationId,
-      NotificationAction.UPDATED,
-    )
+    NotificationStateEventEmitter.emit(notificationId, NotificationAction.UPDATED)
   }
 
   fun stopNotification(notificationId: Int) {
@@ -84,10 +78,7 @@ class LiveUpdatesManager(private val context: Context) {
     }
 
     notificationManager.cancel(notificationId)
-    NotificationStateEventEmitter.emitNotificationStateChange(
-      notificationId,
-      NotificationAction.STOPPED,
-    )
+    NotificationStateEventEmitter.emit(notificationId, NotificationAction.STOPPED)
   }
 
   private fun notificationExists(notificationId: Int): Boolean {

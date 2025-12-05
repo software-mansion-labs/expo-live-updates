@@ -79,9 +79,7 @@ class ExpoLiveUpdatesModule : Module() {
 
     notificationId
       .takeIf { action == NotificationAction.CLICKED }
-      ?.let { id ->
-        NotificationStateEventEmitter.emitNotificationStateChange(id, NotificationAction.CLICKED)
-      }
+      ?.let { NotificationStateEventEmitter.emit(it, NotificationAction.CLICKED) }
   }
 
   private val context
@@ -112,7 +110,7 @@ class ExpoLiveUpdatesModule : Module() {
     }
 
     liveUpdatesManager = LiveUpdatesManager(context)
-    NotificationStateEventEmitter.setInstance(NotificationStateEventEmitter(::sendEvent))
+    NotificationStateEventEmitter.sendEvent = ::sendEvent
   }
 }
 

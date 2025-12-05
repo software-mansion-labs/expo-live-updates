@@ -12,10 +12,7 @@ class NotificationDismissedReceiver : BroadcastReceiver() {
     Log.i(TAG, "Notification dismissed by user")
     val notificationId = intent.getIntExtra("notificationId", -1)
     if (notificationId != -1) {
-      NotificationStateEventEmitter.emitNotificationStateChange(
-        notificationId,
-        NotificationAction.DISMISSED,
-      )
+      NotificationStateEventEmitter.emit(notificationId, NotificationAction.DISMISSED)
     }
   }
 }
