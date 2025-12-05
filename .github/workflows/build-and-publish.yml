@@ -22,7 +22,7 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Update npm to latest version
+      - name: Install npm 11.6.4
         run: npm install -g npm@11.6.4
 
       - name: Install dependencies
