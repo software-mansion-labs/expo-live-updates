@@ -11,18 +11,8 @@ enum class NotificationAction {
   CLICKED,
 }
 
-class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> Unit) {
-  companion object {
-    private var instance: NotificationStateEventEmitter? = null
-
-    fun setInstance(emitter: NotificationStateEventEmitter) {
-      instance = emitter
-    }
-
-    fun emitNotificationStateChange(notificationId: Int, action: NotificationAction) {
-      instance?.emit(notificationId, action)
-    }
-  }
+object NotificationStateEventEmitter {
+  var sendEvent: ((String, Bundle) -> Unit)? = null
 
   fun emit(notificationId: Int, action: NotificationAction) {
     val event =
@@ -31,7 +21,7 @@ class NotificationStateEventEmitter(private val sendEvent: (String, Bundle) -> U
         action = action.name.lowercase(),
         timestamp = System.currentTimeMillis(),
       )
-    sendEvent(LiveUpdatesModuleEvents.ON_NOTIFICATION_STATE_CHANGE, event.toBundle())
+    sendEvent?.invoke(LiveUpdatesModuleEvents.ON_NOTIFICATION_STATE_CHANGE, event.toBundle())
   }
 }
 
