@@ -35,7 +35,7 @@ Expo module that enables Android Live Updates functionality, allowing you to dis
 You can install this package from the repository:
 
 ```sh
-npm install git+https://github.com/software-mansion-labs/expo-live-updates.git
+npm install expo-live-updates
 ```
 
 Or if you have access to this repository locally:
