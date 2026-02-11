@@ -19,6 +19,9 @@ export type LiveUpdateProgress = {
   indeterminate?: boolean
   points?: LiveUpdateProgressPoint[]
   segments?: LiveUpdateProgressSegment[]
+  progressIcon?: LiveUpdateImage
+  startIcon?: LiveUpdateImage
+  endIcon?: LiveUpdateImage
 }
 
 export type LiveUpdateState = {

@@ -182,6 +182,21 @@ class LiveUpdatesManager(private val context: Context) {
 
     val style = NotificationCompat.ProgressStyle().setProgressSegments(segments)
 
+    progress.progressIcon?.let { icon ->
+      getBitmapFromImage(icon)?.let { bitmap ->
+        style.setProgressTrackerIcon(IconCompat.createWithBitmap(bitmap))
+      }
+    }
+    progress.startIcon?.let { icon ->
+      getBitmapFromImage(icon)?.let { bitmap ->
+        style.setProgressStartIcon(IconCompat.createWithBitmap(bitmap))
+      }
+    }
+    progress.endIcon?.let { icon ->
+      getBitmapFromImage(icon)?.let { bitmap ->
+        style.setProgressEndIcon(IconCompat.createWithBitmap(bitmap))
+      }
+    }
     points?.let { style.setProgressPoints(it) }
     progress.progress?.let { style.setProgress(it) }
 
