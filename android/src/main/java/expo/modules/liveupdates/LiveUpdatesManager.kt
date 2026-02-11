@@ -97,6 +97,10 @@ class LiveUpdatesManager(private val context: Context) {
         .setContentText(state.text)
         .setSubText(state.subText)
 
+      if(config != null && !config.playSound){
+          notificationBuilder.setSilent(true)
+      }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
       notificationBuilder.setShortCriticalText(state.shortCriticalText)
       notificationBuilder.setOngoing(true)

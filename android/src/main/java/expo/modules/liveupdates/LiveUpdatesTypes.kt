@@ -37,6 +37,7 @@ data class LiveUpdateState(
 data class LiveUpdateConfig(
   @Field val deepLinkUrl: String? = null,
   @Field val iconBackgroundColor: String? = null,
+  @Field val playSound: Boolean = true,
 ) : Record
 
 object LiveUpdatesModuleEvents {
