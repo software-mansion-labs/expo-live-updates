@@ -31,6 +31,9 @@ import ExpoLiveUpdateEventsList from '../components/ExpoLiveUpdateEventsList'
 
 const IMAGE_PATH = `./../assets/LiveUpdates/logo.png`
 const ICON_PATH = `./../assets/LiveUpdates/logo-island.png`
+const PROGRESS_ICON_PATH = `./../assets/LiveUpdates/truck-icon.png`
+const START_PROGRESS_ICON_PATH = `./../assets/LiveUpdates/start-icon.png`
+const END_PROGRESS_ICON_PATH = `./../assets/LiveUpdates/end-icon.png`
 
 export default function LiveUpdatesScreen() {
   const [title, onChangeTitle] = useState('This is a title')
@@ -41,6 +44,9 @@ export default function LiveUpdatesScreen() {
   const [isImageRemote, setIsImageRemote] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [iconLocalUrl, setIconLocalUrl] = useState('')
+  const [progressIconLocalUrl, setProgressIconLocalUrl] = useState('')
+  const [startProgressIconLocalUrl, setStartProgressIconLocalUrl] = useState('')
+  const [endProgressIconLocalUrl, setEndProgressIconLocalUrl] = useState('')
   const [isIconRemote, setIsIconRemote] = useState(false)
   const [iconUrl, setIconUrl] = useState('')
   const [iconBackgroundColor, onIconBackgroundColor] = useState('red')
@@ -70,6 +76,9 @@ export default function LiveUpdatesScreen() {
   const [progressIndeterminate, setProgressIndeterminate] = useState(false)
   const [passPoints, setPassPoints] = useState(false)
   const [passSegments, setPassSegments] = useState(false)
+  const [showProgressIcon, setShowProgressIcon] = useState(false)
+  const [showStartProgressIcon, setShowStartProgressIcon] = useState(false)
+  const [showEndProgressIcon, setShowEndProgressIcon] = useState(false)
   const [passIconBackgroundColor, setPassIconBackgroundColor] = useState(false)
 
   const notificationId = useMemo(() => {
@@ -79,13 +88,28 @@ export default function LiveUpdatesScreen() {
 
   useEffect(() => {
     const loadImages = async () => {
-      const { imageLocalUri, iconLocalUri } = await getImgsUri()
+      const {
+        imageLocalUri,
+        iconLocalUri,
+        progressIconLocalUri,
+        startProgressIconLocalUri,
+        endProgressIconLocalUri,
+      } = await getImgsUri()
 
       if (imageLocalUri) {
         setImageLocalUrl(imageLocalUri)
       }
       if (iconLocalUri) {
         setIconLocalUrl(iconLocalUri)
+      }
+      if (progressIconLocalUri) {
+        setProgressIconLocalUrl(progressIconLocalUri)
+      }
+      if (startProgressIconLocalUri) {
+        setStartProgressIconLocalUrl(startProgressIconLocalUri)
+      }
+      if (endProgressIconLocalUri) {
+        setEndProgressIconLocalUrl(endProgressIconLocalUri)
       }
     }
 
@@ -135,6 +159,15 @@ export default function LiveUpdatesScreen() {
                 { length: 30, color: 'red' },
                 { length: 300, color: 'blue' },
               ]
+            : undefined,
+          progressIcon: showProgressIcon
+            ? { url: progressIconLocalUrl, isRemote: false }
+            : undefined,
+          startIcon: showStartProgressIcon
+            ? { url: startProgressIconLocalUrl, isRemote: false }
+            : undefined,
+          endIcon: showEndProgressIcon
+            ? { url: endProgressIconLocalUrl, isRemote: false }
             : undefined,
         }
       : undefined,
@@ -410,6 +443,27 @@ export default function LiveUpdatesScreen() {
                     setValue: setPassSegments,
                   }}
                 />
+                <LabelWithSwitch
+                  label="Progress icon"
+                  switchProps={{
+                    value: showProgressIcon,
+                    setValue: setShowProgressIcon,
+                  }}
+                />
+                <LabelWithSwitch
+                  label="Start progress icon"
+                  switchProps={{
+                    value: showStartProgressIcon,
+                    setValue: setShowStartProgressIcon,
+                  }}
+                />
+                <LabelWithSwitch
+                  label="End progress icon"
+                  switchProps={{
+                    value: showEndProgressIcon,
+                    setValue: setShowEndProgressIcon,
+                  }}
+                />
               </>
             )}
 
@@ -474,13 +528,28 @@ function isBaklava() {
 async function getImgsUri(): Promise<{
   imageLocalUri: string | undefined
   iconLocalUri: string | undefined
+  progressIconLocalUri: string | undefined
+  startProgressIconLocalUri: string | undefined
+  endProgressIconLocalUri: string | undefined
 }> {
   const [{ localUri: imageUri }] = await Asset.loadAsync(require(IMAGE_PATH))
   const [{ localUri: iconUri }] = await Asset.loadAsync(require(ICON_PATH))
+  const [{ localUri: progressIconUri }] = await Asset.loadAsync(
+    require(PROGRESS_ICON_PATH),
+  )
+  const [{ localUri: startProgressIconUri }] = await Asset.loadAsync(
+    require(START_PROGRESS_ICON_PATH),
+  )
+  const [{ localUri: endProgressIconUri }] = await Asset.loadAsync(
+    require(END_PROGRESS_ICON_PATH),
+  )
 
   return {
     imageLocalUri: imageUri ?? undefined,
     iconLocalUri: iconUri ?? undefined,
+    progressIconLocalUri: progressIconUri ?? undefined,
+    startProgressIconLocalUri: startProgressIconUri ?? undefined,
+    endProgressIconLocalUri: endProgressIconUri ?? undefined,
   }
 }
 

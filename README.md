@@ -140,6 +140,9 @@ type LiveUpdateProgress = {
   indeterminate?: boolean
   points?: LiveUpdateProgressPoint[] // { position: number, color?: string }
   segments?: LiveUpdateProgressSegment[] // { position: number, color?: string }
+  progressIcon?: LiveUpdateImage
+  startIcon?: LiveUpdateImage
+  endIcon?: LiveUpdateImage
 }
 ```
 

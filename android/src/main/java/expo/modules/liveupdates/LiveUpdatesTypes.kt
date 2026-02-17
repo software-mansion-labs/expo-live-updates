@@ -20,6 +20,9 @@ data class LiveUpdateProgress(
   @Field val indeterminate: Boolean?,
   @Field val points: ArrayList<LiveUpdateProgressPoint>? = null,
   @Field val segments: ArrayList<LiveUpdateProgressSegment>? = null,
+  @Field val progressIcon: LiveUpdateImage? = null,
+  @Field val startIcon: LiveUpdateImage? = null,
+  @Field val endIcon: LiveUpdateImage? = null,
 ) : Record
 
 data class LiveUpdateState(
