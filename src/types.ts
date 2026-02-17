@@ -36,6 +36,7 @@ export type LiveUpdateState = {
 export type LiveUpdateConfig = {
   deepLinkUrl?: string
   iconBackgroundColor?: string // only SDK < 16
+  playSound?: boolean
 }
 
 export type TokenChangeEvent = {
