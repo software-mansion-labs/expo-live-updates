@@ -17,7 +17,13 @@ object TokenChangeHandler {
 
       lastReceivedToken?.let(::sendTokenChangeEvent)
         ?: FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-          if (task.result != null) sendTokenChangeEvent(task.result)
+          // task.result throws on a failed task (e.g. SERVICE_NOT_AVAILABLE), which would crash
+          // the app on the main thread.
+          if (!task.isSuccessful) {
+            Log.w(TAG, "Failed to fetch FCM token", task.exception)
+            return@addOnCompleteListener
+          }
+          task.result?.let(::sendTokenChangeEvent)
         }
     }
 
